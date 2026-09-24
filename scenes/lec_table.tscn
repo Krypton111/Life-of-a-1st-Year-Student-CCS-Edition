@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://c5j0r1yoyqsm4"]
+
+[ext_resource type="Texture2D" uid="uid://jwofrrahrt6d" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/Lecture Room Assets/lec_room.png" id="1_fj4lp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57msd"]
+atlas = ExtResource("1_fj4lp")
+region = Rect2(639, 292, 213, 146)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b6cbq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57msd")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6cbq"]
+size = Vector2(145, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ro6fj"]
+size = Vector2(9.5, 25)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pjhql"]
+size = Vector2(10, 20)
+
+[node name="lec table" type="StaticBody2D" unique_id=1103766339]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=211191302]
+position = Vector2(80, 48)
+sprite_frames = SubResource("SpriteFrames_b6cbq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=724373867]
+position = Vector2(81.5, 46)
+shape = SubResource("RectangleShape2D_b6cbq")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=884630590]
+position = Vector2(28.5, 71.5)
+shape = SubResource("RectangleShape2D_ro6fj")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="." unique_id=1290794806]
+position = Vector2(56, 72)
+shape = SubResource("RectangleShape2D_ro6fj")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="." unique_id=1167800349]
+position = Vector2(111, 72)
+shape = SubResource("RectangleShape2D_ro6fj")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="." unique_id=1267632700]
+position = Vector2(137.75, 72)
+shape = SubResource("RectangleShape2D_ro6fj")
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="." unique_id=1928423899]
+position = Vector2(17, 65)
+shape = SubResource("RectangleShape2D_pjhql")
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="." unique_id=1345510964]
+position = Vector2(149, 63)
+shape = SubResource("RectangleShape2D_pjhql")

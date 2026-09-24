@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b05dae1c718mn"
+path="res://.godot/imported/pc_bootup_noice.mp3-d94540c4044b072b55a1f48bddcb3fa5.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/SFX/pc_bootup_noice.mp3"
+dest_files=["res://.godot/imported/pc_bootup_noice.mp3-d94540c4044b072b55a1f48bddcb3fa5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

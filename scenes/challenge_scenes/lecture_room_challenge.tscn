@@ -1,0 +1,129 @@
+[gd_scene format=3 uid="uid://cs1yrsgtxo1m0"]
+
+[ext_resource type="Texture2D" uid="uid://chpw8evbach2b" path="res://GAME ASSETS_/Misc/Menus/tablebg.jpg" id="1_rv07s"]
+[ext_resource type="Script" uid="uid://d2pc4uo031qth" path="res://scripts/LectureRoomChallenge.gd" id="1_ut1j2"]
+[ext_resource type="Texture2D" uid="uid://c0u248rqpmico" path="res://GAME ASSETS_/Misc/Menus/notebook interfacew.png" id="2_ut1j2"]
+[ext_resource type="Script" uid="uid://dni602w2rjxk0" path="res://scripts/DragBar.gd" id="3_gjil2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="9_pause"]
+
+[node name="LectureRoomChallenge" type="Control" unique_id=1480372150]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 960.0
+offset_top = 540.0
+offset_right = 960.0
+offset_bottom = 540.0
+script = ExtResource("1_ut1j2")
+
+[node name="PauseMenu" parent="." unique_id=1326021430 instance=ExtResource("9_pause")]
+
+[node name="background" type="TextureRect" parent="." unique_id=1229473848]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 653.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_rv07s")
+
+[node name="notebook" type="TextureRect" parent="." unique_id=1996351555]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -971.0
+offset_top = -529.0
+offset_right = 909.0
+offset_bottom = 511.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ut1j2")
+
+[node name="DragBar" type="Control" parent="notebook" unique_id=414238714]
+layout_mode = 1
+anchor_left = 0.087000005
+anchor_top = 0.020000001
+anchor_right = 0.919
+anchor_bottom = 0.14600001
+offset_left = 13.959991
+offset_top = 30.399998
+offset_right = -196.4801
+offset_bottom = 822.32
+script = ExtResource("3_gjil2")
+
+[node name="QuestionText" type="Label" parent="notebook" unique_id=1470934834]
+layout_mode = 0
+offset_left = 266.0
+offset_top = 311.0
+offset_right = 438.0
+offset_bottom = 334.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "What is a proposition?"
+
+[node name="QuestionNumberLabel" type="Label" parent="notebook" unique_id=71583220]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 229.0
+offset_right = 382.0
+offset_bottom = 252.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Question 1 / 20"
+
+[node name="AnswerInput" type="LineEdit" parent="notebook" unique_id=141177596]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 459.0
+offset_right = 504.0
+offset_bottom = 490.0
+placeholder_text = "Type your answer here..."
+
+[node name="SubmitButton" type="Button" parent="notebook" unique_id=481785064]
+layout_mode = 0
+offset_left = 507.0
+offset_top = 461.0
+offset_right = 570.0
+offset_bottom = 492.0
+text = "Submit"
+
+[node name="FeedbackLabel" type="Label" parent="notebook" unique_id=114296707]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 366.0
+offset_right = 462.0
+offset_bottom = 420.0
+
+[node name="ResultPanel" type="Panel" parent="notebook" unique_id=1999602964]
+visible = false
+layout_mode = 0
+offset_left = 596.0
+offset_top = 781.0
+offset_right = 779.0
+offset_bottom = 852.0
+
+[node name="ResultTitle" type="Label" parent="notebook/ResultPanel" unique_id=1196158354]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 11.0
+offset_right = 175.0
+offset_bottom = 34.0
+text = "Challenge Complete!"
+
+[node name="ScoreLabel" type="Label" parent="notebook/ResultPanel" unique_id=1257333284]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 35.0
+offset_right = 130.0
+offset_bottom = 58.0
+text = "Final Score: 0%"
+
+[node name="ContinueButton" type="Button" parent="notebook/ResultPanel" unique_id=1291529386]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 71.0
+offset_right = 183.0
+offset_bottom = 102.0
+text = "Finish"

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://dmlbmlgycwnc"]
+
+[ext_resource type="Texture2D" uid="uid://ccbb2cfi0a5rk" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/Comp Lab Assets/trash bin.png" id="1_afng0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tjgyx"]
+atlas = ExtResource("1_afng0")
+region = Rect2(987, 666, 62, 67)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b6cbq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tjgyx")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ro6fj"]
+size = Vector2(33, 30)
+
+[node name="StaticBody2D" type="StaticBody2D" unique_id=537891111]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=168207666]
+sprite_frames = SubResource("SpriteFrames_b6cbq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=509531944]
+position = Vector2(-0.5, 9)
+shape = SubResource("RectangleShape2D_ro6fj")

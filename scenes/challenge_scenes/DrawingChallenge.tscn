@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bd0m4b856st3l"]
+
+[node name="DrawingChallenge" type="Control" unique_id=1738164010]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=831966526]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.30323282, 0.30323282, 0.30323282, 1)
+
+[node name="Label" type="Label" parent="." unique_id=29897492]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "DRAWING CHALLENGE"

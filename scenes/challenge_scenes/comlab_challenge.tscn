@@ -1,0 +1,194 @@
+[gd_scene format=3 uid="uid://dggoqgvo8hq6n"]
+
+[ext_resource type="Script" uid="uid://vv3x647ps62x" path="res://scripts/ComLabChallenge.gd" id="1_dpnig"]
+[ext_resource type="Texture2D" uid="uid://grwfknrmiwm6" path="res://GAME ASSETS_/Misc/Menus/comlab bg.jpg" id="2_h28rq"]
+[ext_resource type="Texture2D" uid="uid://ckgqmeehbw4f" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/mamamo question.png" id="2_rtfla"]
+[ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="2_ysnh3"]
+[ext_resource type="Texture2D" uid="uid://dfyri053ptjip" path="res://GAME ASSETS_/Misc/Menus/computer rules.png" id="3_rqv5r"]
+[ext_resource type="Texture2D" uid="uid://cnw02oo16ivi8" path="res://GAME ASSETS_/Misc/Menus/comlab quiz browser.png" id="4_u5e83"]
+[ext_resource type="AudioStream" uid="uid://puwr2c30ucqx" path="res://GAME ASSETS_/Misc/Music/comlab_music.mp3" id="5_vjdjf"]
+[ext_resource type="AudioStream" uid="uid://b6pgc8uarkpgy" path="res://GAME ASSETS_/Misc/SFX/right answer 2.mp3" id="6_3g2ec"]
+[ext_resource type="AudioStream" uid="uid://b6hb8l2cqyrku" path="res://GAME ASSETS_/Misc/SFX/wrong_answer.mp3" id="7_41qak"]
+[ext_resource type="Script" uid="uid://dni602w2rjxk0" path="res://scripts/DragBar.gd" id="7_bu4fx"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="9_pause"]
+
+[node name="ProgrammingChallenge" type="Control" unique_id=851096493]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_dpnig")
+
+[node name="PauseMenu" parent="." unique_id=744218745 instance=ExtResource("9_pause")]
+
+[node name="background" type="TextureRect" parent="." unique_id=1564655788]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1198.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_h28rq")
+
+[node name="ComputerRules" type="Sprite2D" parent="." unique_id=462766117]
+position = Vector2(1287, 521)
+scale = Vector2(0.80546874, 0.8296296)
+texture = ExtResource("3_rqv5r")
+
+[node name="browserquiz" type="TextureRect" parent="." unique_id=408128305]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -29.0
+offset_top = -50.0
+offset_right = 1891.0
+offset_bottom = 1030.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_u5e83")
+
+[node name="Answer1" type="Button" parent="browserquiz" unique_id=908732184]
+layout_mode = 0
+offset_left = 466.00003
+offset_top = 569.00006
+offset_right = 2394.0
+offset_bottom = 1657.0
+scale = Vector2(0.24, 0.24)
+icon = ExtResource("2_rtfla")
+flat = true
+
+[node name="Answer1Text" type="Label" parent="browserquiz/Answer1" unique_id=1913590836]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.104
+anchor_top = 0.37500003
+anchor_right = 0.89900005
+anchor_bottom = 0.61300004
+offset_left = -17.178787
+offset_top = -20.500336
+offset_right = 36.061157
+offset_bottom = -21.111145
+theme_override_fonts/font = ExtResource("2_ysnh3")
+theme_override_font_sizes/font_size = 130
+text = "HyperText Markup Language"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Answer2" type="Button" parent="browserquiz" unique_id=439603894]
+layout_mode = 0
+offset_left = 982.0
+offset_top = 569.00006
+offset_right = 2910.0
+offset_bottom = 1657.0
+scale = Vector2(0.24, 0.24)
+icon = ExtResource("2_rtfla")
+flat = true
+
+[node name="Answer2Text" type="Label" parent="browserquiz/Answer2" unique_id=1443793812]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.07300001
+anchor_top = 0.39100003
+anchor_right = 0.929
+anchor_bottom = 0.609
+offset_left = 5.089325
+offset_top = -25.408295
+offset_right = 4.7213135
+offset_bottom = -25.092285
+theme_override_fonts/font = ExtResource("2_ysnh3")
+theme_override_font_sizes/font_size = 130
+text = "HighText Machine Language"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Answer3" type="Button" parent="browserquiz" unique_id=169929603]
+layout_mode = 0
+offset_left = 466.00003
+offset_top = 726.00006
+offset_right = 2394.0
+offset_bottom = 1814.0
+scale = Vector2(0.24, 0.24)
+icon = ExtResource("2_rtfla")
+flat = true
+
+[node name="Answer3Text" type="Label" parent="browserquiz/Answer3" unique_id=1030194100]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.071
+anchor_top = 0.39100003
+anchor_right = 0.929
+anchor_bottom = 0.609
+offset_left = 21.44519
+offset_top = -37.908295
+offset_right = 21.38794
+offset_bottom = 15.907715
+theme_override_fonts/font = ExtResource("2_ysnh3")
+theme_override_font_sizes/font_size = 120
+text = "Hyperlink Text Management 
+Language"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Answer4" type="Button" parent="browserquiz" unique_id=938730511]
+layout_mode = 0
+offset_left = 982.0
+offset_top = 725.00006
+offset_right = 2910.0
+offset_bottom = 1813.0
+scale = Vector2(0.24, 0.24)
+icon = ExtResource("2_rtfla")
+flat = true
+
+[node name="Answer4Text" type="Label" parent="browserquiz/Answer4" unique_id=424345762]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.071
+anchor_top = 0.39100003
+anchor_right = 0.929
+anchor_bottom = 0.609
+offset_left = 17.278671
+offset_top = -21.241638
+offset_right = 17.22107
+offset_bottom = -20.92566
+theme_override_fonts/font = ExtResource("2_ysnh3")
+theme_override_font_sizes/font_size = 130
+text = "Home Tool Markup Language"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="QuestionText" type="Label" parent="browserquiz" unique_id=1681682401]
+layout_mode = 0
+offset_left = 354.0
+offset_top = 249.0
+offset_right = 1564.0
+offset_bottom = 564.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_ysnh3")
+theme_override_font_sizes/font_size = 80
+text = "What does HTML stand for?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DragBar" type="Control" parent="browserquiz" unique_id=1017414707]
+layout_mode = 1
+anchor_left = 0.087000005
+anchor_top = 0.020000001
+anchor_right = 0.919
+anchor_bottom = 0.14600001
+offset_left = 178.95999
+offset_top = 51.399998
+offset_right = -133.4801
+offset_bottom = 67.31999
+script = ExtResource("7_bu4fx")
+
+[node name="ChallengeMusic" type="AudioStreamPlayer" parent="." unique_id=1241392073]
+stream = ExtResource("5_vjdjf")
+volume_db = -8.602
+autoplay = true
+
+[node name="CorrectSound" type="AudioStreamPlayer" parent="." unique_id=1982667111]
+stream = ExtResource("6_3g2ec")
+
+[node name="WrongSound" type="AudioStreamPlayer" parent="." unique_id=946832261]
+stream = ExtResource("7_41qak")

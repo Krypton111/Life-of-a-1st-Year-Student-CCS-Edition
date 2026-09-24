@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bldfyyduohvyh"]
+
+[ext_resource type="Texture2D" uid="uid://dw1oshj5qie3y" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/Comp Lab Assets/bench.png" id="1_y051q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2646g"]
+atlas = ExtResource("1_y051q")
+region = Rect2(819, 658, 117, 94)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b6cbq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2646g")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ro6fj"]
+size = Vector2(101, 35)
+
+[node name="StaticBody2D" type="StaticBody2D" unique_id=852410739]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=915150822]
+sprite_frames = SubResource("SpriteFrames_b6cbq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2124042380]
+position = Vector2(2.5, 13.5)
+shape = SubResource("RectangleShape2D_ro6fj")

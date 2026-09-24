@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://kttphrg2cjxp"]
+
+[ext_resource type="PackedScene" uid="uid://bcr4uxbbl60oc" path="res://scenes/main_level_scenes/Lecture Room.tscn" id="1_cpfxy"]
+[ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player&NPCs/player.tscn" id="2_udjh4"]
+
+[node name="Lecture Room Level" type="Node2D" unique_id=1273772793]
+y_sort_enabled = true
+
+[node name="LECROOMSAMPLE" parent="." unique_id=1591438708 instance=ExtResource("1_cpfxy")]
+position = Vector2(-2, -19)
+scale = Vector2(4, 4)
+
+[node name="Player" parent="." unique_id=873346093 instance=ExtResource("2_udjh4")]
+y_sort_enabled = true
+position = Vector2(636, 168)
+scale = Vector2(1.5, 1.5)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1297991098]
+zoom = Vector2(1.4, 1.4)

@@ -1,0 +1,622 @@
+[gd_scene format=3 uid="uid://d2pq7d7m5o1x"]
+
+[ext_resource type="Texture2D" uid="uid://cnvgcqc7e2w18" path="res://GAME ASSETS_/Misc/comic-panels/op1_p1.png" id="1_5nq3g"]
+[ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="1_wxwp8"]
+[ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="2_csnvj"]
+[ext_resource type="Texture2D" uid="uid://drkh18h53mhg0" path="res://GAME ASSETS_/Misc/comic-panels/op1_p2.png" id="2_wxwp8"]
+[ext_resource type="Texture2D" uid="uid://cno5i4yl2ayw0" path="res://GAME ASSETS_/Misc/comic-panels/op1_p3.png" id="3_5c1c8"]
+[ext_resource type="Texture2D" uid="uid://h3y0n53o0lfu" path="res://GAME ASSETS_/Misc/comic-panels/op1_p4.png" id="4_alq2l"]
+[ext_resource type="Texture2D" uid="uid://dccvavy6s0t4v" path="res://GAME ASSETS_/Misc/comic-panels/op1_p5.png" id="5_totlj"]
+[ext_resource type="Texture2D" uid="uid://cdgp7djv455n" path="res://GAME ASSETS_/Misc/comic-panels/op1_p6.png" id="6_evw2q"]
+[ext_resource type="Texture2D" uid="uid://bmoukx6n48qih" path="res://GAME ASSETS_/Misc/comic-panels/op2_p1.png" id="8_4g3a2"]
+[ext_resource type="Texture2D" uid="uid://dkcb7kv2rtrkl" path="res://GAME ASSETS_/Misc/comic-panels/op2_p2.png" id="9_0otps"]
+[ext_resource type="Texture2D" uid="uid://bsujmk2ptu8vw" path="res://GAME ASSETS_/Misc/comic-panels/op2_p3.png" id="10_1unov"]
+[ext_resource type="Texture2D" uid="uid://i0u7wb4hcweb" path="res://GAME ASSETS_/Misc/comic-panels/op2_p4.png" id="11_28vgt"]
+[ext_resource type="Texture2D" uid="uid://b8sayf55fg3nj" path="res://GAME ASSETS_/Misc/comic-panels/op2_p5.png" id="12_c4kn8"]
+[ext_resource type="Texture2D" uid="uid://bq8emwkw1i2a3" path="res://GAME ASSETS_/Misc/comic-panels/op2_p6.png" id="13_pc7eu"]
+[ext_resource type="Texture2D" uid="uid://dbsrxs1d4ofu" path="res://GAME ASSETS_/Misc/comic-panels/op3_p1.png" id="14_eruo5"]
+[ext_resource type="Texture2D" uid="uid://ccl62dwth8lsi" path="res://GAME ASSETS_/Misc/comic-panels/op3_p2.png" id="15_3a2lx"]
+[ext_resource type="Texture2D" uid="uid://dtb3vaabqvpwh" path="res://GAME ASSETS_/Misc/comic-panels/op3_p3.png" id="16_n2hq4"]
+[ext_resource type="Texture2D" uid="uid://cokaqgg7lbxj" path="res://GAME ASSETS_/Misc/comic-panels/op3_p4.png" id="17_qmjnb"]
+[ext_resource type="Texture2D" uid="uid://d4hqqjvpjj2p8" path="res://GAME ASSETS_/Misc/comic-panels/op3_p5.png" id="18_cuoud"]
+[ext_resource type="Texture2D" uid="uid://m6gn4xvx7wfl" path="res://GAME ASSETS_/Misc/comic-panels/op3_p6.png" id="19_mnpv1"]
+[ext_resource type="Texture2D" uid="uid://cxd7moaeynm8d" path="res://GAME ASSETS_/Misc/comic-panels/op4_p1.png" id="20_iejhw"]
+[ext_resource type="Texture2D" uid="uid://dqq7itkgyaici" path="res://GAME ASSETS_/Misc/comic-panels/op4_p2.png" id="21_lao1s"]
+[ext_resource type="Texture2D" uid="uid://cg03rysd8gydp" path="res://GAME ASSETS_/Misc/comic-panels/op4_p3.png" id="22_udp3s"]
+[ext_resource type="Texture2D" uid="uid://77ryq8mdmgs3" path="res://GAME ASSETS_/Misc/comic-panels/op4_p4.png" id="23_0bhj3"]
+[ext_resource type="Texture2D" uid="uid://b3s5376twsv3c" path="res://GAME ASSETS_/Misc/comic-panels/op4_p5.png" id="24_bon8d"]
+[ext_resource type="Texture2D" uid="uid://uhfwvyyttwsj" path="res://GAME ASSETS_/Misc/comic-panels/op4_p6.png" id="25_v4t0g"]
+[ext_resource type="AudioStream" uid="uid://wsjtmwe22bo" path="res://GAME ASSETS_/Misc/Music/cutscene music.mp3" id="27_0otps"]
+
+[node name="OpeningCutscene" type="Control" unique_id=1457254742]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_wxwp8")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=605368358]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8901961, 0.74509805, 0.5411765, 1)
+
+[node name="op1_p1" type="TextureRect" parent="." unique_id=1128470090]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_5nq3g")
+
+[node name="op1_p2" type="TextureRect" parent="." unique_id=1258893758]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_wxwp8")
+
+[node name="op1_p3" type="TextureRect" parent="." unique_id=438041591]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_5c1c8")
+
+[node name="op1_p4" type="TextureRect" parent="." unique_id=312516945]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_alq2l")
+
+[node name="op1_p5" type="TextureRect" parent="." unique_id=1213283442]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_totlj")
+
+[node name="op1_p6" type="TextureRect" parent="." unique_id=2009927828]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_evw2q")
+
+[node name="op2_p1" type="TextureRect" parent="." unique_id=1715248168]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_4g3a2")
+
+[node name="op2_p2" type="TextureRect" parent="." unique_id=998855776]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_0otps")
+
+[node name="op2_p3" type="TextureRect" parent="." unique_id=831766456]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_1unov")
+
+[node name="op2_p4" type="TextureRect" parent="." unique_id=849140625]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_28vgt")
+
+[node name="op2_p5" type="TextureRect" parent="." unique_id=994132066]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_c4kn8")
+
+[node name="op2_p6" type="TextureRect" parent="." unique_id=285567325]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_pc7eu")
+
+[node name="op3_p1" type="TextureRect" parent="." unique_id=1500132922]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_eruo5")
+
+[node name="op3_p2" type="TextureRect" parent="." unique_id=627837619]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_3a2lx")
+
+[node name="op3_p3" type="TextureRect" parent="." unique_id=1823468913]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_n2hq4")
+
+[node name="op3_p4" type="TextureRect" parent="." unique_id=21620779]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_qmjnb")
+
+[node name="op3_p5" type="TextureRect" parent="." unique_id=1535638834]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_cuoud")
+
+[node name="op3_p6" type="TextureRect" parent="." unique_id=1017811372]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("19_mnpv1")
+
+[node name="op4_p1" type="TextureRect" parent="." unique_id=1467312159]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_iejhw")
+
+[node name="op4_p2" type="TextureRect" parent="." unique_id=599104737]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_lao1s")
+
+[node name="op4_p3" type="TextureRect" parent="." unique_id=871483605]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_udp3s")
+
+[node name="op4_p4" type="TextureRect" parent="." unique_id=1128523176]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_0bhj3")
+
+[node name="op4_p5" type="TextureRect" parent="." unique_id=1270050478]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_bon8d")
+
+[node name="op4_p6" type="TextureRect" parent="." unique_id=2070549699]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("25_v4t0g")
+
+[node name="ContinueText" type="Label" parent="." unique_id=717441613]
+layout_mode = 0
+offset_left = 1749.0
+offset_top = 1177.0
+offset_right = 1907.0
+offset_bottom = 1201.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 17
+text = "▶ Click to continue..."
+
+[node name="DialogueText1" type="Label" parent="." unique_id=138658523]
+visible = false
+layout_mode = 0
+offset_left = 49.0
+offset_top = 36.0
+offset_right = 257.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText2" type="Label" parent="." unique_id=1518113462]
+visible = false
+layout_mode = 0
+offset_left = 688.0
+offset_top = 36.0
+offset_right = 1020.0
+offset_bottom = 136.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText3" type="Label" parent="." unique_id=652283129]
+visible = false
+layout_mode = 0
+offset_left = 1327.0
+offset_top = 39.0
+offset_right = 1671.0
+offset_bottom = 115.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText4" type="Label" parent="." unique_id=1332918443]
+visible = false
+layout_mode = 0
+offset_left = 48.0
+offset_top = 645.0
+offset_right = 219.0
+offset_bottom = 685.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT4"
+horizontal_alignment = 1
+
+[node name="DialogueText5" type="Label" parent="." unique_id=1181421648]
+visible = false
+layout_mode = 0
+offset_left = 682.0
+offset_top = 637.0
+offset_right = 1055.0
+offset_bottom = 727.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText6" type="Label" parent="." unique_id=1718069824]
+visible = false
+layout_mode = 0
+offset_left = 1323.0
+offset_top = 650.0
+offset_right = 1736.0
+offset_bottom = 732.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="DialogueText7" type="Label" parent="." unique_id=2083045566]
+visible = false
+layout_mode = 0
+offset_left = 49.0
+offset_top = 27.0
+offset_right = 257.0
+offset_bottom = 101.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText8" type="Label" parent="." unique_id=539626337]
+visible = false
+layout_mode = 0
+offset_left = 678.0
+offset_top = 38.0
+offset_right = 1010.0
+offset_bottom = 138.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText9" type="Label" parent="." unique_id=1754990953]
+visible = false
+layout_mode = 0
+offset_left = 1317.0
+offset_top = 34.0
+offset_right = 1661.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText10" type="Label" parent="." unique_id=832933496]
+visible = false
+layout_mode = 0
+offset_left = 58.0
+offset_top = 638.0
+offset_right = 229.0
+offset_bottom = 678.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText11" type="Label" parent="." unique_id=778874639]
+visible = false
+layout_mode = 0
+offset_left = 690.0
+offset_top = 636.0
+offset_right = 1063.0
+offset_bottom = 726.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText12" type="Label" parent="." unique_id=1015188084]
+visible = false
+layout_mode = 0
+offset_left = 1537.0
+offset_top = 636.0
+offset_right = 1869.0
+offset_bottom = 727.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+
+[node name="DialogueText13" type="Label" parent="." unique_id=199119142]
+visible = false
+layout_mode = 0
+offset_left = 46.0
+offset_top = 28.0
+offset_right = 254.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText14" type="Label" parent="." unique_id=776673056]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 44.0
+offset_right = 1012.0
+offset_bottom = 144.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText15" type="Label" parent="." unique_id=1190879894]
+visible = false
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 31.0
+offset_right = 1663.0
+offset_bottom = 107.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText16" type="Label" parent="." unique_id=1923380087]
+visible = false
+layout_mode = 0
+offset_left = 43.0
+offset_top = 632.0
+offset_right = 214.0
+offset_bottom = 672.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText17" type="Label" parent="." unique_id=1829840511]
+visible = false
+layout_mode = 0
+offset_left = 682.0
+offset_top = 636.0
+offset_right = 1055.0
+offset_bottom = 726.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText18" type="Label" parent="." unique_id=106764386]
+visible = false
+layout_mode = 0
+offset_left = 1323.0
+offset_top = 639.0
+offset_right = 1736.0
+offset_bottom = 721.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="DialogueText19" type="Label" parent="." unique_id=229770553]
+visible = false
+layout_mode = 0
+offset_left = 44.0
+offset_top = 32.0
+offset_right = 252.0
+offset_bottom = 106.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText20" type="Label" parent="." unique_id=2128983673]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 33.0
+offset_right = 1012.0
+offset_bottom = 133.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText21" type="Label" parent="." unique_id=472657625]
+visible = false
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 37.0
+offset_right = 1663.0
+offset_bottom = 113.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText22" type="Label" parent="." unique_id=1454303412]
+visible = false
+layout_mode = 0
+offset_left = 50.0
+offset_top = 639.0
+offset_right = 221.0
+offset_bottom = 679.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText23" type="Label" parent="." unique_id=712814703]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 642.0
+offset_right = 1053.0
+offset_bottom = 732.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 23
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText24" type="Label" parent="." unique_id=1420433101]
+visible = false
+layout_mode = 0
+offset_left = 1318.0
+offset_top = 641.0
+offset_right = 1731.0
+offset_bottom = 723.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("2_csnvj")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="NextButton" type="Button" parent="." unique_id=918166453]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+flat = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1640260729]
+stream = ExtResource("27_0otps")
+volume_db = -12.18
+autoplay = true

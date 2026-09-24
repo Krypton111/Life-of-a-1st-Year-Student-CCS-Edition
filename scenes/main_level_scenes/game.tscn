@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://yicge48108e0"]
+
+[ext_resource type="PackedScene" uid="uid://boq2gc60fcvv5" path="res://scenes/main_level_scenes/Cafe.tscn" id="1_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player&NPCs/player.tscn" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://b4sc13idrrfln" path="res://scenes/player&NPCs/hosep.tscn" id="2_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://cvnkm1vd41y21" path="res://scenes/player&NPCs/gelo.tscn" id="4_lbhrr"]
+[ext_resource type="PackedScene" uid="uid://s3ifca8ee5i1" path="res://scenes/player&NPCs/marya.tscn" id="5_iywne"]
+
+[node name="World" type="Node2D" unique_id=75316205]
+y_sort_enabled = true
+scale = Vector2(2, 2)
+
+[node name="Cafe" parent="." unique_id=13878766 instance=ExtResource("1_lnu2h")]
+scale = Vector2(1.08, 1.08)
+
+[node name="Player" parent="." unique_id=873346093 instance=ExtResource("1_uwrxv")]
+y_sort_enabled = true
+position = Vector2(-164, 332)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=752476965]
+
+[node name="NPC" parent="." unique_id=1473032720 instance=ExtResource("2_yqjtg")]
+position = Vector2(-84, 425)
+
+[node name="NPC2" parent="." unique_id=1276816549 instance=ExtResource("4_lbhrr")]
+position = Vector2(-186, 209)
+
+[node name="NPC3" parent="." unique_id=1398098153 instance=ExtResource("5_iywne")]
+position = Vector2(-171, 390)

@@ -1,0 +1,11 @@
+{
+   "Name":"Total Rehaul",
+   "Author":"BrutalCleric",
+   "Version":"1.0.1",
+   "Description":"Lots of new furniture and decorations",
+   "UniqueID":"BrutalCleric.CustomFurniture.TotalRehaul",
+   "ContentPackFor":{
+      "UniqueID":"Platonymous.CustomFurniture",
+      "MinimumVersion":"0.11.4"
+   }
+}

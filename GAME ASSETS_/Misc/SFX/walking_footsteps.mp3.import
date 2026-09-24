@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://kpevxpt2rakl"
+path="res://.godot/imported/walking_footsteps.mp3-4d53e9c8ae691735d67d958018ab56cb.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/SFX/walking_footsteps.mp3"
+dest_files=["res://.godot/imported/walking_footsteps.mp3-4d53e9c8ae691735d67d958018ab56cb.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

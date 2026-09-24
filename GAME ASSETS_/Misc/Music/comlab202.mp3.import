@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b3w1q01iuvavd"
+path="res://.godot/imported/comlab202.mp3-88365c840e32b828b6a557a9bbee0b32.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/Music/comlab202.mp3"
+dest_files=["res://.godot/imported/comlab202.mp3-88365c840e32b828b6a557a9bbee0b32.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

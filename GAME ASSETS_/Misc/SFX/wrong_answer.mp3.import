@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b6hb8l2cqyrku"
+path="res://.godot/imported/wrong_answer.mp3-22b645d8868189e586c0c7075f6fcca6.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/SFX/wrong_answer.mp3"
+dest_files=["res://.godot/imported/wrong_answer.mp3-22b645d8868189e586c0c7075f6fcca6.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

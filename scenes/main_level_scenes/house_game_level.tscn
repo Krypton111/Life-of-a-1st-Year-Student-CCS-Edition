@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://cr1ldbjs43cle"]
+
+[ext_resource type="PackedScene" uid="uid://dx8kwfidhkj8n" path="res://scenes/main_level_scenes/house.tscn" id="1_a54da"]
+[ext_resource type="Script" uid="uid://d26hnwf6c74cn" path="res://scripts/Baon.gd" id="2_cpoa5"]
+[ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player&NPCs/player.tscn" id="2_qd638"]
+[ext_resource type="Texture2D" uid="uid://b1rcrlqkvj8if" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_7.png" id="2_ultbk"]
+[ext_resource type="Texture2D" uid="uid://co44ct2dj2ke7" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_16.png" id="3_ncsbb"]
+[ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="4_ultbk"]
+[ext_resource type="Script" uid="uid://crb1ykf0vguwx" path="res://scripts/HouseOpeningController.gd" id="7_reueo"]
+[ext_resource type="PackedScene" uid="uid://dhhko64jds3eo" path="res://scenes/ui/DialogueUI.tscn" id="8_reueo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_m8543"]
+radius = 19.026299
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jy425"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cpoa5"]
+radius = 5.56522
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_reueo"]
+size = Vector2(11.130439, 10.666674)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_reueo"]
+vertices = PackedVector2Array(738.6172, 346.04688, 732.65625, 343.02344, 738.5703, 343.28125, 1469.2031, 581.4297, 1409.5078, 583.8828, 1384.4063, 569.2422, 1433.4375, 555.4531, 1468.0234, 566.6719, 1745, 526.35156, 1752.8203, 542.52344, 1741.3984, 542.2031, 1725.7266, 492.4297, 1730.7422, 496.8203, 1720.5313, 467.21094, 1698.6094, 467.67188, 1286, 409.5, 1286, 431.5703, 1283.2422, 466.03125, 1246.4609, 446.5078, 1213.0781, 403.17188, 1235.2578, 379.8828, 1463.6875, 486.60156, 1427.6328, 454.25, 1708.4531, 430.96875, 1664.6719, 461.5703, 1661.6094, 382.92188, 783.5, 468.45313, 781.4219, 502.71875, 744.7578, 515.3906, 740.9922, 475.39844, 1218.7969, 440.59375, 1219.8203, 505.70313, 1155.6016, 498, 1124.6719, 421.28125, 738.2031, 323.0703, 817.59375, 331, 813.5625, 424, 840.6406, 458.92188, 965.46875, 424, 857.21875, 492.10156, 891.3672, 482.35156, 951.47656, 466.79688, 1028.4688, 391.27344, 1029.5469, 478.72656, 1024.6563, 335.22656, 961.4531, 336.75, 1044, 498, 1078.0313, 408.5625, 1723.8438, 350, 1817, 349.09375, 1817, 359.5078, 1749.9219, 363.10156, 1676.8594, 348, 1694.8281, 383.90625, 1575.4531, 349.0078, 1517.5469, 342.02344, 1525.6328, 384.09375, 1439.2188, 345, 1519.9531, 451.96875, 1527.8438, 444.7422, 1249.0781, 365.2422, 1286.4297, 367.3828, 1342.8438, 400.2422, 1295.6094, 345.95313, 1368.0078, 428.6875)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(3, 4, 5, 6, 7), PackedInt32Array(8, 9, 10, 11), PackedInt32Array(12, 8, 11), PackedInt32Array(13, 12, 11, 14), PackedInt32Array(15, 16, 17, 18, 19, 20), PackedInt32Array(21, 7, 6, 22), PackedInt32Array(23, 13, 14, 24, 25), PackedInt32Array(26, 27, 28, 29, 0), PackedInt32Array(30, 31, 32, 33, 19), PackedInt32Array(2, 34, 35, 36), PackedInt32Array(26, 0, 2, 36, 37), PackedInt32Array(37, 36, 38), PackedInt32Array(39, 37, 38, 40), PackedInt32Array(41, 40, 38), PackedInt32Array(42, 43, 41, 38, 44), PackedInt32Array(38, 45, 44), PackedInt32Array(46, 43, 42, 47, 32), PackedInt32Array(48, 49, 50, 51), PackedInt32Array(52, 48, 51, 53, 25, 54), PackedInt32Array(53, 23, 25), PackedInt32Array(55, 54, 25, 56, 57), PackedInt32Array(58, 21, 22, 57, 56, 59), PackedInt32Array(32, 47, 33), PackedInt32Array(18, 30, 19), PackedInt32Array(15, 20, 60, 61, 62), PackedInt32Array(62, 61, 63, 57), PackedInt32Array(64, 62, 57, 22)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(755, 334, 755, 334, 742, 359, 687, 331), PackedVector2Array(731, 476, 728, 312, 828, 322, 824, 414, 955, 414, 951, 327, 1034, 325, 1038, 384, 1081, 399, 1125, 411, 1208, 394, 1228, 373, 1245, 355, 1280, 357, 1289, 336, 1439, 335, 1518, 332, 1576, 339, 1677, 338, 1724, 340, 1827, 339, 1827, 369, 1752, 373, 1707, 390, 1718, 428, 1730, 464, 1740, 493, 1754, 522, 1769, 553, 1734, 552, 1717, 498, 1694, 477, 1655, 470, 1652, 393, 1536, 394, 1538, 449, 1526, 460, 1474, 492, 1478, 566, 1480, 591, 1407, 594, 1359, 566, 1423, 548, 1418, 461, 1362, 437, 1339, 411, 1296, 418, 1296, 432, 1292, 482, 1243, 456, 1229, 453, 1230, 517, 1155, 508, 1039, 508, 1024, 488, 952, 477, 894, 492, 852, 504, 835, 470, 793, 477, 791, 510, 736, 529)])
+
+[node name="Node2D" type="Node2D" unique_id=21046673]
+y_sort_enabled = true
+position = Vector2(-1667, 176)
+
+[node name="house" parent="." unique_id=204748866 instance=ExtResource("1_a54da")]
+position = Vector2(-3091, -151.00002)
+scale = Vector2(2.75, 2.75)
+
+[node name="Baon" type="Area2D" parent="." unique_id=1104437077]
+position = Vector2(1543, 421)
+script = ExtResource("2_cpoa5")
+
+[node name="Sprite2D" type="Sprite2D" parent="Baon" unique_id=1775443705]
+position = Vector2(-4, -4)
+scale = Vector2(3, 3)
+texture = ExtResource("2_ultbk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Baon" unique_id=1278379362]
+position = Vector2(-1, 2)
+shape = SubResource("CircleShape2D_m8543")
+
+[node name="Player" parent="." unique_id=873346093 instance=ExtResource("2_qd638")]
+y_sort_enabled = true
+position = Vector2(1394, 393)
+scale = Vector2(1.8, 1.8)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=176241388]
+position = Vector2(-7.6293945e-06, 0)
+zoom = Vector2(1.2, 1.2)
+
+[node name="Door_Room202" type="Sprite2D" parent="." unique_id=1113427787]
+position = Vector2(1824, 288.00003)
+scale = Vector2(5.174999, 6.75)
+texture = ExtResource("3_ncsbb")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Door_Room202" unique_id=919962170]
+physics_material_override = SubResource("PhysicsMaterial_jy425")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/StaticBody2D" unique_id=210925304]
+position = Vector2(0, 2.1333275)
+shape = SubResource("CircleShape2D_cpoa5")
+
+[node name="Area2D" type="Area2D" parent="Door_Room202" unique_id=1654756367]
+script = ExtResource("4_ultbk")
+room_name = "School"
+destination_scene = "uid://dtxaj25sp8o5w"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/Area2D" unique_id=1045648632]
+position = Vector2(0, 7.4666634)
+shape = SubResource("RectangleShape2D_reueo")
+
+[node name="OpeningRoute" type="Node2D" parent="." unique_id=1068398048]
+
+[node name="PanicPoint01" type="Marker2D" parent="OpeningRoute" unique_id=1714974244]
+position = Vector2(792, 409)
+
+[node name="PanicPoint02" type="Marker2D" parent="OpeningRoute" unique_id=486313587]
+position = Vector2(780, 341)
+
+[node name="PanicPoint03" type="Marker2D" parent="OpeningRoute" unique_id=542574562]
+position = Vector2(758, 495)
+
+[node name="PanicPoint04" type="Marker2D" parent="OpeningRoute" unique_id=522292516]
+position = Vector2(1051, 472)
+
+[node name="PanicPoint05" type="Marker2D" parent="OpeningRoute" unique_id=1201651832]
+position = Vector2(1154, 435)
+
+[node name="PanicPoint06" type="Marker2D" parent="OpeningRoute" unique_id=1334241616]
+position = Vector2(1322, 366)
+
+[node name="PanicPoint7" type="Marker2D" parent="OpeningRoute" unique_id=88078901]
+position = Vector2(1505, 405)
+
+[node name="PanicPoint8" type="Marker2D" parent="OpeningRoute" unique_id=1284223355]
+position = Vector2(866, 443)
+
+[node name="HouseOpeningController" type="Node" parent="." unique_id=729800770]
+script = ExtResource("7_reueo")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1884333813]
+layer = 10
+
+[node name="DialogueUI" parent="UI" unique_id=1438493306 instance=ExtResource("8_reueo")]
+metadata/_edit_use_anchors_ = true
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=510617187]
+navigation_polygon = SubResource("NavigationPolygon_reueo")

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dsbst1y8nsp0s"]
+
+[ext_resource type="PackedScene" uid="uid://b4sc13idrrfln" path="res://scripts/hosep.tscn" id="1_bl13t"]
+[ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player.tscn" id="2_iyx0m"]
+
+[node name="Node2D" type="Node2D" unique_id=450792057]
+
+[node name="CollisionShape2D" parent="." unique_id=1473032720 instance=ExtResource("1_bl13t")]
+position = Vector2(19, 54)
+
+[node name="Player" parent="." unique_id=873346093 instance=ExtResource("2_iyx0m")]
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1788666214]

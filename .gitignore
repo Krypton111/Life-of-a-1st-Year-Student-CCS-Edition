@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+.DS_Store
+
+# Godot temporary files
+*.tmp
+
+# macOS archive metadata
+__MACOSX/

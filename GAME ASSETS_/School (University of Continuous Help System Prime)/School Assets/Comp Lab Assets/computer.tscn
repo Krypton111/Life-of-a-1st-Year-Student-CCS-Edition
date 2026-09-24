@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dfb72c6c24ku2"]
+
+[ext_resource type="Texture2D" uid="uid://bqptk03d4uqj0" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/Comp Lab Assets/computer.png" id="1_tieyl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e75cx"]
+atlas = ExtResource("1_tieyl")
+region = Rect2(662, 301, 152, 149)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b6cbq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e75cx")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ro6fj"]
+radius = 28.160255
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pjhql"]
+size = Vector2(97, 62.5)
+
+[node name="StaticBody2D" type="StaticBody2D" unique_id=852410739]
+y_sort_enabled = true
+position = Vector2(-361, 204)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1373122406]
+y_sort_enabled = true
+position = Vector2(76, 75)
+sprite_frames = SubResource("SpriteFrames_b6cbq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=769162674]
+position = Vector2(51, 94)
+shape = SubResource("CircleShape2D_ro6fj")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=2004115986]
+position = Vector2(65.5, 74.25)
+shape = SubResource("RectangleShape2D_pjhql")

@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://dhhko64jds3eo"]
+
+[ext_resource type="Script" uid="uid://bv4m07kv6v75m" path="res://scripts/DialogueUI.gd" id="1_6snq5"]
+
+[node name="DialogueUI" type="Control" unique_id=1438493306]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6snq5")
+
+[node name="LeftCharacter" type="TextureRect" parent="." unique_id=854589020]
+layout_mode = 0
+offset_left = -164.0
+offset_top = 129.0
+offset_right = 436.0
+offset_bottom = 929.0
+pivot_offset = Vector2(300, 400)
+
+[node name="RightCharacter" type="TextureRect" parent="." unique_id=838315002]
+layout_mode = 0
+offset_left = 1028.0
+offset_top = 117.0
+offset_right = 1628.0
+offset_bottom = 917.0
+pivot_offset = Vector2(300, 400)
+
+[node name="DialogueBox" type="Panel" parent="." unique_id=414543013]
+custom_minimum_size = Vector2(1720, 300)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -860.0
+offset_top = -387.0
+offset_right = 860.0
+offset_bottom = -87.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SpeakerName" type="Label" parent="DialogueBox" unique_id=2089657532]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 13.0
+offset_right = 466.0
+offset_bottom = 79.0
+
+[node name="DialogueText" type="Label" parent="DialogueBox" unique_id=2053196003]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 91.0
+offset_right = 1707.0
+offset_bottom = 283.0
+
+[node name="ContinuePrompt" type="Label" parent="." unique_id=189402097]
+layout_mode = 0
+offset_left = 1562.0
+offset_top = 1016.0
+offset_right = 1810.0
+offset_bottom = 1065.0
+text = "Click or press SPACE to continue"
+horizontal_alignment = 1
+vertical_alignment = 1
