@@ -379,9 +379,6 @@ func start_dialogue(
 	multi_player_texture: Texture2D = null
 ) -> void:
 
-	# "Don't remind me again" applies only to this dialogue set.
-	skip_dialogue_without_confirmation = false
-
 	dialogue_data = data
 	current_line = 0
 

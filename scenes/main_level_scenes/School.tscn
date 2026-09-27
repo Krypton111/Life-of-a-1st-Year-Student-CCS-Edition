@@ -19,8 +19,8 @@
 [ext_resource type="Script" uid="uid://bd7fxq0b8p6ab" path="res://scripts/LectureRoomBullyInterruption.gd" id="17_11608"]
 [ext_resource type="PackedScene" uid="uid://b7g3xuvxyvfis" path="res://scenes/player&NPCs/sircharles.tscn" id="18_clt8j"]
 [ext_resource type="Script" uid="uid://bn6m0osl1lp1s" path="res://scripts/SchoolNPCGhostCollision.gd" id="19_clt8j"]
-[ext_resource type="PackedScene" path="res://scenes/player&NPCs/tina.tscn" id="20_tina"]
-[ext_resource type="Script" path="res://scripts/TinaHallwayEncounter.gd" id="21_tina"]
+[ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="20_tina"]
+[ext_resource type="Script" uid="uid://cbkwqp147lok1" path="res://scripts/TinaHallwayEncounter.gd" id="21_tina"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_b6cbq"]
 vertices = PackedVector2Array(1194.3906, 123.61719, -31.03125, 120.9375, -26.546875, 108.96875, -80.4375, 78.13281, -94.47656, 75.97656, -92.78906, -161.75781, -91.453125, -161.89063, -39.75, 76.00781, -42.421875, -170.0625, 1210.9063, 87.14844, 1210.9063, 120.09375, 1229.0313, -174.03125, 1276.4219, -162.17188, 1278.1328, 76.21875, 1262.9688, 82.890625, -30.15625, -194.59375, 1211.6563, -202.6875)
@@ -4902,7 +4902,7 @@ script = ExtResource("16_8c38i")
 [node name="LectureRoomBullyInterruption" type="Node" parent="." unique_id=2080266146]
 script = ExtResource("17_11608")
 
-[node name="Tina" parent="." instance=ExtResource("20_tina")]
+[node name="Tina" parent="." unique_id=719591055 instance=ExtResource("20_tina")]
 visible = false
 position = Vector2(620, 454)
 scale = Vector2(1.6, 1.6)
@@ -4911,7 +4911,7 @@ scale = Vector2(1.6, 1.6)
 position = Vector2(1173, 344)
 scale = Vector2(1.7, 1.7)
 
-[node name="TinaHallwayEncounter" type="Node" parent="."]
+[node name="TinaHallwayEncounter" type="Node" parent="." unique_id=1740279583]
 script = ExtResource("21_tina")
 
 [node name="SchoolNPCGhostCollision" type="Node" parent="." unique_id=600807343]

@@ -7,6 +7,15 @@ var dialogue_layer = null
 var is_active := false
 var skip_dialogue_confirmation_disabled := false
 
+func _process(_delta: float) -> void:
+	# Keep the "Don't remind me again" preference in the autoload so it
+	# survives when a scene creates a new DialogueUI instance.
+	if dialogue_ui == null or not is_instance_valid(dialogue_ui):
+		return
+
+	if dialogue_ui.get("skip_dialogue_without_confirmation") == true:
+		skip_dialogue_confirmation_disabled = true
+
 func start_dialogue(dialogue_data: Array, left_texture: Texture2D, right_texture: Texture2D) -> void:
 	if is_active:
 
@@ -31,6 +40,11 @@ func start_dialogue(dialogue_data: Array, left_texture: Texture2D, right_texture
 		is_active = false
 		GameManager.player_controls_locked = false
 		return
+
+	# Restore the session-wide skip preference before the dialogue UI starts.
+	if skip_dialogue_confirmation_disabled:
+		dialogue_ui.set("skip_dialogue_without_confirmation", true)
+
 	if dialogue_ui.has_method("start_dialogue"):
 		dialogue_ui.start_dialogue(dialogue_data, left_texture, right_texture)
 	else:
@@ -63,6 +77,11 @@ func start_multi_dialogue(dialogue_data: Array, speaker_portraits: Dictionary, p
 		is_active = false
 		GameManager.player_controls_locked = false
 		return
+
+	# Restore the session-wide skip preference before the dialogue UI starts.
+	if skip_dialogue_confirmation_disabled:
+		dialogue_ui.set("skip_dialogue_without_confirmation", true)
+
 	if dialogue_ui.has_method("start_multi_dialogue"):
 		dialogue_ui.start_multi_dialogue(dialogue_data, speaker_portraits, player_texture)
 	else:
@@ -144,6 +163,10 @@ func face_character_toward_character(character: CharacterBody2D, target_characte
 func end_dialogue() -> void:
 	if not is_active:
 		return
+	# Capture the local UI preference before the current DialogueUI is released.
+	if dialogue_ui != null and is_instance_valid(dialogue_ui):
+		if dialogue_ui.get("skip_dialogue_without_confirmation") == true:
+			skip_dialogue_confirmation_disabled = true
 	GameManager.player_controls_locked = false
 	# Returning from dialogue restores normal gameplay cursor behavior.
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN

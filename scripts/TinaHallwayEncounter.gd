@@ -291,6 +291,9 @@ func tina_route() -> void:
 			"res://scenes/main_level_scenes/game.tscn"
 		)
 	else:
+		# Wait until the choice UI has fully released before starting the farewell.
+		await wait_for_dialogue_manager_to_be_idle()
+
 		var goodbye := [
 			{"speaker": "Tina", "text": "No worries. Maybe another time."},
 			{"speaker": "Player", "text": "Yeah... take care, Tina."}
@@ -302,6 +305,25 @@ func tina_route() -> void:
 			PLAYER_PORTRAIT
 		)
 		await DialogueManager.dialogue_finished
+
+		# Explicitly continue into the friends route for this branch. Do not rely
+		# on GameManager._process detecting the handoff on a later frame.
+		await walk_tina_off_screen()
+		await start_friend_quiz_encounter()
+
+		# If the friends decline their cafe invitation, immediately continue into
+		# the final post-friends decision instead of waiting for another scene tick.
+		if get_tree().current_scene != null and get_tree().current_scene.scene_file_path.ends_with("School.tscn"):
+			GameManager.tina_post_hallway_sequence_started = true
+			GameManager.tina_post_hallway_sequence_running = true
+			await GameManager._run_tina_post_hallway_sequence()
+
+
+func wait_for_dialogue_manager_to_be_idle() -> void:
+	var safety_frames: int = 0
+	while DialogueManager.is_active and safety_frames < 30:
+		await get_tree().process_frame
+		safety_frames += 1
 
 
 func walk_tina_and_player_to_left() -> void:

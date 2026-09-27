@@ -5,10 +5,13 @@
 [ext_resource type="PackedScene" uid="uid://b4sc13idrrfln" path="res://scenes/player&NPCs/hosep.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://cvnkm1vd41y21" path="res://scenes/player&NPCs/gelo.tscn" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://s3ifca8ee5i1" path="res://scenes/player&NPCs/marya.tscn" id="5_iywne"]
+[ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="6_tina"]
+[ext_resource type="Script" path="res://scripts/CafeDateController.gd" id="7_controller"]
 
 [node name="World" type="Node2D" unique_id=75316205]
 y_sort_enabled = true
 scale = Vector2(2, 2)
+script = ExtResource("7_controller")
 
 [node name="Cafe" parent="." unique_id=13878766 instance=ExtResource("1_lnu2h")]
 scale = Vector2(1.08, 1.08)
@@ -18,6 +21,10 @@ y_sort_enabled = true
 position = Vector2(-164, 332)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=752476965]
+
+[node name="Tina" parent="." unique_id=40411401 instance=ExtResource("6_tina")]
+y_sort_enabled = true
+position = Vector2(-218, 332)
 
 [node name="NPC" parent="." unique_id=1473032720 instance=ExtResource("2_yqjtg")]
 position = Vector2(-84, 425)
