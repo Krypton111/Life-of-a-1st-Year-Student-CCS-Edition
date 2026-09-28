@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://s3ifca8ee5i1" path="res://scenes/player&NPCs/marya.tscn" id="5_iywne"]
 [ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="6_tina"]
 [ext_resource type="Script" path="res://scripts/CafeDateController.gd" id="7_controller"]
+[ext_resource type="PackedScene" path="res://scenes/player&NPCs/kairi.tscn" id="8_kairi"]
+[ext_resource type="PackedScene" path="res://scenes/player&NPCs/kerwin.tscn" id="9_kerwin"]
+[ext_resource type="PackedScene" path="res://scenes/player&NPCs/janssen.tscn" id="10_janssen"]
+[ext_resource type="PackedScene" path="res://scenes/player&NPCs/nathaly.tscn" id="11_nathaly"]
 
 [node name="World" type="Node2D" unique_id=75316205]
 y_sort_enabled = true
@@ -34,3 +38,19 @@ position = Vector2(-186, 209)
 
 [node name="NPC3" parent="." unique_id=1398098153 instance=ExtResource("5_iywne")]
 position = Vector2(-171, 390)
+
+[node name="Kairi" parent="." instance=ExtResource("8_kairi")]
+visible = false
+position = Vector2(-20, 350)
+
+[node name="Kerwin" parent="." instance=ExtResource("9_kerwin")]
+visible = false
+position = Vector2(20, 320)
+
+[node name="Janssen" parent="." instance=ExtResource("10_janssen")]
+visible = false
+position = Vector2(60, 350)
+
+[node name="Nathaly" parent="." instance=ExtResource("11_nathaly")]
+visible = false
+position = Vector2(100, 320)
