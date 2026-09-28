@@ -5,7 +5,7 @@ const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuo
 
 @onready var player: CharacterBody2D = $"../Player"
 @onready var tina: CharacterBody2D = $"../Tina"
-@onready var gelo: CharacterBody2D = $"../NPC"
+@onready var gelo: CharacterBody2D = $"../NPC2"
 @onready var kairi: CharacterBody2D = $"../Kairi"
 @onready var kerwin: CharacterBody2D = $"../Kerwin"
 @onready var janssen: CharacterBody2D = $"../Janssen"
@@ -22,30 +22,38 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	# The hallway controller sets cafe_route immediately before changing
-	# scenes. Do not depend on tina_hallway_encounter_done here because the
+	# scenes. Do not depend on tina_hallway_encounter_done because the
 	# scene transition can happen before the hallway encounter function gets
 	# a chance to set that flag after its awaited call returns.
-	if GameManager.cafe_route != "tina" and GameManager.cafe_route != "friends":
+	var route := GameManager.cafe_route
+	if route != "tina" and route != "friends":
 		return
-
-	if GameManager.cafe_route == "tina":
-		setup_cafe_cast_for_tina()
-	elif GameManager.cafe_route == "friends":
-		setup_cafe_cast_for_friends()
 
 	GameManager.player_controls_locked = true
 	entry_running = true
 
-	# The friends route currently only needs the group to be present.
+	# Wait one frame so every instantiated character in game.tscn is fully
+	# ready before applying route-specific visibility and positions.
+	await get_tree().process_frame
+
+	if route == "tina":
+		setup_cafe_cast_for_tina()
+	elif route == "friends":
+		setup_cafe_cast_for_friends()
+
+	# Consume the one-time route flag after reading it. This prevents a later
+	# return to game.tscn from incorrectly reusing an older hallway choice.
+	GameManager.cafe_route = ""
+
+	# The friends route only needs the group to be present for now.
 	# Leave the existing Tina cinematic untouched for the Tina route.
-	if GameManager.cafe_route == "friends":
+	if route == "friends":
 		entry_running = false
 		GameManager.player_controls_locked = false
 		return
 
 	setup_cinematic_ui()
 	set_cursor_hidden()
-	await get_tree().process_frame
 	await play_cafe_entry()
 	entry_running = false
 	GameManager.player_controls_locked = true
