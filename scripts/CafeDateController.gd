@@ -5,6 +5,11 @@ const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuo
 
 @onready var player: CharacterBody2D = $"../Player"
 @onready var tina: CharacterBody2D = $"../Tina"
+@onready var gelo: CharacterBody2D = $"../NPC"
+@onready var kairi: CharacterBody2D = $"../Kairi"
+@onready var kerwin: CharacterBody2D = $"../Kerwin"
+@onready var janssen: CharacterBody2D = $"../Janssen"
+@onready var nathaly: CharacterBody2D = $"../Nathaly"
 @onready var camera: Camera2D = $"../Player/Camera2D"
 
 var cinematic_ui: CanvasLayer
@@ -19,8 +24,22 @@ func _ready() -> void:
 	if not GameManager.tina_hallway_encounter_done:
 		return
 
+	# Only explicit hallway routes change the cafe cast. An empty route
+	# preserves the existing behavior for the pre-existing/default cafe path.
+	if GameManager.cafe_route == "tina":
+		setup_cafe_cast_for_tina()
+	elif GameManager.cafe_route == "friends":
+		setup_cafe_cast_for_friends()
+
 	GameManager.player_controls_locked = true
 	entry_running = true
+
+	# The friends route currently only needs the group to be present.
+	# Leave the existing Tina cinematic untouched for the Tina route.
+	if GameManager.cafe_route == "friends":
+		entry_running = false
+		GameManager.player_controls_locked = false
+		return
 
 	setup_cinematic_ui()
 	set_cursor_hidden()
@@ -28,6 +47,34 @@ func _ready() -> void:
 	await play_cafe_entry()
 	entry_running = false
 	GameManager.player_controls_locked = true
+
+
+func setup_cafe_cast_for_tina() -> void:
+	# Tina route: Tina remains, while Gelo and all friends are removed
+	# from the playable cafe scene.
+	tina.visible = true
+	gelo.visible = false
+	kairi.visible = false
+	kerwin.visible = false
+	janssen.visible = false
+	nathaly.visible = false
+
+
+func setup_cafe_cast_for_friends() -> void:
+	# Friends route: Tina and Gelo are absent; the four friends are present.
+	tina.visible = false
+	gelo.visible = false
+
+	var center := player.global_position
+	kairi.global_position = center + Vector2(110.0, 35.0)
+	kerwin.global_position = center + Vector2(155.0, -5.0)
+	janssen.global_position = center + Vector2(200.0, 35.0)
+	nathaly.global_position = center + Vector2(245.0, -5.0)
+
+	kairi.visible = true
+	kerwin.visible = true
+	janssen.visible = true
+	nathaly.visible = true
 
 
 func setup_cinematic_ui() -> void:
