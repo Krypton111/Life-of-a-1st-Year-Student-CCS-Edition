@@ -9,6 +9,10 @@ var maclab_challenge_completed := false
 var lecture_challenge_completed := false
 var tina_hallway_encounter_done := false
 
+# Identifies which hallway cafe route entered game.tscn.
+# Empty preserves the existing/default cafe behavior.
+var cafe_route := ""
+
 # Challenge performance percentages. These are stored as 0.0-100.0 so each
 # challenge can have a different maximum score.
 var comlab_performance_score: float = -1.0
