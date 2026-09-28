@@ -21,11 +21,13 @@ var entry_running := false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	if not GameManager.tina_hallway_encounter_done:
+	# The hallway controller sets cafe_route immediately before changing
+	# scenes. Do not depend on tina_hallway_encounter_done here because the
+	# scene transition can happen before the hallway encounter function gets
+	# a chance to set that flag after its awaited call returns.
+	if GameManager.cafe_route != "tina" and GameManager.cafe_route != "friends":
 		return
 
-	# Only explicit hallway routes change the cafe cast. An empty route
-	# preserves the existing behavior for the pre-existing/default cafe path.
 	if GameManager.cafe_route == "tina":
 		setup_cafe_cast_for_tina()
 	elif GameManager.cafe_route == "friends":
