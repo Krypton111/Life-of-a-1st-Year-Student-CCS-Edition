@@ -3,14 +3,14 @@ extends Node
 const PLAYER_PORTRAIT = preload("res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png")
 const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/8-bit Sprite Models/Tina (dating binubully ni mc na ngayon bespren)/tina.png")
 
-@onready var player: CharacterBody2D = $"../Player"
-@onready var tina: CharacterBody2D = $"../Tina"
-@onready var gelo: CharacterBody2D = $"../NPC2"
-@onready var kairi: CharacterBody2D = $"../Kairi"
-@onready var kerwin: CharacterBody2D = $"../Kerwin"
-@onready var janssen: CharacterBody2D = $"../Janssen"
-@onready var nathaly: CharacterBody2D = $"../Nathaly"
-@onready var camera: Camera2D = $"../Player/Camera2D"
+@onready var player: CharacterBody2D = $"Player"
+@onready var tina: CharacterBody2D = $"Tina"
+@onready var gelo: CharacterBody2D = $"NPC2"
+@onready var kairi: CharacterBody2D = $"Kairi"
+@onready var kerwin: CharacterBody2D = $"Kerwin"
+@onready var janssen: CharacterBody2D = $"Janssen"
+@onready var nathaly: CharacterBody2D = $"Nathaly"
+@onready var camera: Camera2D = $"Player/Camera2D"
 
 var cinematic_ui: CanvasLayer
 var top_bar: ColorRect
