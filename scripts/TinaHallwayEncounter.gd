@@ -286,6 +286,9 @@ func tina_route() -> void:
 	)
 
 	if choice == 1:
+		# Explicitly mark this as the Tina + Player cafe route so game.tscn
+		# can hide Gelo and the friends when the cafe scene loads.
+		GameManager.cafe_route = "tina"
 		await walk_tina_and_player_to_left()
 		await FadeManager.change_scene_with_fade(
 			"res://scenes/main_level_scenes/game.tscn"
@@ -550,6 +553,9 @@ func start_friend_quiz_encounter() -> void:
 	)
 
 	if choice == 1:
+		# Mark this as the friends cafe route. game.tscn will then show
+		# Kairi, Kerwin, Janssen, and Nathaly while hiding Tina and Gelo.
+		GameManager.cafe_route = "friends"
 		await get_tree().create_timer(0.35).timeout
 		await hide_cinematic_bars()
 		await FadeManager.change_scene_with_fade(
