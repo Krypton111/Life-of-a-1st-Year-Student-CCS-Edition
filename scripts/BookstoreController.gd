@@ -302,16 +302,25 @@ func handle_bookstore_interaction() -> void:
 	)
 
 
-	# ITEM HAS PRIORITY IF IT IS CLOSE ENOUGH.
-	if nearest_item != null and item_distance <= 20.0:
+	# ITEM HAS PRIORITY IF IT IS WITHIN THE ITEM'S OWN INTERACTION RANGE.
+	# This uses BookstoreItem.gd's exported interaction_distance instead of
+	# a separate hardcoded distance here.
+	if nearest_item != null:
 
-		if nearest_item.has_method(
-			"collect_item"
-		):
+		var item_can_interact := false
+
+		if nearest_item.has_method("can_interact"):
+			item_can_interact = nearest_item.can_interact(player)
+		else:
+			item_can_interact = item_distance <= 50.0
+
+		if item_can_interact and nearest_item.has_method("collect_item"):
 
 			print(
 				"COLLECTING ITEM: ",
-				nearest_item.name
+				nearest_item.name,
+				" | DISTANCE: ",
+				item_distance
 			)
 
 			nearest_item.collect_item()
