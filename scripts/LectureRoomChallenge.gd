@@ -5,6 +5,7 @@ extends Control
 @onready var answer_input: LineEdit = $notebook/AnswerInput
 @onready var submit_button: Button = $notebook/SubmitButton
 @onready var feedback_label: Label = $notebook/FeedbackLabel
+@onready var progress_bar: ProgressBar = $notebook/ProgressBar
 
 @onready var result_panel: Panel = $notebook/ResultPanel
 @onready var result_title: Label = $notebook/ResultPanel/ResultTitle
@@ -156,9 +157,10 @@ func show_question() -> void:
 	feedback_label.text = ""
 	feedback_label.add_theme_color_override(
 		"font_color",
-		Color.WHITE
+		Color("#BCA58E")
 	)
 
+	progress_bar.value = (float(current_question) / float(questions.size())) * 100.0
 	answer_input.grab_focus()
 
 
@@ -217,7 +219,7 @@ func check_answer() -> void:
 
 		feedback_label.add_theme_color_override(
 			"font_color",
-			Color.GREEN
+			Color("#8FB9A8")
 		)
 	else:
 		feedback_label.text = (
@@ -227,7 +229,7 @@ func check_answer() -> void:
 
 		feedback_label.add_theme_color_override(
 			"font_color",
-			Color.RED
+			Color("#D98F78")
 		)
 
 	current_question += 1
@@ -248,6 +250,7 @@ func finish_challenge() -> void:
 	)
 
 	GameManager.lecture_performance_score = final_score
+	progress_bar.value = 100.0
 
 	result_title.text = "Challenge Complete!"
 	score_label.text = "Final Score: %d%%" % final_score
