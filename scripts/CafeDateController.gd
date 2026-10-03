@@ -1,11 +1,13 @@
 extends Node
 
 const PLAYER_PORTRAIT = preload("res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png")
-const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/8-bit Sprite Models/Tina (dating binubully ni mc na ngayon bespren)/tina.png")
+const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Tina/tina.png")
 
 @onready var player: CharacterBody2D = $"Player"
 @onready var tina: CharacterBody2D = $"Tina"
 @onready var gelo: CharacterBody2D = $"NPC2"
+@onready var npc: Node2D = $"NPC"
+@onready var npc3: Node2D = $"NPC3"
 @onready var kairi: CharacterBody2D = $"Kairi"
 @onready var kerwin: CharacterBody2D = $"Kerwin"
 @onready var janssen: CharacterBody2D = $"Janssen"
@@ -56,7 +58,7 @@ func _ready() -> void:
 	set_cursor_hidden()
 	await play_cafe_entry()
 	entry_running = false
-	GameManager.player_controls_locked = true
+	# play_cafe_entry() restores player control after the full dialogue sequence.
 
 
 func setup_cafe_cast_for_tina() -> void:
@@ -68,6 +70,15 @@ func setup_cafe_cast_for_tina() -> void:
 	kerwin.visible = false
 	janssen.visible = false
 	nathaly.visible = false
+
+	set_character_collisions(tina, true)
+	set_character_collisions(gelo, false)
+	set_character_collisions(kairi, false)
+	set_character_collisions(kerwin, false)
+	set_character_collisions(janssen, false)
+	set_character_collisions(nathaly, false)
+	set_character_collisions(npc, npc.visible)
+	set_character_collisions(npc3, npc3.visible)
 
 
 func setup_cafe_cast_for_friends() -> void:
@@ -86,8 +97,39 @@ func setup_cafe_cast_for_friends() -> void:
 	janssen.visible = true
 	nathaly.visible = true
 
+	set_character_collisions(tina, false)
+	set_character_collisions(gelo, false)
+	set_character_collisions(kairi, true)
+	set_character_collisions(kerwin, true)
+	set_character_collisions(janssen, true)
+	set_character_collisions(nathaly, true)
+	set_character_collisions(npc, npc.visible)
+	set_character_collisions(npc3, npc3.visible)
+
+
+func set_character_collisions(character: Node, enabled: bool) -> void:
+	if character == null:
+		return
+
+	for child in character.find_children("*", "CollisionShape2D", true, false):
+		(child as CollisionShape2D).set_deferred("disabled", not enabled)
+
+	for child in character.find_children("*", "CollisionPolygon2D", true, false):
+		(child as CollisionPolygon2D).set_deferred("disabled", not enabled)
+
+	for child in character.find_children("*", "Area2D", true, false):
+		var area := child as Area2D
+		area.set_deferred("monitoring", enabled)
+		area.set_deferred("monitorable", enabled)
+
 
 func setup_cinematic_ui() -> void:
+	# DialogueUI.tscn is a Control. Its parent UI node is the actual CanvasLayer.
+	# Put that CanvasLayer above the cinematic bars.
+	var dialogue_layer := get_node_or_null("UI") as CanvasLayer
+	if dialogue_layer != null:
+		dialogue_layer.layer = 4000
+
 	cinematic_ui = CanvasLayer.new()
 	cinematic_ui.name = "CinematicUI"
 	cinematic_ui.layer = 3000
@@ -99,6 +141,7 @@ func setup_cinematic_ui() -> void:
 	top_bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	top_bar.position = Vector2(0, 0)
 	top_bar.size = Vector2(0, 115)
+	top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_ui.add_child(top_bar)
 
 	bottom_bar = ColorRect.new()
@@ -107,6 +150,7 @@ func setup_cinematic_ui() -> void:
 	bottom_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	bottom_bar.position = Vector2(0, -115)
 	bottom_bar.size = Vector2(0, 115)
+	bottom_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cinematic_ui.add_child(bottom_bar)
 
 	top_bar.modulate.a = 0.0
@@ -117,7 +161,7 @@ func play_cafe_entry() -> void:
 	# The two arrive together from the left side of the cafe entrance.
 	# The target is intentionally modest so the camera frames both characters
 	# without becoming excessively zoomed in.
-	var target_player := player.global_position + Vector2(150.0, 0.0)
+	var target_player := player.global_position + Vector2(150.0, 70.0)
 	var target_tina := target_player + Vector2(-54.0, 0.0)
 
 	player.set_physics_process(false)
@@ -167,8 +211,37 @@ func play_cafe_entry() -> void:
 	)
 	await DialogueManager.dialogue_finished
 
+	# After the initial catch-up, Tina asks what the player wants to order.
+	# For this first cafe sequence, the player's choice is intentionally simple:
+	# a latte. Tina then places an intentionally over-the-top coffee order.
+	var order_dialogue := [
+		{"speaker": "Tina", "text": "Alright, enough reminiscing. What are you getting?"},
+		{"speaker": "Player", "text": "I'll keep it simple. Just a latte."},
+		{"speaker": "Tina", "text": "A latte? That's it?"},
+		{"speaker": "Player", "text": "Yep. Simple, warm, and I know what I'm getting."},
+		{"speaker": "Tina", "text": "Okay, then. I think I know what I want too."},
+		{"speaker": "Tina", "text": "I'll have a grande iced caramel macchiato, oat milk, extra vanilla, two pumps of caramel, one pump of hazelnut, extra caramel drizzle, cold foam, cinnamon powder, light ice, and an extra espresso shot."},
+		{"speaker": "Player", "text": "...That's a lot of coffee."},
+		{"speaker": "Tina", "text": "It's called having standards."},
+		{"speaker": "Player", "text": "I ordered a latte."},
+		{"speaker": "Tina", "text": "And I ordered an experience."}
+	]
+
+	DialogueManager.start_multi_dialogue(
+		order_dialogue,
+		{"Tina": TINA_PORTRAIT},
+		PLAYER_PORTRAIT
+	)
+	await DialogueManager.dialogue_finished
+
 	await hide_cinematic_bars()
 	camera.zoom = Vector2.ONE
+
+	# The cafe arrival sequence is finished. Give control back to the player.
+	player.set_physics_process(true)
+	GameManager.player_controls_locked = false
+	entry_running = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func show_cinematic_bars() -> void:
