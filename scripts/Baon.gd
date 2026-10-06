@@ -25,7 +25,8 @@ func _ready() -> void:
 		if sprite.texture == null:
 			print("WARNING: Baon/Sprite2D has no texture assigned.")
 
-	# If the player already collected the baon, keep it hidden.
+	# If the player already collected the baon,
+	# keep it hidden.
 	if GameManager.has_baon:
 		collected = true
 		visible = false
@@ -54,12 +55,35 @@ func interact() -> void:
 		return
 
 	collected = true
+
+	# Mark the baon as collected.
 	GameManager.has_baon = true
 
-	# Picking up the baon immediately completes the house objective.
-	var quest_manager := get_node_or_null("/root/QuestUIManager")
-	if quest_manager != null and quest_manager.has_method("complete_baon"):
-		quest_manager.complete_baon()
+	# --------------------------------------------------------
+	# UPDATE QUEST POINTER
+	# --------------------------------------------------------
+
+	var player: Node = get_tree().get_first_node_in_group("player")
+
+	if player != null:
+		if player.has_method("_update_quest_pointer"):
+			player._update_quest_pointer()
+
+	# --------------------------------------------------------
+	# COMPLETE BAON OBJECTIVE
+	# --------------------------------------------------------
+
+	var quest_manager := get_node_or_null(
+		"/root/QuestUIManager"
+	)
+
+	if quest_manager != null:
+		if quest_manager.has_method("complete_baon"):
+			quest_manager.complete_baon()
+
+	# --------------------------------------------------------
+	# HIDE BAON
+	# --------------------------------------------------------
 
 	visible = false
 	disable_collision()

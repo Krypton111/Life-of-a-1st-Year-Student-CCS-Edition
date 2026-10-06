@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://vgwmjchh7va7"
+path="res://.godot/imported/bully_entrace_music.mp3-5300a946f5c3cba515665ff83495c1c0.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/Music/bully_entrace_music.mp3"
+dest_files=["res://.godot/imported/bully_entrace_music.mp3-5300a946f5c3cba515665ff83495c1c0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -20,11 +20,16 @@
 [ext_resource type="PackedScene" uid="uid://dov5cfecnqq7w" path="res://scenes/player&NPCs/kerwin.tscn" id="17_ucqny"]
 [ext_resource type="PackedScene" uid="uid://ejf7n6lwtrso" path="res://scenes/player&NPCs/janssen.tscn" id="18_v4p2l"]
 [ext_resource type="PackedScene" uid="uid://cn6ijyqcvca2n" path="res://scenes/player&NPCs/nathaly.tscn" id="19_oyg1y"]
-[ext_resource type="Texture2D" uid="uid://b1rcrlqkvj8if" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_7.png" id="20_5buam"]
 [ext_resource type="Script" uid="uid://dww2mx1fjoorl" path="res://scripts/BookstoreItem.gd" id="21_rmqhq"]
 [ext_resource type="PackedScene" uid="uid://ppwoy6h4mx3j" path="res://scenes/player&NPCs/Ate Libro.tscn" id="21_ucqny"]
 [ext_resource type="PackedScene" uid="uid://dhhko64jds3eo" path="res://scenes/ui/DialogueUI.tscn" id="22_oyg1y"]
 [ext_resource type="PackedScene" uid="uid://dunvwvh5wnort" path="res://scenes/player&NPCs/Kuya Libro.tscn" id="22_v4p2l"]
+[ext_resource type="Texture2D" uid="uid://bxy3ugsy34nr3" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/yellowpad.png" id="25_bomyh"]
+[ext_resource type="Texture2D" uid="uid://cjlhjg5akyo5n" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/ballpen1.png" id="26_v1mcf"]
+[ext_resource type="Texture2D" uid="uid://wak34nh7fe0o" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/ballpen2.png" id="27_ggkil"]
+[ext_resource type="Texture2D" uid="uid://cqn1dn320o8wr" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/ballpen3.png" id="28_wol7b"]
+[ext_resource type="Texture2D" uid="uid://c2mc430g0ad38" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/correction.png" id="29_v6xf7"]
+[ext_resource type="Texture2D" uid="uid://bahe1hyr14aes" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/Static/mamamo question/book.png" id="30_0gb02"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ybxx2"]
 texture = ExtResource("1_5oysd")
@@ -55203,27 +55208,27 @@ texture = ExtResource("3_hfruh")
 sources/0 = SubResource("TileSetAtlasSource_f3s0l")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b6cbq"]
-radius = 6.0
+radius = 19.026306
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ro6fj"]
-radius = 6.5
+radius = 10.005554
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pjhql"]
-radius = 7.0
+radius = 17.362158
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_t4534"]
-radius = 6.5
+radius = 10.338703
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_e3i4n"]
-radius = 6.5
+radius = 20.333344
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lxh5r"]
-radius = 7.017834
+radius = 20.401535
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ro6fj"]
-vertices = PackedVector2Array(246.03125, 136.35938, 248.24219, 136.67969, 245.61719, 140.46875, 91.77344, 79.65625, 90.35156, 74.17969, 266.53906, 69.74219, 186.6875, 76.32031, 109.63281, 179.21094, 106.25, 185, 75.74219, 185, 28.460938, 136.07031, 43.546875, 122.75, 81.8125, 120.28906, 90.6875, 130.14844, 99.25, 148.9375, 99.40625, 129.84375, 126.9375, 147.75781, 163.02344, 177.21094, 241.82031, 158.85156, 244.85156, 176.04688, 165.82031, 187.28125, 165.46875, 129.57813, 265.53906, 51.226563, 285, 50.742188, 288, 109.96094, 263.47656, 111.078125, 260.03906, 77.65625, 127.77344, 128.04688, 182.63281, 130.32813, 206.0625, 133.75781, 216.77344, 129.84375, 237.32813, 129.84375, 164.88281, 81.21094, 186.02344, 111.25, 184.1875, 116.63281)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(3, 4, 5, 6), PackedInt32Array(7, 8, 9, 10, 11, 12, 13, 14), PackedInt32Array(13, 15, 14), PackedInt32Array(7, 14, 16, 17), PackedInt32Array(18, 19, 20, 17, 21), PackedInt32Array(5, 22, 23, 24), PackedInt32Array(5, 24, 25, 26), PackedInt32Array(16, 27, 21, 17), PackedInt32Array(2, 18, 21, 28, 29), PackedInt32Array(30, 31, 0, 2, 29), PackedInt32Array(5, 26, 6), PackedInt32Array(32, 3, 6), PackedInt32Array(21, 32, 6, 33, 34), PackedInt32Array(21, 34, 28)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(77.5, 64.5, 84, 89.5, 155, 91, 155.33334, 119.16667, 122.66667, 117.833336, 118, 122.5, 117.333336, 138.16667, 109.333336, 138.5, 109.5, 119.5, 95, 120, 86, 110, 39.5, 113, 14, 135.5, 71.5, 195, 112, 195, 115.5, 189, 155.5, 187.5, 158, 196.5, 165, 197.5, 256.5, 184.5, 252, 159, 255, 144.5, 265.6667, 129.16667, 250, 126.83334, 240.66667, 119.833336, 215, 119.833336, 205, 123.5, 193.66667, 121.833336, 194, 118.833336, 196, 113, 196.5, 86.5, 251, 87.5, 254.5, 121.5, 298.5, 119.5, 294.5, 40.5, 255, 41.5, 256, 60)])
+vertices = PackedVector2Array(239.0625, 134.92188, 258.97656, 134.50781, 273.92188, 137.67188, 246.72656, 140.20313, 220.29688, 142.09375, 184.45313, 162.57031, 279.9297, 166.1875, 272.71875, 178.50781, 194.13281, 183.45313, 156.09375, 177.46875, 91.77344, 79.65625, 90.35156, 74.17969, 266.53906, 69.74219, 186.6875, 76.32031, 259.0078, 134.13281, 229.03906, 130.45313, 109.63281, 179.21094, 106.25, 185, 75.74219, 185, 28.460938, 136.07031, 43.546875, 122.75, 81.8125, 120.28906, 90.6875, 130.14844, 99.25, 148.9375, 99.40625, 129.84375, 126.9375, 147.75781, 265.53906, 51.226563, 284.78906, 50.75, 286.70313, 116.3125, 262.75, 116.67969, 260.4297, 77.671875, 127.77344, 128.04688, 165.46875, 129.57813, 177.99219, 143.96875, 185.60156, 135.22656, 179.21094, 132.89844, 219.45313, 127.96094, 224.71875, 125.75781, 207.03906, 133.54688, 181.5, 112.046875, 164.88281, 81.21094, 186.07813, 108.22656)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(5, 6, 7, 8, 9), PackedInt32Array(10, 11, 12, 13), PackedInt32Array(0, 14, 1), PackedInt32Array(15, 0, 4), PackedInt32Array(16, 17, 18, 19, 20, 21, 22, 23), PackedInt32Array(22, 24, 23), PackedInt32Array(16, 23, 25, 9), PackedInt32Array(12, 26, 27, 28), PackedInt32Array(12, 28, 29, 30), PackedInt32Array(5, 9, 25, 31, 32, 33), PackedInt32Array(34, 33, 32, 35), PackedInt32Array(36, 37, 15, 4, 38), PackedInt32Array(38, 4, 34, 35), PackedInt32Array(39, 35, 32, 40), PackedInt32Array(41, 39, 40, 13), PackedInt32Array(12, 30, 13), PackedInt32Array(10, 13, 40)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(77.5, 64.5, 84, 89.5, 155, 91, 155.33334, 119.16667, 122.66667, 117.833336, 118, 122.5, 117.333336, 138.16667, 109.333336, 138.5, 109.5, 119.5, 95, 120, 86, 110, 39.5, 113, 14, 135.5, 71.5, 195, 112, 195, 115.5, 189, 155.5, 187.5, 193.66667, 193.5, 278.6667, 188.16667, 297, 156.83334, 191.66667, 152.83334, 189.33334, 146.16667, 219.66667, 152.16667, 247.66667, 150.16667, 290.6667, 146.16667, 294.6667, 131.83334, 258.33334, 124.16667, 241, 124.833336, 235, 122.16667, 227.33334, 113.833336, 215.33334, 118.833336, 205, 123.5, 190.33334, 123.16667, 191, 117.16667, 196, 113, 196.5, 86.5, 251, 87.5, 253.33334, 126.83334, 297, 126.16667, 294.5, 40.5, 255, 41.5, 256, 60)])
 
 [node name="Bookstore" type="Node2D" unique_id=1237187797]
 y_sort_enabled = true
@@ -55399,22 +55404,17 @@ position = Vector2(210.5, 170.5)
 scale = Vector2(0.4, 0.4)
 script = ExtResource("16_r3tnc")
 
-[node name="Nathaly" parent="." unique_id=614660421 instance=ExtResource("19_oyg1y")]
-position = Vector2(277.5, 124)
-scale = Vector2(0.3, 0.3)
-script = ExtResource("16_r3tnc")
-
 [node name="Ate Libro" parent="." unique_id=1473032720 instance=ExtResource("21_ucqny")]
 position = Vector2(60.5, 79)
 scale = Vector2(0.5, 0.5)
 script = ExtResource("16_r3tnc")
-interaction_distance = 60.0
+interaction_distance = 50.0
 
 [node name="Kuya Libro" parent="." unique_id=568813684 instance=ExtResource("22_v4p2l")]
 position = Vector2(247.5, 169.5)
 scale = Vector2(0.5, 0.5)
 script = ExtResource("16_r3tnc")
-interaction_distance = 60.0
+interaction_distance = 50.0
 
 [node name="CinematicCamera" type="Camera2D" parent="." unique_id=976136145]
 position = Vector2(749, 97.00003)
@@ -55541,12 +55541,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="YellowPad" unique_id=755362630]
 y_sort_enabled = true
-position = Vector2(87.5, 136)
-texture = ExtResource("20_5buam")
+position = Vector2(113.66668, 131)
+scale = Vector2(0.0067777755, 0.0067777853)
+texture = ExtResource("25_bomyh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="YellowPad" unique_id=905171004]
 y_sort_enabled = true
-position = Vector2(88.5, 138.5)
+position = Vector2(113.333336, 137.33333)
 shape = SubResource("CircleShape2D_b6cbq")
 
 [node name="Ballpen1" type="Area2D" parent="." unique_id=956254724]
@@ -55555,12 +55556,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ballpen1" unique_id=1749491553]
 y_sort_enabled = true
-position = Vector2(161, 147)
-texture = ExtResource("20_5buam")
+position = Vector2(188.66667, 143.99998)
+scale = Vector2(0.006, 0.006)
+texture = ExtResource("26_v1mcf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ballpen1" unique_id=1207662840]
 y_sort_enabled = true
-position = Vector2(161.5, 149.5)
+position = Vector2(185.66667, 142.66667)
 shape = SubResource("CircleShape2D_ro6fj")
 
 [node name="Ballpen2" type="Area2D" parent="." unique_id=1119149266]
@@ -55569,12 +55571,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ballpen2" unique_id=247892709]
 y_sort_enabled = true
-position = Vector2(84.5, 151.5)
-texture = ExtResource("20_5buam")
+position = Vector2(77.333336, 107.999985)
+scale = Vector2(0.006, 0.006)
+texture = ExtResource("27_ggkil")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ballpen2" unique_id=652282132]
 y_sort_enabled = true
-position = Vector2(85.5, 153.5)
+position = Vector2(78, 115.99999)
 shape = SubResource("CircleShape2D_pjhql")
 
 [node name="Ballpen3" type="Area2D" parent="." unique_id=1803399734]
@@ -55583,12 +55586,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="Ballpen3" unique_id=1123768389]
 y_sort_enabled = true
-position = Vector2(124.5, 150.5)
-texture = ExtResource("20_5buam")
+position = Vector2(206.6667, 126.666664)
+scale = Vector2(0.0048888847, 0.0047345455)
+texture = ExtResource("28_wol7b")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ballpen3" unique_id=1815969025]
 y_sort_enabled = true
-position = Vector2(125, 152.5)
+position = Vector2(208.33333, 130)
 shape = SubResource("CircleShape2D_t4534")
 
 [node name="CorrectionTape" type="Area2D" parent="." unique_id=928756392]
@@ -55597,12 +55601,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="CorrectionTape" unique_id=2049954393]
 y_sort_enabled = true
-position = Vector2(61.5, 147)
-texture = ExtResource("20_5buam")
+position = Vector2(124.66666, 57.666668)
+scale = Vector2(0.003, 0.003)
+texture = ExtResource("29_v6xf7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CorrectionTape" unique_id=62765530]
 y_sort_enabled = true
-position = Vector2(62.5, 149.5)
+position = Vector2(127, 67.333336)
 shape = SubResource("CircleShape2D_e3i4n")
 
 [node name="DiscreteMathBook" type="Area2D" parent="." unique_id=286551703]
@@ -55611,12 +55616,13 @@ script = ExtResource("21_rmqhq")
 
 [node name="Sprite2D" type="Sprite2D" parent="DiscreteMathBook" unique_id=1946246559]
 y_sort_enabled = true
-position = Vector2(147, 149)
-texture = ExtResource("20_5buam")
+position = Vector2(261.66666, 126.666664)
+scale = Vector2(0.008, 0.008)
+texture = ExtResource("30_0gb02")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DiscreteMathBook" unique_id=2030050263]
 y_sort_enabled = true
-position = Vector2(147.5, 151)
+position = Vector2(262, 126.66667)
 shape = SubResource("CircleShape2D_lxh5r")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1187217601]
@@ -55637,3 +55643,8 @@ navigation_polygon = SubResource("NavigationPolygon_ro6fj")
 
 [node name="ExitSpot" type="Marker2D" parent="." unique_id=1301765051]
 position = Vector2(273.5, 81)
+
+[node name="Nathaly" parent="." unique_id=614660421 instance=ExtResource("19_oyg1y")]
+position = Vector2(95.6667, 162.33333)
+scale = Vector2(0.3, 0.3)
+script = ExtResource("16_r3tnc")

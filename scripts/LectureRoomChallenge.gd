@@ -5,6 +5,11 @@ extends Control
 @onready var answer_input: LineEdit = $notebook/AnswerInput
 @onready var submit_button: Button = $notebook/SubmitButton
 @onready var feedback_label: Label = $notebook/FeedbackLabel
+@onready var progress_bar: ProgressBar = $notebook/ProgressBar
+@onready var notebook: TextureRect = $notebook
+@onready var paper_answers: TextureRect = $PaperAnswers
+@onready var notebook_drag_bar: Control = $notebook/DragBar
+@onready var paper_drag_bar: Control = $PaperAnswers/DragBar
 
 @onready var result_panel: Panel = $notebook/ResultPanel
 @onready var result_title: Label = $notebook/ResultPanel/ResultTitle
@@ -14,6 +19,10 @@ extends Control
 var current_question: int = 0
 var score: int = 0
 var processing_answer: bool = false
+
+# The guide appears only when the player went with the friends and
+# completed the required bookstore material list.
+var paper_answers_available: bool = false
 
 var questions: Array[Dictionary] = [
 	{
@@ -124,13 +133,129 @@ var questions: Array[Dictionary] = [
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	submit_button.pressed.connect(_on_submit_pressed)
-	continue_button.pressed.connect(_on_continue_pressed)
-	answer_input.text_submitted.connect(_on_answer_submitted)
+	if not submit_button.pressed.is_connected(_on_submit_pressed):
+		submit_button.pressed.connect(_on_submit_pressed)
+	if not continue_button.pressed.is_connected(_on_continue_pressed):
+		continue_button.pressed.connect(_on_continue_pressed)
+	if not answer_input.text_submitted.is_connected(_on_answer_submitted):
+		answer_input.text_submitted.connect(_on_answer_submitted)
 
 	result_panel.visible = false
 
+	setup_answer_guide()
+	setup_document_layer_clicks()
+
 	show_question()
+
+
+func setup_answer_guide() -> void:
+	# The guide is a reward for taking the FRIENDS route to the bookstore
+	# and actually buying the required materials.
+	#
+	# We intentionally check the individual GameManager purchase variables
+	# instead of depending only on bookstore_completed. This makes the guide
+	# appear as soon as the four required purchases are truly recorded.
+	paper_answers_available = (
+		GameManager.friends_bookstore_choice == 1
+		and GameManager.bookstore_completed
+		and GameManager.bookstore_yellow_pad
+		and GameManager.bookstore_ballpens >= 3
+		and GameManager.bookstore_correction_tape
+		and GameManager.bookstore_discrete_math_book
+	)
+
+	paper_answers.visible = paper_answers_available
+
+	if not paper_answers_available:
+		return
+
+	# The paper starts behind the notebook, but is deliberately offset so a
+	# visible part of it remains exposed and can be clicked.
+	paper_answers.position = Vector2(-500.0, -430.0)
+	paper_answers.z_index = 1
+	notebook.z_index = 2
+
+	connect_document_input()
+
+
+func connect_document_input() -> void:
+	if paper_drag_bar != null:
+		paper_drag_bar.mouse_filter = Control.MOUSE_FILTER_STOP
+		paper_drag_bar.mouse_default_cursor_shape = Control.CURSOR_MOVE
+		if not paper_drag_bar.gui_input.is_connected(_on_paper_drag_bar_gui_input):
+			paper_drag_bar.gui_input.connect(_on_paper_drag_bar_gui_input)
+
+	if paper_answers != null:
+		paper_answers.mouse_filter = Control.MOUSE_FILTER_STOP
+		if not paper_answers.gui_input.is_connected(_on_paper_gui_input):
+			paper_answers.gui_input.connect(_on_paper_gui_input)
+
+	if notebook_drag_bar != null:
+		notebook_drag_bar.mouse_filter = Control.MOUSE_FILTER_STOP
+		notebook_drag_bar.mouse_default_cursor_shape = Control.CURSOR_MOVE
+		if not notebook_drag_bar.gui_input.is_connected(_on_notebook_drag_bar_gui_input):
+			notebook_drag_bar.gui_input.connect(_on_notebook_drag_bar_gui_input)
+
+	if notebook != null:
+		notebook.mouse_filter = Control.MOUSE_FILTER_STOP
+		if not notebook.gui_input.is_connected(_on_notebook_gui_input):
+			notebook.gui_input.connect(_on_notebook_gui_input)
+
+
+func setup_document_layer_clicks() -> void:
+	# Input is connected in setup_answer_guide() after the route check.
+	# Keep this function because the challenge startup calls it separately.
+	if notebook_drag_bar != null:
+		notebook_drag_bar.mouse_default_cursor_shape = Control.CURSOR_MOVE
+
+	if paper_drag_bar != null:
+		paper_drag_bar.mouse_default_cursor_shape = Control.CURSOR_MOVE
+
+
+func _on_paper_drag_bar_gui_input(event: InputEvent) -> void:
+	if not paper_answers_available:
+		return
+
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
+			move_document_to_front(paper_answers)
+
+
+func _on_notebook_drag_bar_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
+			move_document_to_front(notebook)
+
+
+func _on_paper_gui_input(event: InputEvent) -> void:
+	if not paper_answers_available:
+		return
+
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
+			move_document_to_front(paper_answers)
+
+
+func _on_notebook_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
+			move_document_to_front(notebook)
+
+
+func move_document_to_front(document: Control) -> void:
+	if document == null:
+		return
+
+	if document == notebook:
+		notebook.z_index = 3
+		paper_answers.z_index = 2
+	else:
+		paper_answers.z_index = 3
+		notebook.z_index = 2
 
 
 func show_question() -> void:
@@ -156,9 +281,10 @@ func show_question() -> void:
 	feedback_label.text = ""
 	feedback_label.add_theme_color_override(
 		"font_color",
-		Color.WHITE
+		Color("#BCA58E")
 	)
 
+	progress_bar.value = (float(current_question) / float(questions.size())) * 100.0
 	answer_input.grab_focus()
 
 
@@ -217,7 +343,7 @@ func check_answer() -> void:
 
 		feedback_label.add_theme_color_override(
 			"font_color",
-			Color.GREEN
+			Color("#8FB9A8")
 		)
 	else:
 		feedback_label.text = (
@@ -227,7 +353,7 @@ func check_answer() -> void:
 
 		feedback_label.add_theme_color_override(
 			"font_color",
-			Color.RED
+			Color("#D98F78")
 		)
 
 	current_question += 1
@@ -248,6 +374,7 @@ func finish_challenge() -> void:
 	)
 
 	GameManager.lecture_performance_score = final_score
+	progress_bar.value = 100.0
 
 	result_title.text = "Challenge Complete!"
 	score_label.text = "Final Score: %d%%" % final_score

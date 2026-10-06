@@ -17,12 +17,18 @@ extends Node
 
 var running: bool = false
 var player_camera: Camera2D = null
+var bully_entrance_music: AudioStreamPlayer = null
+var bully_music_tween: Tween = null
 
 const JOE_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Bullies/Joe/Joe.png")
 const JOEY_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Bullies/Joey/Joey.png")
 const JOSEPH_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Bullies/Joseph/Joseph.png")
 const PLAYER_HD = preload("res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png")
+const BULLY_ENTRANCE_MUSIC = preload("res://GAME ASSETS_/Misc/Music/bully_entrace_music.mp3")
 
+const BULLY_MUSIC_FULL_VOLUME: float = 0.0
+const BULLY_MUSIC_DIALOGUE_VOLUME: float = -10.0
+const BULLY_MUSIC_FADE_TIME: float = 1.25
 
 func _ready() -> void:
 	top_bar.visible = false
@@ -53,6 +59,8 @@ func start_encounter() -> void:
 	running = true
 
 	GameManager.player_controls_locked = true
+
+	start_bully_entrance_music()
 
 	joe.visible = true
 	joey.visible = true
@@ -100,6 +108,78 @@ func stop_bullies() -> void:
 	joe.set_physics_process(false)
 	joey.set_physics_process(false)
 	joseph.set_physics_process(false)
+
+
+func start_bully_entrance_music() -> void:
+	if bully_entrance_music == null:
+		bully_entrance_music = AudioStreamPlayer.new()
+		bully_entrance_music.name = "BullyEntranceMusic"
+		bully_entrance_music.stream = BULLY_ENTRANCE_MUSIC
+		bully_entrance_music.bus = "Master"
+		add_child(bully_entrance_music)
+
+	bully_entrance_music.volume_db = -40.0
+	bully_entrance_music.play()
+
+	if bully_music_tween != null and bully_music_tween.is_valid():
+		bully_music_tween.kill()
+
+	bully_music_tween = create_tween()
+	bully_music_tween.tween_property(
+		bully_entrance_music,
+		"volume_db",
+		BULLY_MUSIC_FULL_VOLUME,
+		BULLY_MUSIC_FADE_TIME
+	)
+
+
+func fade_bully_music_for_dialogue() -> void:
+	if bully_entrance_music == null or not bully_entrance_music.playing:
+		return
+
+	if bully_music_tween != null and bully_music_tween.is_valid():
+		bully_music_tween.kill()
+
+	bully_music_tween = create_tween()
+	bully_music_tween.tween_property(
+		bully_entrance_music,
+		"volume_db",
+		BULLY_MUSIC_DIALOGUE_VOLUME,
+		BULLY_MUSIC_FADE_TIME
+	)
+
+
+func restore_bully_music_after_dialogue() -> void:
+	if bully_entrance_music == null or not bully_entrance_music.playing:
+		return
+
+	if bully_music_tween != null and bully_music_tween.is_valid():
+		bully_music_tween.kill()
+
+	bully_music_tween = create_tween()
+	bully_music_tween.tween_property(
+		bully_entrance_music,
+		"volume_db",
+		BULLY_MUSIC_FULL_VOLUME,
+		BULLY_MUSIC_FADE_TIME
+	)
+
+
+func fade_out_bully_entrance_music() -> void:
+	if bully_entrance_music == null:
+		return
+
+	if bully_music_tween != null and bully_music_tween.is_valid():
+		bully_music_tween.kill()
+
+	bully_music_tween = create_tween()
+	bully_music_tween.tween_property(
+		bully_entrance_music,
+		"volume_db",
+		-40.0,
+		BULLY_MUSIC_FADE_TIME
+	)
+	bully_music_tween.tween_callback(bully_entrance_music.stop)
 
 
 func show_cinematic_bars() -> void:
@@ -593,6 +673,8 @@ func bullies_walk_offscreen() -> void:
 	joey.visible = false
 	joseph.visible = false
 
+	await fade_out_bully_entrance_music()
+
 	await hide_cinematic_bars()
 
 	await restore_player_camera()
@@ -652,6 +734,8 @@ func hide_cinematic_bars() -> void:
 
 
 func start_bully_dialogue() -> void:
+	fade_bully_music_for_dialogue()
+
 	var portraits: Dictionary = {
 		"Joe": JOE_HD,
 		"Joey": JOEY_HD,

@@ -6375,3 +6375,15 @@ scale = Vector2(0.7, 0.7)
 stream = ExtResource("8_pbua3")
 volume_db = -13.293
 autoplay = true
+
+[node name="QuestMarker_Challenge1" type="Marker2D" parent="." unique_id=1900022883]
+position = Vector2(591.3333, 298.6667)
+scale = Vector2(0.36036035, 0.36036035)
+
+[node name="QuestMarker_Door1" type="Marker2D" parent="." unique_id=609837299]
+position = Vector2(288, 160.66666)
+scale = Vector2(0.36036032, 0.36036032)
+
+[node name="QuestMarker_Talk1" type="Marker2D" parent="." unique_id=1302734026]
+position = Vector2(442.66672, 204)
+scale = Vector2(0.19478935, 0.19478935)

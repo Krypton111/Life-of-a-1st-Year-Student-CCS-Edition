@@ -6326,9 +6326,6 @@ position = Vector2(454, 275)
 y_sort_enabled = true
 position = Vector2(377.00003, 201)
 scale = Vector2(1.2, 1.2)
-walk_speed = null
-sprint_speed = null
-sprint_animation_speed = null
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=231158246]
 position = Vector2(-7.6293945e-06, 0)
@@ -6364,3 +6361,15 @@ layer = 10
 
 [node name="DialogueUI" parent="UI" unique_id=1438493306 instance=ExtResource("8_je51l")]
 metadata/_edit_use_anchors_ = true
+
+[node name="QuestMarker_Challenge2" type="Marker2D" parent="." unique_id=1444955347]
+position = Vector2(621.6215, 270.27026)
+scale = Vector2(0.5405405, 0.5405405)
+
+[node name="QuestMarker_Door2" type="Marker2D" parent="." unique_id=1135406299]
+position = Vector2(377.29724, 183.78378)
+scale = Vector2(0.54054046, 0.54054046)
+
+[node name="QuestMarker_Talk2" type="Marker2D" parent="." unique_id=972253597]
+position = Vector2(511.35126, 213.51352)
+scale = Vector2(0.10529152, 0.10529152)

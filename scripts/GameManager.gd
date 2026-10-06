@@ -1,5 +1,28 @@
 extends Node
 
+# ============================================================
+# QUEST POINTER SETTINGS
+# ============================================================
+
+var quest_pointer_enabled: bool = true
+
+# ============================================================
+# PROFESSOR TALK STATES
+# ============================================================
+
+# ============================================================
+# PROFESSOR QUEST STATES
+# ============================================================
+
+var comlab_professor_talked: bool = false
+var comlab_second_professor_talked: bool = false
+
+var maclab_professor_talked: bool = false
+var maclab_second_professor_talked: bool = false
+
+var lecture_professor_talked: bool = false
+var lecture_second_professor_talked: bool = false
+
 var has_baon := false
 var house_opening_completed := false
 var lecture_bully_interruption_done := false
@@ -8,6 +31,10 @@ var quiz_completed := false
 var maclab_challenge_completed := false
 var lecture_challenge_completed := false
 var tina_hallway_encounter_done := false
+
+# Identifies which hallway cafe route entered game.tscn.
+# Empty preserves the existing/default cafe behavior.
+var cafe_route := ""
 
 # Challenge performance percentages. These are stored as 0.0-100.0 so each
 # challenge can have a different maximum score.
@@ -354,3 +381,7 @@ var bookstore_talked_to_friends := false
 var bookstore_completed := false
 
 var bookstore_return_event_pending := false
+
+# Persistent achievement state. AchievementManager writes to this dictionary,
+# and the 10-slot SaveManager serializes it automatically.
+var achievements_unlocked: Dictionary = {}

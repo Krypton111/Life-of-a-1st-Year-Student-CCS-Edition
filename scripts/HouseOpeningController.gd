@@ -67,9 +67,36 @@ func _ready() -> void:
 	await start_house_opening()
 
 
+# =========================================
+# PLAYER SAFETY HELPERS
+# =========================================
+
+func is_player_usable() -> bool:
+	if player == null:
+		return false
+
+	if not is_instance_valid(player):
+		return false
+
+	if not player.is_inside_tree():
+		return false
+
+	var world := player.get_world_2d()
+	if world == null:
+		return false
+
+	if not world.space.is_valid():
+		return false
+
+	return true
+
+
+# =========================================
+# MAIN FLOW
+# =========================================
+
 func start_house_opening() -> void:
 
-	# Make sure the player starts from a completely normal controllable state.
 	GameManager.player_controls_locked = false
 	player.velocity = Vector2.ZERO
 
@@ -96,7 +123,9 @@ func start_house_opening() -> void:
 
 	GameManager.house_opening_completed = true
 	GameManager.player_controls_locked = false
-	player.velocity = Vector2.ZERO
+
+	if is_player_usable():
+		player.velocity = Vector2.ZERO
 
 	restore_player_animation()
 
@@ -242,10 +271,8 @@ func play_automatic_panic_monologue() -> void:
 		GameManager.player_controls_locked = false
 		return
 
-	# Do not let the player skip the automatic spiral.
 	dialogue_ui.input_enabled = false
 
-	# The continue prompt would imply that input is allowed, so hide it here.
 	var continue_prompt := dialogue_ui.get_node_or_null(
 		"ContinuePrompt"
 	) as Label
@@ -253,23 +280,16 @@ func play_automatic_panic_monologue() -> void:
 	if continue_prompt:
 		continue_prompt.visible = false
 
-	# Keep the first line slow, then accelerate the typing speed line by line.
 	dialogue_ui.typing_speed = AUTO_PANIC_SPEEDS[0]
 
 	panic_route_running = true
 	panic_footstep_timer = 0.0
 
-	# Start the panic movement separately from the dialogue coroutine.
-	# call_deferred() lets the route run without blocking the dialogue loop.
-	# Disable the player's normal physics process so Player.gd cannot pause the
-	# AnimatedSprite2D every physics frame while this controller is running the panic.
 	player.set_physics_process(false)
 	call_deferred("run_panic_route")
 
-	# Wait for the dialogue entrance animation and first line to become active.
 	await wait_for_dialogue_ui_entered(dialogue_ui)
 
-	# The player's normal script is locked. This controller now moves the player.
 	GameManager.player_controls_locked = true
 
 	for line_index in range(dialogue.size()):
@@ -282,7 +302,6 @@ func play_automatic_panic_monologue() -> void:
 			AUTO_PANIC_SPEEDS.size() - 1
 		)
 
-		# Change typing speed immediately so the current/next characters accelerate.
 		dialogue_ui.typing_speed = AUTO_PANIC_SPEEDS[speed_index]
 
 		while DialogueManager.is_active and dialogue_ui.is_typing:
@@ -308,33 +327,25 @@ func play_automatic_panic_monologue() -> void:
 			dialogue_ui.typing_speed = AUTO_PANIC_SPEEDS[next_speed_index]
 			dialogue_ui.advance_to_next_line()
 
-	# Wait until the final line has finished typing.
 	while DialogueManager.is_active and dialogue_ui.is_typing:
 		await get_tree().process_frame
 
 	if DialogueManager.is_active:
 		await get_tree().create_timer(0.15).timeout
 
-		# Only advance if the dialogue is still active. If the player used
-		# "Skip All", DialogueUI has already ended this dialogue set.
 		if DialogueManager.is_active:
 			dialogue_ui.advance_to_next_line()
 
-	# IMPORTANT: Skip All can end the dialogue before this point. In that case
-	# dialogue_finished was already emitted, so awaiting it here would wait
-	# forever and prevent the parent phone call from starting.
 	if DialogueManager.is_active:
 		await DialogueManager.dialogue_finished
 
-	# Stop the panic movement immediately when the automatic dialogue is skipped.
 	panic_route_running = false
 
-	# Wait for the panic movement coroutine to finish cleanly before continuing.
 	while panic_route_running:
 		await get_tree().physics_frame
 
-	# Restore the player's normal physics process after the automatic panic.
-	player.set_physics_process(true)
+	if is_player_usable():
+		player.set_physics_process(true)
 
 
 # =========================================
@@ -358,7 +369,6 @@ func load_panic_route() -> void:
 		if marker != null:
 			panic_route.append(marker)
 
-	# Sort markers by name so PanicPoint01, PanicPoint02, etc. are followed in order.
 	panic_route.sort_custom(func(a: Marker2D, b: Marker2D):
 		return a.name.naturalnocasecmp_to(b.name) < 0
 	)
@@ -396,8 +406,6 @@ func get_panic_navigation_target(target_position: Vector2) -> Vector2:
 	if not navigation_map.is_valid():
 		return target_position
 
-	# Snap the target to the nearest point on the navigation mesh so a panic
-	# marker placed slightly outside the walkable area does not break the route.
 	return NavigationServer2D.map_get_closest_point(
 		navigation_map,
 		target_position
@@ -406,12 +414,16 @@ func get_panic_navigation_target(target_position: Vector2) -> Vector2:
 
 func run_panic_route() -> void:
 
-	if player == null:
+	if not is_player_usable():
 		panic_route_running = false
 		return
 
 	if panic_route.is_empty():
 		while panic_route_running and DialogueManager.is_active:
+			if not is_player_usable():
+				panic_route_running = false
+				return
+
 			update_panic_animation(Vector2.ZERO)
 			await get_tree().physics_frame
 
@@ -426,9 +438,13 @@ func run_panic_route() -> void:
 		if not panic_route_running or not DialogueManager.is_active:
 			break
 
+		if not is_player_usable():
+			panic_route_running = false
+			return
+
 		await move_player_to_panic_point(marker.global_position)
 
-	if player:
+	if is_player_usable():
 		player.velocity = Vector2.ZERO
 		restore_player_animation()
 
@@ -436,6 +452,10 @@ func run_panic_route() -> void:
 
 
 func move_player_to_panic_point(target_position: Vector2) -> void:
+
+	if not is_player_usable():
+		panic_route_running = false
+		return
 
 	var stuck_time: float = 0.0
 	var last_position: Vector2 = player.global_position
@@ -454,10 +474,13 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			panic_navigation_agent.target_position = navigation_target
 			use_navigation = true
 
-			# Give NavigationServer2D time to calculate the path before reading it.
 			await get_tree().physics_frame
 
 	while panic_route_running and DialogueManager.is_active:
+
+		if not is_player_usable():
+			panic_route_running = false
+			return
 
 		var distance_to_marker: float = player.global_position.distance_to(target_position)
 
@@ -491,6 +514,10 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 		player.velocity = direction * PANIC_WALK_SPEED
 		player.move_and_slide()
 
+		if not is_player_usable():
+			panic_route_running = false
+			return
+
 		update_panic_animation(direction)
 		update_panic_footsteps()
 
@@ -501,8 +528,6 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 		else:
 			stuck_time = 0.0
 
-		# A collision can make move_and_slide() repeatedly push the player into the
-		# same corner. Pick a clear direction around the collision and keep moving.
 		if player.get_slide_collision_count() > 0:
 			var collision := player.get_slide_collision(0)
 			if collision != null:
@@ -519,8 +544,6 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 
 		last_position = player.global_position
 
-		# If furniture or another collision blocks the player, do not freeze forever.
-		# Ask the navigation agent for a fresh route before giving up on this marker.
 		if stuck_time >= PANIC_POINT_STUCK_TIME:
 			if use_navigation:
 				panic_navigation_agent.target_position = get_panic_navigation_target(target_position)
@@ -535,7 +558,6 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 				await get_tree().physics_frame
 				continue
 
-			# Try to find a local escape route even when no NavigationRegion2D exists.
 			detour_direction = get_collision_escape_direction(
 				direction,
 				target_position,
@@ -561,6 +583,9 @@ func get_collision_escape_direction(
 
 ) -> Vector2:
 
+	if not is_player_usable():
+		return Vector2.ZERO
+
 	var candidates: Array[Vector2] = []
 
 	if collision_normal.length() > 0.1:
@@ -578,8 +603,6 @@ func get_collision_escape_direction(
 		candidates.append(tangent_left)
 		candidates.append(tangent_right)
 
-	# Add several angles around the original movement direction.
-	# test_move() makes sure the selected detour is not immediately blocked.
 	var angles: Array[float] = [
 		-30.0,
 		30.0,
@@ -609,7 +632,9 @@ func get_collision_escape_direction(
 		if candidate.length() <= 0.1:
 			continue
 
-		# Test a short movement first.
+		if not is_player_usable():
+			return Vector2.ZERO
+
 		if player.test_move(
 			player.global_transform,
 			candidate * 18.0
@@ -636,7 +661,7 @@ func get_collision_escape_direction(
 
 func update_panic_animation(direction: Vector2) -> void:
 
-	if player == null:
+	if not is_player_usable():
 		return
 
 	var sprite := player.get_node_or_null(
@@ -667,7 +692,6 @@ func update_panic_animation(direction: Vector2) -> void:
 			animation_name = "walk_up"
 
 	if sprite.sprite_frames.has_animation(animation_name):
-		# Keep the running animation looping instead of stopping after one pass.
 		sprite.sprite_frames.set_animation_loop(animation_name, true)
 
 		sprite.speed_scale = 1.35
@@ -680,7 +704,7 @@ func update_panic_animation(direction: Vector2) -> void:
 
 func update_panic_footsteps() -> void:
 
-	if player == null:
+	if not is_player_usable():
 		return
 
 	panic_footstep_timer -= 1.0 / float(Engine.physics_ticks_per_second)
@@ -708,7 +732,10 @@ func play_phone_ring() -> void:
 		return
 
 	GameManager.player_controls_locked = true
-	player.velocity = Vector2.ZERO
+
+	if is_player_usable():
+		player.velocity = Vector2.ZERO
+
 	restore_player_animation()
 
 	var player_audio := AudioStreamPlayer.new()
@@ -837,7 +864,6 @@ func play_parent_phone_call() -> void:
 		}
 	]
 
-	# The player cannot walk around during the phone call.
 	GameManager.player_controls_locked = true
 
 	DialogueManager.start_dialogue(
@@ -857,12 +883,10 @@ func play_parent_phone_call() -> void:
 
 	await wait_for_dialogue_ui_entered(dialogue_ui)
 
-	# The phone conversation is still a normal skippable dialogue.
 	GameManager.player_controls_locked = true
 
 	await DialogueManager.dialogue_finished
 
-	# Complete the morning-call objective only after the phone-call sequence ends.
 	var quest_manager := get_node_or_null("/root/QuestUIManager")
 	if quest_manager != null and quest_manager.has_method("complete_parent_call"):
 		quest_manager.complete_parent_call()
@@ -935,7 +959,6 @@ func start_dialogue_and_allow_movement(
 
 	await wait_for_dialogue_ui_entered(dialogue_ui)
 
-	# Dialogue can still be advanced by the player, but movement is allowed.
 	GameManager.player_controls_locked = false
 
 	await DialogueManager.dialogue_finished
@@ -949,7 +972,9 @@ func start_dialogue_and_lock_player(
 ) -> void:
 
 	GameManager.player_controls_locked = true
-	player.velocity = Vector2.ZERO
+
+	if is_player_usable():
+		player.velocity = Vector2.ZERO
 
 	DialogueManager.start_dialogue(
 		dialogue,
@@ -974,7 +999,10 @@ func start_dialogue_and_lock_player(
 
 func wait_for_dialogue_ui_entered(dialogue_ui: Control) -> void:
 
-	while DialogueManager.is_active and dialogue_ui.is_entering:
+	if dialogue_ui == null:
+		return
+
+	while DialogueManager.is_active and is_instance_valid(dialogue_ui) and dialogue_ui.is_entering:
 		await get_tree().process_frame
 
 
@@ -984,7 +1012,7 @@ func wait_for_dialogue_ui_entered(dialogue_ui: Control) -> void:
 
 func restore_player_animation() -> void:
 
-	if player == null:
+	if not is_player_usable():
 		return
 
 	var sprite := player.get_node_or_null(

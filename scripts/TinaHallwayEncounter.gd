@@ -1,9 +1,16 @@
 extends Node
 
 const COZY_CHOICE_UI = preload("res://scripts/PolishedChoiceUI.gd")
+const TINA_MUSIC = preload("res://GAME ASSETS_/Misc/Music/Cowpoke.mp3")
+
+const TINA_MUSIC_FULL_VOLUME_DB: float = 20.0
+const TINA_MUSIC_DIALOGUE_VOLUME_DB: float = 5
+const TINA_MUSIC_FADE_IN_TIME: float = 1.5
+const TINA_MUSIC_DIALOGUE_FADE_TIME: float = 0.6
+const TINA_MUSIC_FADE_OUT_TIME: float = 1.2
 
 const PLAYER_PORTRAIT = preload("res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png")
-const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/8-bit Sprite Models/Tina (dating binubully ni mc na ngayon bespren)/tina.png")
+const TINA_PORTRAIT = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Tina/tina.png")
 
 @onready var player: CharacterBody2D = $"../Player"
 @onready var tina: CharacterBody2D = $"../Tina"
@@ -19,12 +26,15 @@ var running := false
 var tina_move_tween: Tween
 var tina_walk_animating := false
 var tina_walk_animation_name := "walk_left"
+var tina_music: AudioStreamPlayer = null
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	top_bar.visible = false
 	bottom_bar.visible = false
+
+	setup_tina_music()
 
 	tina.visible = false
 	kairi.visible = false
@@ -53,42 +63,44 @@ func start_encounter() -> void:
 	running = true
 	GameManager.player_controls_locked = true
 
+	fade_tina_music_in()
+
 	stop_player()
 
 	tina.visible = true
-	# Tina enters from the player's right and walks right-to-left into the
-	# middle of the hallway, matching the intended scene direction.
+
 	tina.global_position = Vector2(
 		player.global_position.x + 350.0,
 		player.global_position.y + 100.0
 	)
+
 	tina.set_physics_process(false)
 
-	# Let Tina actually walk into position before the story/UI begins.
 	move_tina_with_animation(
 		tina.global_position,
 		Vector2(620.0, player.global_position.y + 100.0),
 		110.0
 	)
+
 	await tina_move_tween.finished
+
 	play_animation(tina, "idle_left")
 	pause_animation(tina)
 
 	await start_player_monologue()
 
-	# Give the player a brief moment to react before the timed choice appears.
 	await get_tree().create_timer(0.35).timeout
 
 	var choice_ui := COZY_CHOICE_UI.new()
 	choice_ui.layer = 4096
 	choice_ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().root.add_child(choice_ui)
+
 	await get_tree().process_frame
 
 	var choice := await choice_ui.show_timed_choice(
 		"Call out to Tina?",
-		"Tina is already a few steps away.
-You only have 5 seconds to decide.",
+		"Tina is already a few steps away.\nYou only have 5 seconds to decide.",
 		"Call her",
 		"Let her go",
 		5.0,
@@ -106,16 +118,90 @@ You only have 5 seconds to decide.",
 	running = false
 
 
-func start_player_monologue() -> void:
-	var dialogue := [
-		{
-			"speaker": "Player",
-			"text": "Is that... Tina?"
-		}
-	]
+func setup_tina_music() -> void:
+	if tina_music != null:
+		return
 
-	# Player-only monologue: use the normal dialogue path because
-	# multi-dialogue requires an NPC portrait.
+	tina_music = AudioStreamPlayer.new()
+	tina_music.name = "TinaHallwayMusic"
+	tina_music.stream = TINA_MUSIC
+	tina_music.volume_db = -80.0
+	tina_music.bus = "Master"
+	add_child(tina_music)
+
+
+func fade_tina_music_in() -> void:
+	if tina_music == null:
+		setup_tina_music()
+
+	if not tina_music.playing:
+		tina_music.volume_db = -80.0
+		tina_music.play()
+
+	await fade_tina_music_to(
+		TINA_MUSIC_FULL_VOLUME_DB,
+		TINA_MUSIC_FADE_IN_TIME
+	)
+
+
+func fade_tina_music_to(target_db: float, duration: float) -> void:
+	if tina_music == null:
+		return
+
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+
+	tween.tween_property(
+		tina_music,
+		"volume_db",
+		target_db,
+		duration
+	)
+
+	await tween.finished
+
+
+func fade_tina_music_out() -> void:
+	if tina_music == null:
+		return
+
+	await fade_tina_music_to(-80.0, TINA_MUSIC_FADE_OUT_TIME)
+	tina_music.stop()
+
+
+func play_tina_dialogue(
+	dialogue: Array,
+	portraits: Dictionary,
+	player_portrait: Texture2D
+) -> void:
+
+	await fade_tina_music_to(
+		TINA_MUSIC_DIALOGUE_VOLUME_DB,
+		TINA_MUSIC_DIALOGUE_FADE_TIME
+	)
+
+	DialogueManager.start_multi_dialogue(
+		dialogue,
+		portraits,
+		player_portrait
+	)
+
+	await DialogueManager.dialogue_finished
+
+	await fade_tina_music_to(
+		TINA_MUSIC_FULL_VOLUME_DB,
+		TINA_MUSIC_DIALOGUE_FADE_TIME
+	)
+
+
+func play_tina_player_dialogue(dialogue: Array) -> void:
+
+	await fade_tina_music_to(
+		TINA_MUSIC_DIALOGUE_VOLUME_DB,
+		TINA_MUSIC_DIALOGUE_FADE_TIME
+	)
+
 	DialogueManager.start_dialogue(
 		dialogue,
 		PLAYER_PORTRAIT,
@@ -124,8 +210,29 @@ func start_player_monologue() -> void:
 
 	await DialogueManager.dialogue_finished
 
+	await fade_tina_music_to(
+		TINA_MUSIC_FULL_VOLUME_DB,
+		TINA_MUSIC_DIALOGUE_FADE_TIME
+	)
 
-func move_tina_with_animation(from_position: Vector2, to_position: Vector2, speed: float) -> void:
+
+func start_player_monologue() -> void:
+	var dialogue := [
+		{
+			"speaker": "Player",
+			"text": "Is that... Tina?"
+		}
+	]
+
+	await play_tina_player_dialogue(dialogue)
+
+
+func move_tina_with_animation(
+	from_position: Vector2,
+	to_position: Vector2,
+	speed: float
+) -> void:
+
 	var distance: float = from_position.distance_to(to_position)
 	var duration: float = distance / speed if speed > 0.0 else 0.0
 
@@ -134,25 +241,35 @@ func move_tina_with_animation(from_position: Vector2, to_position: Vector2, spee
 
 	tina.global_position = from_position
 
-	var sprite := tina.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	var sprite := tina.get_node_or_null(
+		"AnimatedSprite2D"
+	) as AnimatedSprite2D
+
 	if sprite:
 		sprite.process_mode = Node.PROCESS_MODE_ALWAYS
 		sprite.stop()
 
 		var movement := to_position - from_position
-		if abs(movement.x) >= abs(movement.y):
-			tina_walk_animation_name = "walk_right" if movement.x > 0.0 else "walk_left"
-		else:
-			tina_walk_animation_name = "walk_down" if movement.y > 0.0 else "walk_up"
 
-		if sprite.sprite_frames.has_animation(tina_walk_animation_name):
-			sprite.animation = StringName(tina_walk_animation_name)
+		if abs(movement.x) >= abs(movement.y):
+			tina_walk_animation_name = (
+				"walk_right" if movement.x > 0.0 else "walk_left"
+			)
+		else:
+			tina_walk_animation_name = (
+				"walk_down" if movement.y > 0.0 else "walk_up"
+			)
+
+		if sprite.sprite_frames.has_animation(
+			tina_walk_animation_name
+		):
+			sprite.animation = StringName(
+				tina_walk_animation_name
+			)
 		else:
 			tina_walk_animation_name = "walk_left"
 			sprite.animation = &"walk_left"
 
-		# Use AnimatedSprite2D's built-in looping so the slow walk repeats
-		# continuously for the entire movement instead of stopping after one cycle.
 		sprite.speed_scale = 0.9 if speed <= 70.0 else 1.0
 		sprite.frame = 0
 		sprite.play(tina_walk_animation_name)
@@ -160,7 +277,9 @@ func move_tina_with_animation(from_position: Vector2, to_position: Vector2, spee
 	tina_walk_animating = duration > 0.0
 
 	tina_move_tween = create_tween()
-	tina_move_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tina_move_tween.set_pause_mode(
+		Tween.TWEEN_PAUSE_PROCESS
+	)
 
 	if duration <= 0.0:
 		tina.global_position = to_position
@@ -177,18 +296,14 @@ func move_tina_with_animation(from_position: Vector2, to_position: Vector2, spee
 	await tina_move_tween.finished
 
 	tina_walk_animating = false
+
 	if sprite and is_instance_valid(sprite):
 		sprite.stop()
 		sprite.speed_scale = 1.0
 		sprite.frame = 0
 
 
-
 func tina_route() -> void:
-	face_character_toward_player(tina)
-	face_character_toward_player(player)
-
-	# Tina first turns toward the player before any conversation begins.
 	face_character_toward_player(tina)
 	face_character_toward_player(player)
 
@@ -207,29 +322,40 @@ func tina_route() -> void:
 		{"speaker": "Tina", "text": "...What is it?"}
 	]
 
-	DialogueManager.start_multi_dialogue(
+	await play_tina_dialogue(
 		opening_dialogue,
 		{"Tina": TINA_PORTRAIT},
 		PLAYER_PORTRAIT
 	)
-	await DialogueManager.dialogue_finished
 
-	# Tina begins slowly walking toward the player exactly as the apology starts.
-	# Build the tween directly here so this route contains no async function call.
-	var distance: float = tina.global_position.distance_to(player.global_position)
+	var distance: float = tina.global_position.distance_to(
+		player.global_position
+	)
+
 	var target_distance: float = 90.0
-	var travel_distance: float = maxf(0.0, distance - target_distance)
+	var travel_distance: float = maxf(
+		0.0,
+		distance - target_distance
+	)
+
 	var speed: float = 55.0
-	var direction: Vector2 = (player.global_position - tina.global_position).normalized()
-	var target_position: Vector2 = player.global_position - (direction * target_distance)
+
+	var direction: Vector2 = (
+		player.global_position - tina.global_position
+	).normalized()
+
+	var target_position: Vector2 = (
+		player.global_position
+		- direction * target_distance
+	)
 
 	var apology_dialogue := [
 		{"speaker": "Player", "text": "I was horrible to you back then."},
-		{"speaker": "Player", "text": "I bullied you, and I know saying sorry doesn't erase what I did."},
-		{"speaker": "Player", "text": "I really regret it. I wish I had treated you differently."},
-		{"speaker": "Tina", "text": "I won't pretend it didn't hurt."},
-		{"speaker": "Tina", "text": "But... I can tell you mean what you're saying."},
-		{"speaker": "Player", "text": "I do. I'm genuinely sorry, Tina."}
+	{"speaker": "Player", "text": "I bullied you, and I know saying sorry doesn't erase what I did."},
+	{"speaker": "Player", "text": "I really regret it. I wish I had treated you differently."},
+	{"speaker": "Tina", "text": "I won't pretend it didn't hurt."},
+	{"speaker": "Tina", "text": "But... I can tell you mean what you're saying."},
+	{"speaker": "Player", "text": "I do. I'm genuinely sorry, Tina."}
 	]
 
 	move_tina_with_animation(
@@ -238,13 +364,14 @@ func tina_route() -> void:
 		speed
 	)
 
-	DialogueManager.start_multi_dialogue(
+	await play_tina_dialogue(
 		apology_dialogue,
 		{"Tina": TINA_PORTRAIT},
 		PLAYER_PORTRAIT
 	)
-	await DialogueManager.dialogue_finished
+
 	await tina_move_tween.finished
+
 	face_character_toward_player(tina)
 
 	var closing_dialogue := [
@@ -262,18 +389,18 @@ func tina_route() -> void:
 		{"speaker": "Tina", "text": "Do you want to go there for a bit? We could catch up properly."}
 	]
 
-	DialogueManager.start_multi_dialogue(
+	await play_tina_dialogue(
 		closing_dialogue,
 		{"Tina": TINA_PORTRAIT},
 		PLAYER_PORTRAIT
 	)
-	await DialogueManager.dialogue_finished
 
 	var choice_ui := COZY_CHOICE_UI.new()
 	choice_ui.layer = 4096
 	choice_ui.process_mode = Node.PROCESS_MODE_ALWAYS
-	# Add the choice UI to the root so it cannot be hidden behind scene-level CanvasLayers.
+
 	get_tree().root.add_child(choice_ui)
+
 	await get_tree().process_frame
 
 	var choice := await choice_ui.show_choice(
@@ -286,12 +413,17 @@ func tina_route() -> void:
 	)
 
 	if choice == 1:
+		GameManager.cafe_route = "tina"
+
 		await walk_tina_and_player_to_left()
+
+		await fade_tina_music_out()
+
 		await FadeManager.change_scene_with_fade(
 			"res://scenes/main_level_scenes/game.tscn"
 		)
+
 	else:
-		# Wait until the choice UI has fully released before starting the farewell.
 		await wait_for_dialogue_manager_to_be_idle()
 
 		var goodbye := [
@@ -299,21 +431,24 @@ func tina_route() -> void:
 			{"speaker": "Player", "text": "Yeah... take care, Tina."}
 		]
 
-		DialogueManager.start_multi_dialogue(
+		await play_tina_dialogue(
 			goodbye,
 			{"Tina": TINA_PORTRAIT},
 			PLAYER_PORTRAIT
 		)
-		await DialogueManager.dialogue_finished
 
-		# Explicitly continue into the friends route for this branch. Do not rely
-		# on GameManager._process detecting the handoff on a later frame.
 		await walk_tina_off_screen()
+
+		await fade_tina_music_out()
+
 		await start_friend_quiz_encounter()
 
-		# If the friends decline their cafe invitation, immediately continue into
-		# the final post-friends decision instead of waiting for another scene tick.
-		if get_tree().current_scene != null and get_tree().current_scene.scene_file_path.ends_with("School.tscn"):
+		if (
+			get_tree().current_scene != null
+			and get_tree().current_scene.scene_file_path.ends_with(
+				"School.tscn"
+			)
+		):
 			GameManager.tina_post_hallway_sequence_started = true
 			GameManager.tina_post_hallway_sequence_running = true
 			await GameManager._run_tina_post_hallway_sequence()
@@ -321,15 +456,18 @@ func tina_route() -> void:
 
 func wait_for_dialogue_manager_to_be_idle() -> void:
 	var safety_frames: int = 0
+
 	while DialogueManager.is_active and safety_frames < 30:
 		await get_tree().process_frame
 		safety_frames += 1
 
 
 func walk_tina_and_player_to_left() -> void:
-	# After agreeing to go to the cafe, the player and Tina leave together,
-	# walking side-by-side toward the left before the scene transition.
-	var target_x: float = minf(player.global_position.x, tina.global_position.x) - 280.0
+	var target_x: float = minf(
+		player.global_position.x,
+		tina.global_position.x
+	) - 280.0
+
 	var speed := 46.0
 
 	play_animation(player, "walk_left")
@@ -337,22 +475,27 @@ func walk_tina_and_player_to_left() -> void:
 
 	while player.global_position.x > target_x:
 		var delta := get_process_delta_time()
+
 		player.global_position.x = move_toward(
 			player.global_position.x,
 			target_x,
 			speed * delta
 		)
+
 		tina.global_position.x = move_toward(
 			tina.global_position.x,
 			player.global_position.x + 52.0,
 			speed * delta
 		)
+
 		await get_tree().process_frame
 
 	player.global_position.x = target_x
 	tina.global_position.x = target_x + 52.0
+
 	play_animation(player, "idle_left")
 	play_animation(tina, "idle_left")
+
 	pause_animation(player)
 	pause_animation(tina)
 
@@ -379,15 +522,12 @@ func ignore_tina_route() -> void:
 		}
 	]
 
-	DialogueManager.start_multi_dialogue(
+	await play_tina_dialogue(
 		monologue,
 		{},
 		PLAYER_PORTRAIT
 	)
-	await DialogueManager.dialogue_finished
 
-	# Tina leaves first. Keep the friends hidden until she is completely
-	# off-screen so the two hallway moments do not overlap.
 	await walk_tina_off_screen()
 
 	await start_friend_quiz_encounter()
@@ -404,11 +544,13 @@ func walk_tina_off_screen() -> void:
 
 	while tina.global_position.x > target_x:
 		var delta := get_process_delta_time()
+
 		tina.global_position.x = move_toward(
 			tina.global_position.x,
 			target_x,
 			speed * delta
 		)
+
 		await get_tree().process_frame
 
 	pause_animation(tina)
@@ -429,17 +571,20 @@ func start_friend_quiz_encounter() -> void:
 	stop_friend_physics()
 
 	var player_center := player.global_position
+
 	cinematic_camera.global_position = player_center
 	cinematic_camera.zoom = Vector2(1.8, 1.8)
 	cinematic_camera.enabled = true
 
-	var player_camera := player.get_node_or_null("Camera2D") as Camera2D
+	var player_camera := player.get_node_or_null(
+		"Camera2D"
+	) as Camera2D
+
 	if player_camera:
 		player_camera.enabled = false
 
 	await show_cinematic_bars()
 
-	# The four friends walk right-to-left toward the player.
 	play_animation(kairi, "walk_left")
 	play_animation(kerwin, "walk_left")
 	play_animation(janssen, "walk_left")
@@ -453,6 +598,7 @@ func start_friend_quiz_encounter() -> void:
 	}
 
 	var finished := {}
+
 	for friend in targets:
 		finished[friend] = false
 
@@ -473,7 +619,9 @@ func start_friend_quiz_encounter() -> void:
 				58.0 * delta
 			)
 
-			if friend.global_position.distance_to(targets[friend]) <= 1.0:
+			if friend.global_position.distance_to(
+				targets[friend]
+			) <= 1.0:
 				friend.global_position = targets[friend]
 				finished[friend] = true
 
@@ -485,9 +633,11 @@ func start_friend_quiz_encounter() -> void:
 			+ player.global_position
 		) / 5.0
 
-		cinematic_camera.global_position = cinematic_camera.global_position.lerp(
-			group_center,
-			min(1.0, 5.0 * delta)
+		cinematic_camera.global_position = (
+			cinematic_camera.global_position.lerp(
+				group_center,
+				min(1.0, 5.0 * delta)
+			)
 		)
 
 		await get_tree().process_frame
@@ -499,8 +649,11 @@ func start_friend_quiz_encounter() -> void:
 	await get_tree().create_timer(0.35).timeout
 
 	var player_score := roundi(
-		clamp(GameManager.lecture_performance_score, 0.0, 100.0)
-		/ 100.0 * 20.0
+		clamp(
+			GameManager.lecture_performance_score,
+			0.0,
+			100.0
+		) / 100.0 * 20.0
 	)
 
 	var dialogue := [
@@ -532,12 +685,15 @@ func start_friend_quiz_encounter() -> void:
 		portraits,
 		PLAYER_PORTRAIT
 	)
+
 	await DialogueManager.dialogue_finished
 
 	var choice_ui := COZY_CHOICE_UI.new()
 	choice_ui.layer = 4096
 	choice_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+
 	get_tree().root.add_child(choice_ui)
+
 	await get_tree().process_frame
 
 	var choice := await choice_ui.show_choice(
@@ -550,14 +706,22 @@ func start_friend_quiz_encounter() -> void:
 	)
 
 	if choice == 1:
+		GameManager.cafe_route = "friends"
+
 		await get_tree().create_timer(0.35).timeout
 		await hide_cinematic_bars()
+
 		await FadeManager.change_scene_with_fade(
 			"res://scenes/main_level_scenes/game.tscn"
 		)
+
 	else:
 		await no_cafe_route()
 
+
+# ============================================================
+# FIXED NO-CAFE ROUTE
+# ============================================================
 
 func no_cafe_route() -> void:
 	var dialogue := [
@@ -574,11 +738,110 @@ func no_cafe_route() -> void:
 		portraits,
 		PLAYER_PORTRAIT
 	)
+
 	await DialogueManager.dialogue_finished
 
+	# Remove the cinematic bars.
 	await hide_cinematic_bars()
+
+	# The friends walk LEFT and leave the cinematic camera frame.
+	await walk_friends_off_screen()
+
+	# The moment the entire group has left the frame,
+	# immediately return the camera to the player.
 	await restore_player_camera()
 
+	# Restore player control.
+	player.velocity = Vector2.ZERO
+	player.set_physics_process(true)
+	GameManager.player_controls_locked = false
+
+	# Continue directly into the next hallway sequence.
+	GameManager.tina_post_hallway_sequence_started = true
+	GameManager.tina_post_hallway_sequence_running = true
+
+	await GameManager._run_tina_post_hallway_sequence()
+
+
+func walk_friends_off_screen() -> void:
+	var friends := [
+		kairi,
+		kerwin,
+		janssen,
+		nathaly
+	]
+
+	# Make everyone walk LEFT.
+	for friend in friends:
+		if friend == null or not friend.visible:
+			continue
+
+		friend.velocity = Vector2.ZERO
+		friend.set_physics_process(false)
+
+		play_animation(
+			friend,
+			"walk_left"
+		)
+
+	# Calculate the actual LEFT edge of the cinematic camera.
+	# This means the friends will keep walking until they are
+	# genuinely outside what the player can see.
+	var viewport_size := get_viewport().get_visible_rect().size
+
+	var camera_zoom_x := cinematic_camera.zoom.x
+	if camera_zoom_x <= 0.0:
+		camera_zoom_x = 1.0
+
+	var camera_half_width := (
+		viewport_size.x / camera_zoom_x
+	) * 0.5
+
+	var camera_left_edge := (
+		cinematic_camera.global_position.x
+		- camera_half_width
+	)
+
+	# Small extra margin so their sprites are completely outside
+	# the frame before the camera switches back.
+	var exit_margin := 80.0
+
+	var target_x := camera_left_edge - exit_margin
+	var speed := 75.0
+
+	while true:
+		var all_left_frame := true
+		var delta := get_process_delta_time()
+
+		for friend in friends:
+			if friend == null or not friend.visible:
+				continue
+
+			# Keep moving LEFT.
+			if friend.global_position.x > target_x:
+				all_left_frame = false
+
+				friend.global_position.x = move_toward(
+					friend.global_position.x,
+					target_x,
+					speed * delta
+				)
+
+		# As soon as every visible friend is outside the
+		# camera frame, immediately finish this sequence.
+		if all_left_frame:
+			break
+
+		await get_tree().process_frame
+
+	# Remove the friends immediately after they leave the frame.
+	for friend in friends:
+		if friend == null:
+			continue
+
+		friend.velocity = Vector2.ZERO
+		pause_animation(friend)
+		friend.visible = false
 
 func show_cinematic_bars() -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
@@ -587,11 +850,25 @@ func show_cinematic_bars() -> void:
 	top_bar.visible = true
 	bottom_bar.visible = true
 
-	top_bar.position = Vector2(0.0, -bar_height)
-	bottom_bar.position = Vector2(0.0, viewport_size.y)
+	top_bar.position = Vector2(
+		0.0,
+		-bar_height
+	)
 
-	top_bar.size = Vector2(viewport_size.x, bar_height)
-	bottom_bar.size = Vector2(viewport_size.x, bar_height)
+	bottom_bar.position = Vector2(
+		0.0,
+		viewport_size.y
+	)
+
+	top_bar.size = Vector2(
+		viewport_size.x,
+		bar_height
+	)
+
+	bottom_bar.size = Vector2(
+		viewport_size.x,
+		bar_height
+	)
 
 	top_bar.modulate.a = 0.0
 	bottom_bar.modulate.a = 0.0
@@ -599,15 +876,33 @@ func show_cinematic_bars() -> void:
 	var tween := create_tween()
 	tween.set_parallel(true)
 
-	tween.tween_property(top_bar, "position:y", 0.0, 0.45)
+	tween.tween_property(
+		top_bar,
+		"position:y",
+		0.0,
+		0.45
+	)
+
 	tween.tween_property(
 		bottom_bar,
 		"position:y",
 		viewport_size.y - bar_height,
 		0.45
 	)
-	tween.tween_property(top_bar, "modulate:a", 1.0, 0.45)
-	tween.tween_property(bottom_bar, "modulate:a", 1.0, 0.45)
+
+	tween.tween_property(
+		top_bar,
+		"modulate:a",
+		1.0,
+		0.45
+	)
+
+	tween.tween_property(
+		bottom_bar,
+		"modulate:a",
+		1.0,
+		0.45
+	)
 
 	await tween.finished
 
@@ -619,10 +914,33 @@ func hide_cinematic_bars() -> void:
 	var tween := create_tween()
 	tween.set_parallel(true)
 
-	tween.tween_property(top_bar, "position:y", -bar_height, 0.45)
-	tween.tween_property(bottom_bar, "position:y", viewport_size.y, 0.45)
-	tween.tween_property(top_bar, "modulate:a", 0.0, 0.45)
-	tween.tween_property(bottom_bar, "modulate:a", 0.0, 0.45)
+	tween.tween_property(
+		top_bar,
+		"position:y",
+		-bar_height,
+		0.45
+	)
+
+	tween.tween_property(
+		bottom_bar,
+		"position:y",
+		viewport_size.y,
+		0.45
+	)
+
+	tween.tween_property(
+		top_bar,
+		"modulate:a",
+		0.0,
+		0.45
+	)
+
+	tween.tween_property(
+		bottom_bar,
+		"modulate:a",
+		0.0,
+		0.45
+	)
 
 	await tween.finished
 
@@ -633,7 +951,10 @@ func hide_cinematic_bars() -> void:
 func restore_player_camera() -> void:
 	cinematic_camera.enabled = false
 
-	var player_camera := player.get_node_or_null("Camera2D") as Camera2D
+	var player_camera := player.get_node_or_null(
+		"Camera2D"
+	) as Camera2D
+
 	if player_camera:
 		player_camera.enabled = true
 		player_camera.make_current()
@@ -645,53 +966,92 @@ func stop_player() -> void:
 	player.velocity = Vector2.ZERO
 	player.set_physics_process(false)
 
-	var sprite := player.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	var sprite := player.get_node_or_null(
+		"AnimatedSprite2D"
+	) as AnimatedSprite2D
+
 	if sprite:
 		sprite.pause()
 
 
 func stop_friend_physics() -> void:
-	for friend in [kairi, kerwin, janssen, nathaly]:
+	for friend in [
+		kairi,
+		kerwin,
+		janssen,
+		nathaly
+	]:
 		friend.velocity = Vector2.ZERO
 		friend.set_physics_process(false)
 
 
-func play_animation(character: CharacterBody2D, animation_name: String) -> void:
-	var sprite := character.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+func play_animation(
+	character: CharacterBody2D,
+	animation_name: String
+) -> void:
+
+	var sprite := character.get_node_or_null(
+		"AnimatedSprite2D"
+	) as AnimatedSprite2D
+
 	if sprite == null:
 		return
 
-	if sprite.sprite_frames.has_animation(animation_name):
+	if sprite.sprite_frames.has_animation(
+		animation_name
+	):
 		sprite.flip_h = false
 		sprite.speed_scale = 1.0
 		sprite.frame = 0
-		# Tina's scripted movement continues while the dialogue/game is paused.
-		# ALWAYS keeps the AnimatedSprite2D processing so all walk frames advance.
 		sprite.process_mode = Node.PROCESS_MODE_ALWAYS
 		sprite.play(animation_name)
 
 
 func pause_animation(character: CharacterBody2D) -> void:
-	var sprite := character.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	var sprite := character.get_node_or_null(
+		"AnimatedSprite2D"
+	) as AnimatedSprite2D
+
 	if sprite:
 		sprite.pause()
 
 
-func face_character_toward_player(character: CharacterBody2D) -> void:
-	var difference := player.global_position - character.global_position
+func face_character_toward_player(
+	character: CharacterBody2D
+) -> void:
+
+	var difference := (
+		player.global_position
+		- character.global_position
+	)
+
 	if difference.length() <= 0.1:
 		return
 
-	var sprite := character.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	var sprite := character.get_node_or_null(
+		"AnimatedSprite2D"
+	) as AnimatedSprite2D
+
 	if sprite == null:
 		return
 
 	var animation_name := "idle_down"
-	if abs(difference.x) > abs(difference.y):
-		animation_name = "idle_right" if difference.x > 0.0 else "idle_left"
-	else:
-		animation_name = "idle_down" if difference.y > 0.0 else "idle_up"
 
-	if sprite.sprite_frames.has_animation(animation_name):
+	if abs(difference.x) > abs(difference.y):
+		animation_name = (
+			"idle_right"
+			if difference.x > 0.0
+			else "idle_left"
+		)
+	else:
+		animation_name = (
+			"idle_down"
+			if difference.y > 0.0
+			else "idle_up"
+		)
+
+	if sprite.sprite_frames.has_animation(
+		animation_name
+	):
 		sprite.play(animation_name)
 		sprite.pause()

@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var interaction_distance: float = 20.0
+@export var interaction_distance: float = 80.0
 
 var collected: bool = false
 

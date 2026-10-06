@@ -6,6 +6,10 @@ var dialogue_ui = null
 var dialogue_layer = null
 var is_active := false
 var skip_dialogue_confirmation_disabled := false
+var current_quest_professor := ""
+
+func set_quest_professor(professor_id: String) -> void:
+	current_quest_professor = professor_id
 
 func _process(_delta: float) -> void:
 	# Keep the "Don't remind me again" preference in the autoload so it
@@ -163,14 +167,45 @@ func face_character_toward_character(character: CharacterBody2D, target_characte
 func end_dialogue() -> void:
 	if not is_active:
 		return
+
 	# Capture the local UI preference before the current DialogueUI is released.
 	if dialogue_ui != null and is_instance_valid(dialogue_ui):
 		if dialogue_ui.get("skip_dialogue_without_confirmation") == true:
 			skip_dialogue_confirmation_disabled = true
+
 	GameManager.player_controls_locked = false
+
 	# Returning from dialogue restores normal gameplay cursor behavior.
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+
 	dialogue_ui = null
 	dialogue_layer = null
 	is_active = false
+
+	# --------------------------------------------------------
+	# QUEST PROFESSOR PROGRESSION
+	# --------------------------------------------------------
+
+	match current_quest_professor:
+
+		"comlab":
+			if GameManager.quiz_completed == true:
+				GameManager.comlab_second_professor_talked = true
+			else:
+				GameManager.comlab_professor_talked = true
+
+		"maclab":
+			if GameManager.maclab_challenge_completed == true:
+				GameManager.maclab_second_professor_talked = true
+			else:
+				GameManager.maclab_professor_talked = true
+
+		"lecture":
+			if GameManager.lecture_challenge_completed == true:
+				GameManager.lecture_second_professor_talked = true
+			else:
+				GameManager.lecture_professor_talked = true
+
+	current_quest_professor = ""
+
 	dialogue_finished.emit()

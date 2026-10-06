@@ -4,7 +4,95 @@
 [ext_resource type="Script" uid="uid://d2pc4uo031qth" path="res://scripts/LectureRoomChallenge.gd" id="1_ut1j2"]
 [ext_resource type="Texture2D" uid="uid://c0u248rqpmico" path="res://GAME ASSETS_/Misc/Menus/notebook interfacew.png" id="2_ut1j2"]
 [ext_resource type="Script" uid="uid://dni602w2rjxk0" path="res://scripts/DragBar.gd" id="3_gjil2"]
-[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="9_pause"]
+[ext_resource type="PackedScene" uid="uid://cmfbrfempeddn" path="res://scenes/ui/PauseMenu.tscn" id="9_pause"]
+[ext_resource type="Texture2D" uid="uid://gsuu452577yg" path="res://GAME ASSETS_/Misc/Menus/paper_answers.png" id="10_paper"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_card"]
+bg_color = Color(0.18, 0.12, 0.09, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.56, 0.43, 0.32, 0.9)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.28)
+shadow_size = 12
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_progress_bg"]
+bg_color = Color(0.1, 0.07, 0.05, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_progress_fill"]
+bg_color = Color(0.45, 0.65, 0.64, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_input"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.96, 0.91, 0.83, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.48, 0.34, 0.25, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_button"]
+content_margin_left = 18.0
+content_margin_right = 18.0
+bg_color = Color(0.42, 0.29, 0.22, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.72, 0.58, 0.42, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_button_hover"]
+content_margin_left = 18.0
+content_margin_right = 18.0
+bg_color = Color(0.56, 0.4, 0.29, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.7, 0.69, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_result"]
+bg_color = Color(0.12, 0.08, 0.06, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.72, 0.58, 0.42, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 20
 
 [node name="LectureRoomChallenge" type="Control" unique_id=1480372150]
 layout_mode = 3
@@ -18,6 +106,7 @@ script = ExtResource("1_ut1j2")
 [node name="PauseMenu" parent="." unique_id=1326021430 instance=ExtResource("9_pause")]
 
 [node name="background" type="TextureRect" parent="." unique_id=1229473848]
+modulate = Color(0.76, 0.68, 0.59, 1)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,23 +114,122 @@ anchor_bottom = 1.0
 offset_left = -960.0
 offset_top = -540.0
 offset_right = 960.0
-offset_bottom = 653.0
+offset_bottom = 665.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("1_rv07s")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackgroundShade" type="ColorRect" parent="." unique_id=848249652]
+layout_mode = 0
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 960.0
+offset_bottom = 674.0
+mouse_filter = 2
+color = Color(0.09, 0.055, 0.035, 0.34)
+
+[node name="PaperAnswers" type="TextureRect" parent="." unique_id=1900042011]
+z_index = 1
+layout_mode = 0
+offset_left = 324.0
+offset_top = -417.0
+offset_right = 904.0
+offset_bottom = 443.0
+mouse_filter = 0
+texture = ExtResource("10_paper")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="DragBar" type="Control" parent="PaperAnswers" unique_id=1900042012]
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 560.0
+offset_bottom = 105.0
+script = ExtResource("3_gjil2")
+
+[node name="GuideTitle" type="Label" parent="PaperAnswers" unique_id=1900042013]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 45.0
+offset_right = 540.0
+offset_bottom = 85.0
+theme_override_colors/font_color = Color(0.2, 0.13, 0.09, 1)
+theme_override_font_sizes/font_size = 22
+text = "DISCRETE MATH GUIDE"
+horizontal_alignment = 1
+
+[node name="GuideDivider" type="ColorRect" parent="PaperAnswers" unique_id=1900042014]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 172.0
+offset_right = 525.0
+offset_bottom = 175.0
+mouse_filter = 2
+color = Color(0.42, 0.29, 0.2, 0.45)
+
+[node name="GuideText" type="Label" parent="PaperAnswers" unique_id=1900042015]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 190.0
+offset_right = 542.0
+offset_bottom = 815.0
+theme_override_colors/font_color = Color(0.24, 0.17, 0.12, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.95, 0.85, 0.25)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 13
+text = "1.  ∧  = AND / Conjunction
+2.  ∨  = OR / Disjunction
+3.  ¬  = NOT / Negation
+4.  →  = Implication / Conditional
+5.  ↔  = Biconditional / IF AND ONLY IF
+
+LOGIC LAWS
+6.  p ∨ p  = p          → Idempotent Law
+7.  p ∧ T  = p          → Identity Law
+8.  p ∨ F  = p          → Identity Law
+9.  p ∧ ¬p = F          → Inverse Law
+10. ¬(p ∧ q) = ¬p ∨ ¬q  → De Morgan's Law
+
+SIMPLIFY
+11. p ∨ p                  → p
+12. p ∧ p                  → p
+13. p ∨ F                  → p
+14. p ∧ T                  → p
+15. p ∨ ¬p                 → T / True
+16. p ∧ ¬p                → F / False
+17. (p ∨ q) ∧ (p ∨ q)     → p ∨ q
+18. (p ∨ q) ∧ (¬p ∨ q)    → q
+19. (p ∧ q) ∨ (p ∧ ¬q)    → p
+20. ¬(p ∧ q) ∨ (p ∧ q)    → T / True
+
+TIP:
+Match the question number with the
+corresponding answer above. Symbols
+may be typed using words instead."
+autowrap_mode = 2
 
 [node name="notebook" type="TextureRect" parent="." unique_id=1996351555]
+modulate = Color(0.92, 0.88, 0.81, 1)
+z_index = 2
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -971.0
-offset_top = -529.0
-offset_right = 909.0
-offset_bottom = 511.0
+offset_left = -926.0
+offset_top = -386.0
+offset_right = 874.0
+offset_bottom = 614.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
 texture = ExtResource("2_ut1j2")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="DragBar" type="Control" parent="notebook" unique_id=414238714]
 layout_mode = 1
@@ -50,80 +238,222 @@ anchor_top = 0.020000001
 anchor_right = 0.919
 anchor_bottom = 0.14600001
 offset_left = 13.959991
-offset_top = 30.399998
-offset_right = -196.4801
-offset_bottom = 822.32
+offset_top = 30.399992
+offset_right = -191.20007
+offset_bottom = 764.0
 script = ExtResource("3_gjil2")
 
-[node name="QuestionText" type="Label" parent="notebook" unique_id=1470934834]
+[node name="HeaderAccent" type="ColorRect" parent="notebook" unique_id=573894033]
 layout_mode = 0
-offset_left = 266.0
-offset_top = 311.0
-offset_right = 438.0
-offset_bottom = 334.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "What is a proposition?"
+offset_left = 231.0
+offset_top = 227.0
+offset_right = 731.0
+offset_bottom = 232.0
+mouse_filter = 2
+color = Color(0.45, 0.65, 0.64, 1)
+
+[node name="Title" type="Label" parent="notebook" unique_id=1662868130]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 157.0
+offset_right = 751.0
+offset_bottom = 207.0
+theme_override_colors/font_color = Color(0.2, 0.13, 0.1, 1)
+theme_override_colors/font_shadow_color = Color(0.65, 0.53, 0.4, 0.35)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 28
+text = "LOGIC & PROPOSITION CHALLENGE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="notebook" unique_id=137316480]
+layout_mode = 0
+offset_left = 261.0
+offset_top = 202.0
+offset_right = 701.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.35, 0.28, 0.23, 1)
+theme_override_font_sizes/font_size = 14
+text = "Take your time • Read carefully • Answer honestly"
+horizontal_alignment = 1
+
+[node name="ChallengeCard" type="Panel" parent="notebook" unique_id=2138128825]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 257.0
+offset_right = 786.0
+offset_bottom = 862.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="SectionLabel" type="Label" parent="notebook" unique_id=558932053]
+layout_mode = 0
+offset_left = 236.0
+offset_top = 282.0
+offset_right = 746.0
+offset_bottom = 307.0
+theme_override_colors/font_color = Color(0.72, 0.58, 0.42, 1)
+theme_override_font_sizes/font_size = 13
+text = "QUESTION"
+horizontal_alignment = 1
 
 [node name="QuestionNumberLabel" type="Label" parent="notebook" unique_id=71583220]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 229.0
-offset_right = 382.0
-offset_bottom = 252.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
+offset_left = 236.0
+offset_top = 312.0
+offset_right = 746.0
+offset_bottom = 352.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.83, 1)
+theme_override_font_sizes/font_size = 20
 text = "Question 1 / 20"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="notebook" unique_id=631141812]
+layout_mode = 0
+offset_left = 261.0
+offset_top = 362.0
+offset_right = 721.0
+offset_bottom = 380.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBox_progress_bg")
+theme_override_styles/fill = SubResource("StyleBox_progress_fill")
+value = 5.0
+show_percentage = false
+
+[node name="QuestionText" type="Label" parent="notebook" unique_id=1470934834]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 402.0
+offset_right = 726.0
+offset_bottom = 492.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.83, 1)
+theme_override_font_sizes/font_size = 23
+text = "What does the symbol ∧ mean?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HintLabel" type="Label" parent="notebook" unique_id=1177478719]
+layout_mode = 0
+offset_left = 261.0
+offset_top = 507.0
+offset_right = 721.0
+offset_bottom = 532.0
+theme_override_colors/font_color = Color(0.58, 0.49, 0.41, 1)
+theme_override_font_sizes/font_size = 12
+text = "Enter your answer below"
+horizontal_alignment = 1
 
 [node name="AnswerInput" type="LineEdit" parent="notebook" unique_id=141177596]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 459.0
-offset_right = 504.0
-offset_bottom = 490.0
+offset_left = 256.0
+offset_top = 552.0
+offset_right = 726.0
+offset_bottom = 607.0
+theme_override_colors/font_color = Color(0.18, 0.12, 0.09, 1)
+theme_override_colors/font_placeholder_color = Color(0.42, 0.34, 0.28, 0.7)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleBox_input")
 placeholder_text = "Type your answer here..."
+alignment = 1
 
 [node name="SubmitButton" type="Button" parent="notebook" unique_id=481785064]
 layout_mode = 0
-offset_left = 507.0
-offset_top = 461.0
-offset_right = 570.0
-offset_bottom = 492.0
-text = "Submit"
+offset_left = 401.0
+offset_top = 627.0
+offset_right = 581.0
+offset_bottom = 677.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.83, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/pressed = SubResource("StyleBox_button_hover")
+theme_override_styles/hover = SubResource("StyleBox_button_hover")
+text = "SUBMIT  →"
 
 [node name="FeedbackLabel" type="Label" parent="notebook" unique_id=114296707]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 366.0
-offset_right = 462.0
-offset_bottom = 420.0
+offset_left = 246.0
+offset_top = 697.0
+offset_right = 736.0
+offset_bottom = 752.0
+theme_override_colors/font_color = Color(0.72, 0.58, 0.42, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FooterHint" type="Label" parent="notebook" unique_id=810584085]
+layout_mode = 0
+offset_left = 251.0
+offset_top = 782.0
+offset_right = 731.0
+offset_bottom = 812.0
+theme_override_colors/font_color = Color(0.46, 0.37, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "20 questions • One answer at a time"
+horizontal_alignment = 1
 
 [node name="ResultPanel" type="Panel" parent="notebook" unique_id=1999602964]
 visible = false
 layout_mode = 0
-offset_left = 596.0
-offset_top = 781.0
-offset_right = 779.0
-offset_bottom = 852.0
+offset_left = 591.0
+offset_top = 298.0
+offset_right = 1031.0
+offset_bottom = 658.0
+theme_override_styles/panel = SubResource("StyleBox_result")
+
+[node name="ResultAccent" type="ColorRect" parent="notebook/ResultPanel" unique_id=2124072864]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 400.0
+offset_bottom = 44.0
+mouse_filter = 2
+color = Color(0.45, 0.65, 0.64, 1)
 
 [node name="ResultTitle" type="Label" parent="notebook/ResultPanel" unique_id=1196158354]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 11.0
-offset_right = 175.0
-offset_bottom = 34.0
+offset_left = 35.0
+offset_top = 75.0
+offset_right = 405.0
+offset_bottom = 120.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.83, 1)
+theme_override_font_sizes/font_size = 25
 text = "Challenge Complete!"
+horizontal_alignment = 1
+
+[node name="ResultSubtitle" type="Label" parent="notebook/ResultPanel" unique_id=830743402]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 125.0
+offset_right = 395.0
+offset_bottom = 155.0
+theme_override_colors/font_color = Color(0.62, 0.53, 0.45, 1)
+theme_override_font_sizes/font_size = 12
+text = "A quiet moment to see how you did."
+horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="notebook/ResultPanel" unique_id=1257333284]
 layout_mode = 0
-offset_left = 14.0
-offset_top = 35.0
-offset_right = 130.0
-offset_bottom = 58.0
+offset_left = 35.0
+offset_top = 175.0
+offset_right = 405.0
+offset_bottom = 235.0
+theme_override_colors/font_color = Color(0.72, 0.58, 0.42, 1)
+theme_override_font_sizes/font_size = 30
 text = "Final Score: 0%"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ContinueButton" type="Button" parent="notebook/ResultPanel" unique_id=1291529386]
 layout_mode = 0
-offset_left = 129.0
-offset_top = 71.0
-offset_right = 183.0
-offset_bottom = 102.0
-text = "Finish"
+offset_left = 145.0
+offset_top = 275.0
+offset_right = 295.0
+offset_bottom = 325.0
+theme_override_colors/font_color = Color(0.96, 0.91, 0.83, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBox_button")
+theme_override_styles/pressed = SubResource("StyleBox_button_hover")
+theme_override_styles/hover = SubResource("StyleBox_button_hover")
+text = "CONTINUE  →"

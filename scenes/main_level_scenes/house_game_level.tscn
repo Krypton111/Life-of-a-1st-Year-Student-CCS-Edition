@@ -12,13 +12,8 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_m8543"]
 radius = 19.026299
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jy425"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_cpoa5"]
-radius = 5.56522
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_reueo"]
-size = Vector2(11.130439, 10.666674)
+size = Vector2(1.9582489, 3.0783007)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_reueo"]
 vertices = PackedVector2Array(738.6172, 346.04688, 732.65625, 343.02344, 738.5703, 343.28125, 1469.2031, 581.4297, 1409.5078, 583.8828, 1384.4063, 569.2422, 1433.4375, 555.4531, 1468.0234, 566.6719, 1745, 526.35156, 1752.8203, 542.52344, 1741.3984, 542.2031, 1725.7266, 492.4297, 1730.7422, 496.8203, 1720.5313, 467.21094, 1698.6094, 467.67188, 1286, 409.5, 1286, 431.5703, 1283.2422, 466.03125, 1246.4609, 446.5078, 1213.0781, 403.17188, 1235.2578, 379.8828, 1463.6875, 486.60156, 1427.6328, 454.25, 1708.4531, 430.96875, 1664.6719, 461.5703, 1661.6094, 382.92188, 783.5, 468.45313, 781.4219, 502.71875, 744.7578, 515.3906, 740.9922, 475.39844, 1218.7969, 440.59375, 1219.8203, 505.70313, 1155.6016, 498, 1124.6719, 421.28125, 738.2031, 323.0703, 817.59375, 331, 813.5625, 424, 840.6406, 458.92188, 965.46875, 424, 857.21875, 492.10156, 891.3672, 482.35156, 951.47656, 466.79688, 1028.4688, 391.27344, 1029.5469, 478.72656, 1024.6563, 335.22656, 961.4531, 336.75, 1044, 498, 1078.0313, 408.5625, 1723.8438, 350, 1817, 349.09375, 1817, 359.5078, 1749.9219, 363.10156, 1676.8594, 348, 1694.8281, 383.90625, 1575.4531, 349.0078, 1517.5469, 342.02344, 1525.6328, 384.09375, 1439.2188, 345, 1519.9531, 451.96875, 1527.8438, 444.7422, 1249.0781, 365.2422, 1286.4297, 367.3828, 1342.8438, 400.2422, 1295.6094, 345.95313, 1368.0078, 428.6875)
@@ -55,17 +50,16 @@ scale = Vector2(1.8, 1.8)
 position = Vector2(-7.6293945e-06, 0)
 zoom = Vector2(1.2, 1.2)
 
+[node name="QuestMarker_Out" type="Marker2D" parent="." unique_id=1415715152]
+position = Vector2(1826, 344)
+
+[node name="QuestMarker_Baon" type="Marker2D" parent="." unique_id=112190565]
+position = Vector2(1540, 427)
+
 [node name="Door_Room202" type="Sprite2D" parent="." unique_id=1113427787]
-position = Vector2(1824, 288.00003)
-scale = Vector2(5.174999, 6.75)
+position = Vector2(-1483, 2540.9998)
+scale = Vector2(52.087494, 55.875004)
 texture = ExtResource("3_ncsbb")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Door_Room202" unique_id=919962170]
-physics_material_override = SubResource("PhysicsMaterial_jy425")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/StaticBody2D" unique_id=210925304]
-position = Vector2(0, 2.1333275)
-shape = SubResource("CircleShape2D_cpoa5")
 
 [node name="Area2D" type="Area2D" parent="Door_Room202" unique_id=1654756367]
 script = ExtResource("4_ultbk")
@@ -73,7 +67,8 @@ room_name = "School"
 destination_scene = "uid://dtxaj25sp8o5w"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/Area2D" unique_id=1045648632]
-position = Vector2(0, 7.4666634)
+position = Vector2(63.50852, -39.373592)
+scale = Vector2(1, 0.9999998)
 shape = SubResource("RectangleShape2D_reueo")
 
 [node name="OpeningRoute" type="Node2D" parent="." unique_id=1068398048]

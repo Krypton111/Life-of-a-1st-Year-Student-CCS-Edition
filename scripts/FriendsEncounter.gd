@@ -1,6 +1,14 @@
 extends Node
 
 const COZY_CHOICE_UI = preload("res://scripts/PolishedChoiceUI.gd")
+const FRIENDS_MUSIC = preload("res://GAME ASSETS_/Misc/Music/u_got_a_friend.mp3")
+const SLIP_SOUND = preload("res://GAME ASSETS_/Misc/SFX/slip_sound.mp3")
+
+const FRIENDS_MUSIC_FULL_VOLUME_DB: float = 0.0
+const FRIENDS_MUSIC_DIALOGUE_VOLUME_DB: float = -8.0
+const FRIENDS_MUSIC_FADE_IN_TIME: float = 1.5
+const FRIENDS_MUSIC_DIALOGUE_FADE_TIME: float = 0.6
+const FRIENDS_MUSIC_FADE_OUT_TIME: float = 1.2
 
 #CONTROLLER FOR THIS SCRIPT
 @onready var player: CharacterBody2D = $"../Player"
@@ -22,6 +30,8 @@ const COZY_CHOICE_UI = preload("res://scripts/PolishedChoiceUI.gd")
 
 var running: bool = false
 var player_camera: Camera2D = null
+var friends_music: AudioStreamPlayer = null
+var slip_sound_player: AudioStreamPlayer = null
 
 const PLAYER_HD = preload("res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png")
 const KAIRI_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Friends/Kairi/Kairi.png")
@@ -42,6 +52,9 @@ func _ready() -> void:
 	no_button.visible = false
 
 	cinematic_camera.enabled = false
+
+	setup_friends_music()
+	setup_slip_sound()
 
 	player_camera = player.get_node_or_null("Camera2D") as Camera2D
 
@@ -76,6 +89,10 @@ func start_encounter() -> void:
 	running = true
 
 	GameManager.player_controls_locked = true
+
+	# Start the friends theme as the entrance cutscene begins.
+	fade_friends_music_in()
+
 	GameManager.friends_bookstore_choice = 0
 
 	# The optional "Make Friends" quest becomes active when this encounter starts.
@@ -321,6 +338,9 @@ func friends_notice_player() -> void:
 
 #WHAT IF I'VE TOLD YOU THAT I'VE FALLEN
 func player_falls() -> void:
+	# Play the slip sound immediately as the player falls, before the friends rush over.
+	play_slip_sound()
+
 	var sprite := player.get_node_or_null(
 		"AnimatedSprite2D"
 	) as AnimatedSprite2D
@@ -571,6 +591,63 @@ func return_camera_to_group() -> void:
 
 	await tween.finished
 	
+#FRIENDS MUSIC
+func setup_friends_music() -> void:
+	if friends_music != null:
+		return
+
+	friends_music = AudioStreamPlayer.new()
+	friends_music.name = "FriendsEntranceMusic"
+	friends_music.stream = FRIENDS_MUSIC
+	friends_music.volume_db = -80.0
+	friends_music.bus = "Master"
+	add_child(friends_music)
+
+func fade_friends_music_in() -> void:
+	if friends_music == null:
+		setup_friends_music()
+
+	if not friends_music.playing:
+		friends_music.volume_db = -80.0
+		friends_music.play()
+
+	await fade_friends_music_to(FRIENDS_MUSIC_FULL_VOLUME_DB, FRIENDS_MUSIC_FADE_IN_TIME)
+
+func fade_friends_music_to(target_db: float, duration: float) -> void:
+	if friends_music == null:
+		return
+
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(friends_music, "volume_db", target_db, duration)
+	await tween.finished
+
+func fade_friends_music_out() -> void:
+	if friends_music == null:
+		return
+
+	await fade_friends_music_to(-80.0, FRIENDS_MUSIC_FADE_OUT_TIME)
+	friends_music.stop()
+
+#SLIP SOUND
+func setup_slip_sound() -> void:
+	if slip_sound_player != null:
+		return
+
+	slip_sound_player = AudioStreamPlayer.new()
+	slip_sound_player.name = "SlipSound"
+	slip_sound_player.stream = SLIP_SOUND
+	slip_sound_player.bus = "Master"
+	add_child(slip_sound_player)
+
+func play_slip_sound() -> void:
+	if slip_sound_player == null:
+		setup_slip_sound()
+
+	slip_sound_player.stop()
+	slip_sound_player.play()
+
 #OSAP-OSAP CLA
 func start_friends_dialogue() -> void:
 	var portraits: Dictionary = {
@@ -747,6 +824,12 @@ func start_friends_dialogue() -> void:
 		}
 	]
 
+	# Lower the music slightly so the dialogue remains clear.
+	await fade_friends_music_to(
+		FRIENDS_MUSIC_DIALOGUE_VOLUME_DB,
+		FRIENDS_MUSIC_DIALOGUE_FADE_TIME
+	)
+
 	DialogueManager.start_multi_dialogue(
 		dialogue,
 		portraits,
@@ -754,7 +837,13 @@ func start_friends_dialogue() -> void:
 	)
 
 	await DialogueManager.dialogue_finished
-	
+
+	# Restore the full music volume after the dialogue.
+	await fade_friends_music_to(
+		FRIENDS_MUSIC_FULL_VOLUME_DB,
+		FRIENDS_MUSIC_DIALOGUE_FADE_TIME
+	)
+
 
 func show_bookstore_choice() -> void:
 	GameManager.player_controls_locked = true
@@ -846,6 +935,9 @@ func yes_route() -> void:
 	player.visible = false
 
 	await get_tree().create_timer(0.4).timeout
+
+	# The friends have left the scene, so gently fade their theme out.
+	await fade_friends_music_out()
 
 	await transition_to_bookstore()
 
@@ -941,6 +1033,9 @@ func no_route() -> void:
 	kerwin.visible = false
 	janssen.visible = false
 	nathaly.visible = false
+
+	# The friends have left the scene, so gently fade their theme out.
+	await fade_friends_music_out()
 
 	await hide_cinematic_bars()
 

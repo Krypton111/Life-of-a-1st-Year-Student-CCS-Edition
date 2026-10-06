@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player&NPCs/player.tscn" id="2_6omkh"]
 [ext_resource type="PackedScene" uid="uid://13v5gj6ib216" path="res://GAME ASSETS_/School (University of Continuous Help System Prime)/School Assets/Comp Lab Assets/plant.tscn" id="3_6omkh"]
 [ext_resource type="PackedScene" uid="uid://b6vujhawi2xsl" path="res://scenes/player&NPCs/joe.tscn" id="3_da2ak"]
-[ext_resource type="Texture2D" uid="uid://co44ct2dj2ke7" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_16.png" id="3_xxu0h"]
 [ext_resource type="PackedScene" uid="uid://ddla808sps54i" path="res://scenes/player&NPCs/joey.tscn" id="4_8n445"]
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="4_drj7c"]
 [ext_resource type="PackedScene" uid="uid://b4pp7r8rjygkw" path="res://scenes/player&NPCs/joseph.tscn" id="5_ynjyj"]
@@ -14,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://ejf7n6lwtrso" path="res://scenes/player&NPCs/janssen.tscn" id="9_b376v"]
 [ext_resource type="PackedScene" uid="uid://cn6ijyqcvca2n" path="res://scenes/player&NPCs/nathaly.tscn" id="10_11608"]
 [ext_resource type="PackedScene" uid="uid://dhhko64jds3eo" path="res://scenes/ui/DialogueUI.tscn" id="10_ynjyj"]
+[ext_resource type="Texture2D" uid="uid://crrcm8b21h1l5" path="res://GAME ASSETS_/Misc/nothing.png" id="11_mwybg"]
 [ext_resource type="Script" uid="uid://susdpwjou6ob" path="res://scripts/FriendsEncounter.gd" id="15_clt8j"]
 [ext_resource type="Script" uid="uid://d0ct6y03fo3mu" path="res://scripts/SchoolBookstoreReturnEvent.gd" id="16_8c38i"]
 [ext_resource type="Script" uid="uid://bd7fxq0b8p6ab" path="res://scripts/LectureRoomBullyInterruption.gd" id="17_11608"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://bn6m0osl1lp1s" path="res://scripts/SchoolNPCGhostCollision.gd" id="19_clt8j"]
 [ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="20_tina"]
 [ext_resource type="Script" uid="uid://cbkwqp147lok1" path="res://scripts/TinaHallwayEncounter.gd" id="21_tina"]
+[ext_resource type="AudioStream" uid="uid://cao1vm8obr0ap" path="res://GAME ASSETS_/Misc/Music/ingay.mp3" id="22_ingay"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_b6cbq"]
 vertices = PackedVector2Array(1194.3906, 123.61719, -31.03125, 120.9375, -26.546875, 108.96875, -80.4375, 78.13281, -94.47656, 75.97656, -92.78906, -161.75781, -91.453125, -161.89063, -39.75, 76.00781, -42.421875, -170.0625, 1210.9063, 87.14844, 1210.9063, 120.09375, 1229.0313, -174.03125, 1276.4219, -162.17188, 1278.1328, 76.21875, 1262.9688, 82.890625, -30.15625, -194.59375, 1211.6563, -202.6875)
@@ -4761,7 +4762,7 @@ zoom = Vector2(2.3, 2.3)
 [node name="Door_Room202" type="Sprite2D" parent="." unique_id=2035484539]
 position = Vector2(1153, 310)
 scale = Vector2(5.174999, 6.75)
-texture = ExtResource("3_xxu0h")
+texture = ExtResource("11_mwybg")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Door_Room202" unique_id=1463598697]
 position = Vector2(-379.7102, 123.11111)
@@ -4908,7 +4909,7 @@ position = Vector2(620, 454)
 scale = Vector2(1.6, 1.6)
 
 [node name="Sir Charles" parent="." unique_id=1654989308 instance=ExtResource("18_clt8j")]
-position = Vector2(1173, 344)
+position = Vector2(1160, 284.99997)
 scale = Vector2(1.7, 1.7)
 
 [node name="TinaHallwayEncounter" type="Node" parent="." unique_id=1740279583]
@@ -4916,3 +4917,59 @@ script = ExtResource("21_tina")
 
 [node name="SchoolNPCGhostCollision" type="Node" parent="." unique_id=600807343]
 script = ExtResource("19_clt8j")
+
+[node name="SchoolHallwayAmbience" type="AudioStreamPlayer" parent="." unique_id=1917776212]
+stream = ExtResource("22_ingay")
+volume_db = 1.042
+autoplay = true
+
+[node name="QuestMarker_Comlab202" type="Marker2D" parent="." unique_id=994744761]
+position = Vector2(635, 329)
+
+[node name="QuestMarker_Maclab" type="Marker2D" parent="." unique_id=997243058]
+position = Vector2(887, 329)
+
+[node name="QuestMarker_LectureRoom" type="Marker2D" parent="." unique_id=1685391241]
+position = Vector2(1156, 335)
+
+[node name="JoeSpawn0" type="Marker2D" parent="." unique_id=186205700]
+position = Vector2(636, 340)
+
+[node name="JoeySpawn0" type="Marker2D" parent="." unique_id=1090489560]
+position = Vector2(635, 340)
+
+[node name="JosephSpawn0" type="Marker2D" parent="." unique_id=520951214]
+position = Vector2(636, 341)
+
+[node name="JoeSpawn1" type="Marker2D" parent="." unique_id=999862161]
+position = Vector2(582, 429)
+
+[node name="JoeySpawn1" type="Marker2D" parent="." unique_id=436865240]
+position = Vector2(637, 421)
+
+[node name="JosephSpawn1" type="Marker2D" parent="." unique_id=1021999386]
+position = Vector2(694, 429)
+
+[node name="JoeSpawn2" type="Marker2D" parent="." unique_id=689665168]
+position = Vector2(1029, 368)
+
+[node name="JoeySpawn2" type="Marker2D" parent="." unique_id=1288169416]
+position = Vector2(1132, 435)
+
+[node name="JosephSpawn2" type="Marker2D" parent="." unique_id=2045337900]
+position = Vector2(1069, 410)
+
+[node name="JoeSpawn3" type="Marker2D" parent="." unique_id=548152868]
+position = Vector2(76, 535)
+
+[node name="JoeySpawn3" type="Marker2D" parent="." unique_id=1392703920]
+position = Vector2(82, 465)
+
+[node name="JosephSpawn3" type="Marker2D" parent="." unique_id=1008698787]
+position = Vector2(79, 408)
+
+[node name="SirCharlesSpawn0" type="Marker2D" parent="." unique_id=1740810350]
+position = Vector2(1191, 340)
+
+[node name="SirCharlesSpawn1" type="Marker2D" parent="." unique_id=717259020]
+position = Vector2(1181, 393)

@@ -23,8 +23,6 @@
 [ext_resource type="Texture2D" uid="uid://c6rdh7h2cjiwe" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_1.png" id="18_i1hmn"]
 [ext_resource type="Texture2D" uid="uid://r7wqj2xgqdbw" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/CRBakery_Black.png" id="22_8fobu"]
 [ext_resource type="Texture2D" uid="uid://d104aq708ar55" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/1.png" id="24_vgx7c"]
-[ext_resource type="Texture2D" uid="uid://co44ct2dj2ke7" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/texture_16.png" id="25_wcywk"]
-[ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="26_4v64c"]
 [ext_resource type="Texture2D" uid="uid://cai5dwoxq0fy5" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/2.png" id="26_wcywk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ge08"]
@@ -44199,14 +44197,6 @@ texture = ExtResource("6_bs318")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_wbwm8")
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_b6cbq"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_b6cbq"]
-radius = 5.56522
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ro6fj"]
-size = Vector2(26.782616, 9.86667)
-
 [node name="Cafe" type="Node2D" unique_id=13878766]
 y_sort_enabled = true
 
@@ -44435,24 +44425,3 @@ position = Vector2(4.768371e-07, 8.000002)
 scale = Vector2(1.7, 1.7)
 tile_map_data = PackedByteArray("AAACAA4AAAAAABkAAAACAA8AAAAAABoAAAADAA4AAAABABkAAAADAA8AAAABABoAAAD//wwAAAAAABkAAAD//w0AAAAAABoAAAAAAAwAAAABABkAAAAAAA0AAAABABoAAAA=")
 tile_set = SubResource("TileSet_eepwf")
-
-[node name="Door_Room202" type="Sprite2D" parent="." unique_id=286698169]
-position = Vector2(-549, 636)
-scale = Vector2(2.8749995, 3.75)
-texture = ExtResource("25_wcywk")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="Door_Room202" unique_id=1110580104]
-physics_material_override = SubResource("PhysicsMaterial_b6cbq")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/StaticBody2D" unique_id=518624074]
-position = Vector2(0, 2.1333275)
-shape = SubResource("CircleShape2D_b6cbq")
-
-[node name="Area2D" type="Area2D" parent="Door_Room202" unique_id=520810153]
-script = ExtResource("26_4v64c")
-room_name = "School"
-destination_scene = "uid://dtxaj25sp8o5w"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Door_Room202/Area2D" unique_id=211130833]
-position = Vector2(162.95656, -45.73333)
-shape = SubResource("RectangleShape2D_ro6fj")

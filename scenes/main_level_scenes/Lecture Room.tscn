@@ -6916,3 +6916,15 @@ shape = SubResource("RectangleShape2D_ru0ut")
 position = Vector2(159.33334, 58.333416)
 scale = Vector2(0.43999994, 0.44)
 script = ExtResource("9_oxlj3")
+
+[node name="QuestMarker_Challenge3" type="Marker2D" parent="." unique_id=2006115745]
+position = Vector2(201.33331, 83.33333)
+scale = Vector2(0.23783779, 0.23783782)
+
+[node name="QuestMarker_Door3" type="Marker2D" parent="." unique_id=2135372637]
+position = Vector2(264.99997, 53.666668)
+scale = Vector2(0.23783778, 0.23783779)
+
+[node name="QuestMarker_Talk3" type="Marker2D" parent="." unique_id=1651138890]
+position = Vector2(159, 62.666668)
+scale = Vector2(0.04632827, 0.04632827)

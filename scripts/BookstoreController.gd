@@ -93,7 +93,8 @@ const KAIRI_HD = preload("res://GAME ASSETS_/School (University of Continuous He
 const KERWIN_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Friends/Kerwin/Kerwin.png")
 const JANSSEN_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Friends/Janssen/Janssen.png")
 const NATHALY_HD = preload("res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/Friends/Nathaly/Nathaly.png")
-
+const ATE_LIBRO_HD = preload("res://GAME ASSETS_/Bookstore (Local Bookstore)/Character Sprites/32-bit Sprite Model/ate_libro.png")
+const KUYA_LIBRO_HD = preload("res://GAME ASSETS_/Bookstore (Local Bookstore)/Character Sprites/32-bit Sprite Model/kuya_libro.png")
 
 #CHALLENGE CHECKER AND QUEST CHECKER
 func _ready() -> void:
@@ -302,16 +303,25 @@ func handle_bookstore_interaction() -> void:
 	)
 
 
-	# ITEM HAS PRIORITY IF IT IS CLOSE ENOUGH.
-	if nearest_item != null and item_distance <= 20.0:
+	# ITEM HAS PRIORITY IF IT IS WITHIN THE ITEM'S OWN INTERACTION RANGE.
+	# This uses BookstoreItem.gd's exported interaction_distance instead of
+	# a separate hardcoded distance here.
+	if nearest_item != null:
 
-		if nearest_item.has_method(
-			"collect_item"
-		):
+		var item_can_interact := false
+
+		if nearest_item.has_method("can_interact"):
+			item_can_interact = nearest_item.can_interact(player)
+		else:
+			item_can_interact = item_distance <= 50.0
+
+		if item_can_interact and nearest_item.has_method("collect_item"):
 
 			print(
 				"COLLECTING ITEM: ",
-				nearest_item.name
+				nearest_item.name,
+				" | DISTANCE: ",
+				item_distance
 			)
 
 			nearest_item.collect_item()
@@ -1345,8 +1355,8 @@ func start_npc_dialogue(npc_name: String) -> void:
 		"Kerwin": KERWIN_HD,
 		"Janssen": JANSSEN_HD,
 		"Nathaly": NATHALY_HD,
-		"Ate Libro": get_character_texture(ate_libro),
-		"Kuya Libro": get_character_texture(kuya_libro)
+		"Ate Libro": ATE_LIBRO_HD,
+		"Kuya Libro": KUYA_LIBRO_HD
 	}
 
 	var dialogue: Array = []
@@ -2709,8 +2719,8 @@ func reposition_group_at_purchase_counter() -> void:
 func start_purchase_dialogue() -> void:
 
 	var portraits: Dictionary = {
-		"Kuya Libro": get_character_texture(kuya_libro),
-		"Ate Libro": get_character_texture(ate_libro),
+		"Kuya Libro": KUYA_LIBRO_HD,
+		"Ate Libro": ATE_LIBRO_HD,
 		"Kairi": KAIRI_HD,
 		"Kerwin": KERWIN_HD,
 		"Janssen": JANSSEN_HD,

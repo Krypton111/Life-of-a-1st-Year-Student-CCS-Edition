@@ -342,7 +342,63 @@ func build_bookstore_quests() -> void:
 
 func build_cafe_quests() -> void:
 	add_section_header("CURRENT OBJECTIVE")
-	add_quest("Finish your final conversation")
+
+	var route := str(GameManager.get_meta("cafe_quest_route", ""))
+	var phase := str(GameManager.get_meta("cafe_quest_phase", ""))
+
+	if route == "tina":
+		build_tina_cafe_quests(phase)
+	elif route == "friends":
+		build_friends_cafe_quests(phase)
+	elif route == "solo":
+		build_solo_cafe_quests(phase)
+	else:
+		add_quest("Finish your final conversation")
+
+
+func build_tina_cafe_quests(phase: String) -> void:
+	var phases := ["enter_cafe", "order_drinks", "post_order_conversation", "headache", "returned_home"]
+	add_quest("Enter the cafe", "done" if phase in phases.slice(1, phases.size()) else "active")
+	add_quest("Catch up with Tina", "done" if phase in phases.slice(2, phases.size()) else ("active" if phase == "order_drinks" else "locked"), 1)
+	add_quest("Order the coffee", "done" if phase in phases.slice(3, phases.size()) else ("active" if phase == "order_drinks" else "locked"))
+	add_quest("Talk to Tina after ordering", "done" if phase in ["headache", "returned_home"] else ("active" if phase == "post_order_conversation" else "locked"), 1)
+	add_quest("Deal with the headache", "done" if phase == "returned_home" else ("active" if phase == "headache" else "locked"))
+
+
+func build_friends_cafe_quests(phase: String) -> void:
+	var entered := phase in ["order_drinks", "coffee_ordered", "post_order_conversation", "headache", "returned_home"]
+	var ordered := phase in ["coffee_ordered", "post_order_conversation", "headache", "returned_home"]
+	var talked := phase in ["headache", "returned_home"]
+	var returned := phase == "returned_home"
+
+	add_quest("Enter the cafe with your friends", "done" if entered else "active")
+	add_quest("Spend time with your friends", "done" if ordered else ("active" if phase == "order_drinks" else "locked"), 1)
+	add_quest("Order everyone's coffee", "done" if ordered else ("active" if phase == "order_drinks" else "locked"))
+	add_quest("Talk with your friends after ordering", "done" if talked else ("active" if phase == "post_order_conversation" else "locked"), 1)
+	add_quest("Deal with the headache", "done" if returned else ("active" if phase == "headache" else "locked"))
+
+
+func build_solo_cafe_quests(phase: String) -> void:
+	var entered := phase != "enter_cafe" and phase != ""
+	var decided := phase in ["talk_to_gelo", "order_drinks", "coffee_ordered", "talk_to_gelo_after_order", "headache", "returned_home"]
+	var ordered := phase in ["coffee_ordered", "talk_to_gelo_after_order", "headache", "returned_home"]
+	var talked := phase in ["talk_to_gelo_after_order", "headache", "returned_home"]
+	var returned := phase == "returned_home"
+	var talked_to_gelo := bool(GameManager.get_meta("cafe_solo_order_talked_to_gelo", false))
+
+	add_quest("Enter the cafe alone", "done" if entered else "active")
+	add_quest("Decide whether to talk to Gelo", "done" if decided else ("active" if phase == "decide_about_gelo" else "locked"))
+
+	if talked_to_gelo:
+		add_quest("Talk to Gelo", "done" if ordered else ("active" if phase == "talk_to_gelo" else "locked"), 1)
+	else:
+		add_quest("Go to Marya for your coffee", "done" if ordered else ("active" if phase == "order_drinks" else "locked"), 1)
+
+	add_quest("Order your coffee", "done" if ordered else ("active" if phase == "order_drinks" else "locked"))
+
+	if talked_to_gelo:
+		add_quest("Talk to Gelo after ordering", "done" if returned or phase == "headache" else ("active" if phase == "talk_to_gelo_after_order" else "locked"), 1)
+	add_quest("Deal with the headache", "done" if returned else ("active" if phase == "headache" else "locked"))
 
 func build_default_quests() -> void:
 	add_section_header("CURRENT OBJECTIVE")
@@ -386,7 +442,10 @@ func build_state_signature(kind: String) -> String:
 		bool(GameManager.get("bookstore_discrete_math_book")),
 		bool(GameManager.get("bookstore_talked_to_friends")),
 		bool(GameManager.get("bookstore_talked_to_ate_libro")),
-		bool(GameManager.get("bookstore_talked_to_kuya_libro"))
+		bool(GameManager.get("bookstore_talked_to_kuya_libro")),
+		str(GameManager.get_meta("cafe_quest_route", "")),
+		str(GameManager.get_meta("cafe_quest_phase", "")),
+		bool(GameManager.get_meta("cafe_solo_order_talked_to_gelo", false))
 	])
 
 func position_panel() -> void:

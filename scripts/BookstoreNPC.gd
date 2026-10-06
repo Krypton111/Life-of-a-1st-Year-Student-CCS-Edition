@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var interaction_distance: float = 60.0
+@export var interaction_distance: float = 50.0
 
 
 func can_interact(player: CharacterBody2D) -> bool:
