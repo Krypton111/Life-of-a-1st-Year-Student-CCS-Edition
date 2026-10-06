@@ -284,7 +284,7 @@ func get_current_scene_path() -> String:
 func build_toast_ui() -> void:
 	toast_layer = CanvasLayer.new()
 	toast_layer.name = "AchievementToastLayer"
-	toast_layer.layer = 300
+	toast_layer.layer = 10000
 	add_child(toast_layer)
 
 	# Use a plain Control as the full-screen coordinate space.
