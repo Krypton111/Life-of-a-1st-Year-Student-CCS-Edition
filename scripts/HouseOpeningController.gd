@@ -68,7 +68,7 @@ func _ready() -> void:
 	load_panic_route()
 	setup_panic_navigation()
 
-	await get_tree().process_frame
+	await panic_tree.process_frame
 	await get_tree().process_frame
 
 	if not is_inside_tree():
@@ -325,6 +325,11 @@ func play_automatic_panic_monologue() -> void:
 
 	GameManager.player_controls_locked = true
 
+	var panic_tree := get_tree()
+	if panic_tree == null:
+		panic_route_running = false
+		return
+
 	for line_index in range(dialogue.size()):
 
 		if not DialogueManager.is_active:
@@ -350,7 +355,7 @@ func play_automatic_panic_monologue() -> void:
 			if not controller_active or not is_inside_tree():
 				panic_route_running = false
 				return
-			await get_tree().create_timer(
+			await panic_tree.create_timer(
 				AUTO_PANIC_PAUSES[line_index]
 			).timeout
 
@@ -390,7 +395,7 @@ func play_automatic_panic_monologue() -> void:
 		if not controller_active or not is_inside_tree():
 			panic_route_running = false
 			return
-		await get_tree().physics_frame
+		await panic_tree.physics_frame
 
 	if is_player_usable():
 		player.set_physics_process(true)
