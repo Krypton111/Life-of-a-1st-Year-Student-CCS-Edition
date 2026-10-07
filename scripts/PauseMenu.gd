@@ -878,7 +878,6 @@ func load_from_slot(slot: int) -> void:
 	showing_achievement_menu = false
 	showing_settings_menu = false
 
-	restore_all_non_pause_nodes()
 	get_tree().paused = false
 	Input.mouse_mode = cursor_mode_before_pause
 
@@ -1015,7 +1014,6 @@ func pause_game() -> void:
 	update_save_button_lock_state()
 
 	get_tree().paused = true
-	freeze_all_non_pause_nodes()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	resume_button.grab_focus()
 
@@ -1033,7 +1031,6 @@ func resume_game() -> void:
 		save_game_button.disabled = false
 		save_game_button.tooltip_text = ""
 
-	restore_all_non_pause_nodes()
 	get_tree().paused = false
 	Input.mouse_mode = cursor_mode_before_pause
 	hide_menu()
