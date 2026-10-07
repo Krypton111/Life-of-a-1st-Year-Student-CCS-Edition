@@ -281,7 +281,7 @@ func load_game(slot: int) -> bool:
 			# A loaded scene creates a fresh Player node. Explicitly restore
 			# its processing state because an earlier pause/cutscene may have
 			# disabled physics processing on the previous Player instance.
-			player.process_mode = Node.PROCESS_MODE_INHERIT
+			player.process_mode = Node.PROCESS_MODE_PAUSABLE
 			player.set_process(true)
 			player.set_physics_process(true)
 
