@@ -88,6 +88,11 @@ func is_player_usable() -> bool:
 	if not world.space.is_valid():
 		return false
 
+	# A CharacterBody2D can remain in the scene tree for a brief moment while
+	# its physics body has already been removed from the physics space.
+	if not PhysicsServer2D.body_get_space(player.get_rid()).is_valid():
+		return false
+
 	return true
 
 
@@ -474,7 +479,7 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			panic_navigation_agent.target_position = navigation_target
 			use_navigation = true
 
-			await get_tree().physics_frame
+			await tree.physics_frame
 
 	while panic_route_running and DialogueManager.is_active:
 
