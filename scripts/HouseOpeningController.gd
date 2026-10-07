@@ -624,13 +624,13 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			if detour_direction.length() > 0.1:
 				detour_time = 0.45
 				stuck_time = 0.0
-				await get_tree().physics_frame
+				await panic_tree.physics_frame
 				continue
 
 			player.velocity = Vector2.ZERO
 			break
 
-		await get_tree().physics_frame
+		await panic_tree.physics_frame
 
 
 func get_collision_escape_direction(
@@ -839,7 +839,7 @@ func play_phone_ring() -> void:
 
 	playback.push_buffer(buffer)
 
-	await get_tree().create_timer(duration + 0.05).timeout
+	await panic_tree.create_timer(duration + 0.05).timeout
 
 	player_audio.queue_free()
 
@@ -955,7 +955,7 @@ func play_parent_phone_call() -> void:
 
 func play_final_calming_monologue() -> void:
 
-	await get_tree().create_timer(0.75).timeout
+	await panic_tree.create_timer(0.75).timeout
 
 	var dialogue = [
 		{
