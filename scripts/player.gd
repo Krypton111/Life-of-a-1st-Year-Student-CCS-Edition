@@ -51,7 +51,10 @@ func _ready() -> void:
 
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
-	GameManager.player_controls_locked = false
+	# Do not forcibly unlock controls here. During save loading, the scene and
+	# SaveManager reconstruct the gameplay state after _ready(). Forcing this
+	# flag to false here can overwrite a restored lock and cause load-state
+	# controllers/dialogue sequences to become inconsistent.
 
 
 	# --------------------------------------------------------
