@@ -319,6 +319,10 @@ func play_automatic_panic_monologue() -> void:
 
 	await wait_for_dialogue_ui_entered(dialogue_ui)
 
+	if not controller_active or not is_inside_tree():
+		panic_route_running = false
+		return
+
 	GameManager.player_controls_locked = true
 
 	for line_index in range(dialogue.size()):
@@ -334,12 +338,18 @@ func play_automatic_panic_monologue() -> void:
 		dialogue_ui.typing_speed = AUTO_PANIC_SPEEDS[speed_index]
 
 		while DialogueManager.is_active and dialogue_ui.is_typing:
+			if not controller_active or not is_inside_tree():
+				panic_route_running = false
+				return
 			await get_tree().process_frame
 
 		if not DialogueManager.is_active:
 			break
 
 		if line_index < AUTO_PANIC_PAUSES.size():
+			if not controller_active or not is_inside_tree():
+				panic_route_running = false
+				return
 			await get_tree().create_timer(
 				AUTO_PANIC_PAUSES[line_index]
 			).timeout
@@ -357,9 +367,15 @@ func play_automatic_panic_monologue() -> void:
 			dialogue_ui.advance_to_next_line()
 
 	while DialogueManager.is_active and dialogue_ui.is_typing:
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
 		await get_tree().process_frame
 
 	if DialogueManager.is_active:
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
 		await get_tree().create_timer(0.15).timeout
 
 		if DialogueManager.is_active:
@@ -371,6 +387,9 @@ func play_automatic_panic_monologue() -> void:
 	panic_route_running = false
 
 	while panic_route_running:
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
 		await get_tree().physics_frame
 
 	if is_player_usable():
