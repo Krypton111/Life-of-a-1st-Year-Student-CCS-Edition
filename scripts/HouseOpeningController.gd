@@ -47,6 +47,7 @@ var panic_route_running: bool = false
 var panic_footstep_timer: float = 0.0
 var panic_navigation_agent: NavigationAgent2D = null
 var controller_active: bool = false
+var panic_tree: SceneTree = null
 
 
 func _ready() -> void:
@@ -64,12 +65,16 @@ func _ready() -> void:
 		print("ERROR: HouseOpeningController could not find Player.")
 		return
 
+	panic_tree = get_tree()
+	if panic_tree == null:
+		controller_active = false
+		return
+
 	transparent_texture = create_transparent_texture()
 	load_panic_route()
 	setup_panic_navigation()
 
 	await panic_tree.process_frame
-	await get_tree().process_frame
 
 	if not is_inside_tree():
 		return
@@ -325,7 +330,6 @@ func play_automatic_panic_monologue() -> void:
 
 	GameManager.player_controls_locked = true
 
-	var panic_tree := get_tree()
 	if panic_tree == null:
 		panic_route_running = false
 		return
@@ -346,7 +350,7 @@ func play_automatic_panic_monologue() -> void:
 			if not controller_active or not is_inside_tree():
 				panic_route_running = false
 				return
-			await get_tree().process_frame
+			await panic_tree.process_frame
 
 		if not DialogueManager.is_active:
 			break
@@ -375,13 +379,13 @@ func play_automatic_panic_monologue() -> void:
 		if not controller_active or not is_inside_tree():
 			panic_route_running = false
 			return
-		await get_tree().process_frame
+		await panic_tree.process_frame
 
 	if DialogueManager.is_active:
 		if not controller_active or not is_inside_tree():
 			panic_route_running = false
 			return
-		await get_tree().create_timer(0.15).timeout
+		await panic_tree.create_timer(0.15).timeout
 
 		if DialogueManager.is_active:
 			dialogue_ui.advance_to_next_line()
@@ -478,7 +482,7 @@ func run_panic_route() -> void:
 				return
 
 			update_panic_animation(Vector2.ZERO)
-			await get_tree().physics_frame
+			await panic_tree.physics_frame
 
 		panic_route_running = false
 		return
@@ -527,7 +531,7 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			panic_navigation_agent.target_position = navigation_target
 			use_navigation = true
 
-			await get_tree().physics_frame
+			await panic_tree.physics_frame
 
 	while panic_route_running and DialogueManager.is_active:
 
@@ -608,7 +612,7 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 				)
 				if detour_direction.length() > 0.1:
 					detour_time = 0.45
-				await get_tree().physics_frame
+				await panic_tree.physics_frame
 				continue
 
 			detour_direction = get_collision_escape_direction(
