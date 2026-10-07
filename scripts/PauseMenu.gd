@@ -55,7 +55,7 @@ var showing_settings_menu := false
 
 var cursor_mode_before_pause: Input.MouseMode = Input.MOUSE_MODE_HIDDEN
 var paused_node_process_modes: Array = []
-var paused_audio_players: Array[AudioStreamPlayer] = []
+var paused_audio_players: Array[Node] = []
 var paused_audio_player_states: Array[bool] = []
 
 
@@ -1059,13 +1059,15 @@ func collect_and_pause_audio_players(node: Node) -> void:
 	if node != self and is_ancestor_of(node):
 		return
 
-	if node is AudioStreamPlayer:
-		var audio_player := node as AudioStreamPlayer
+	if node is AudioStreamPlayer or node is AudioStreamPlayer2D or node is AudioStreamPlayer3D:
+		var audio_player := node as Node
 
-		if audio_player.playing:
+		if bool(audio_player.get("playing")):
 			paused_audio_players.append(audio_player)
-			paused_audio_player_states.append(audio_player.stream_paused)
-			audio_player.stream_paused = true
+			paused_audio_player_states.append(
+				bool(audio_player.get("stream_paused"))
+			)
+			audio_player.set("stream_paused", true)
 
 	for child in node.get_children():
 		collect_and_pause_audio_players(child)
@@ -1079,7 +1081,10 @@ func resume_game_audio() -> void:
 			continue
 
 		if index < paused_audio_player_states.size():
-			audio_player.stream_paused = paused_audio_player_states[index]
+			audio_player.set(
+				"stream_paused",
+				paused_audio_player_states[index]
+			)
 
 	paused_audio_players.clear()
 	paused_audio_player_states.clear()
