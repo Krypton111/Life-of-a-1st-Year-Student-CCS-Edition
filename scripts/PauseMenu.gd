@@ -55,6 +55,8 @@ var showing_settings_menu := false
 
 var cursor_mode_before_pause: Input.MouseMode = Input.MOUSE_MODE_HIDDEN
 var paused_node_process_modes: Array = []
+var paused_audio_players: Array[AudioStreamPlayer] = []
+var paused_audio_player_states: Array[bool] = []
 
 
 func _ready() -> void:
@@ -903,6 +905,7 @@ func force_unlock_player_after_load() -> void:
 		if SaveManager.property_exists(GameManager, property_name):
 			GameManager.set(property_name, false)
 
+	resume_game_audio()
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
@@ -1014,6 +1017,7 @@ func pause_game() -> void:
 	update_save_button_lock_state()
 
 	get_tree().paused = true
+	pause_game_audio()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	resume_button.grab_focus()
 
@@ -1031,55 +1035,54 @@ func resume_game() -> void:
 		save_game_button.disabled = false
 		save_game_button.tooltip_text = ""
 
+	resume_game_audio()
 	get_tree().paused = false
 	Input.mouse_mode = cursor_mode_before_pause
 	hide_menu()
 
 
-func freeze_all_non_pause_nodes() -> void:
-	paused_node_process_modes.clear()
+func pause_game_audio() -> void:
+	paused_audio_players.clear()
+	paused_audio_player_states.clear()
+
 	var root := get_tree().root
 	if root == null:
 		return
-	freeze_node_tree(root)
+
+	collect_and_pause_audio_players(root)
 
 
-func freeze_node_tree(node: Node) -> void:
-	if node == null:
+func collect_and_pause_audio_players(node: Node) -> void:
+	if node == null or not is_instance_valid(node):
 		return
 
-	if not is_instance_valid(node):
+	if node != self and is_ancestor_of(node):
 		return
 
-	if node != self and not is_ancestor_of(node):
-		paused_node_process_modes.append([node, node.process_mode])
-		node.process_mode = Node.PROCESS_MODE_DISABLED
+	if node is AudioStreamPlayer:
+		var audio_player := node as AudioStreamPlayer
+
+		if audio_player.playing:
+			paused_audio_players.append(audio_player)
+			paused_audio_player_states.append(audio_player.stream_paused)
+			audio_player.stream_paused = true
 
 	for child in node.get_children():
-		freeze_node_tree(child)
+		collect_and_pause_audio_players(child)
 
 
-func restore_all_non_pause_nodes() -> void:
-	for entry in paused_node_process_modes:
-		if entry.size() < 2:
+func resume_game_audio() -> void:
+	for index in range(paused_audio_players.size()):
+		var audio_player := paused_audio_players[index]
+
+		if not is_instance_valid(audio_player):
 			continue
 
-		var raw = entry[0]
+		if index < paused_audio_player_states.size():
+			audio_player.stream_paused = paused_audio_player_states[index]
 
-		if raw == null:
-			continue
-
-		if not is_instance_valid(raw):
-			continue
-
-		var node := raw as Node
-
-		if node == null:
-			continue
-
-		node.process_mode = entry[1]
-
-	paused_node_process_modes.clear()
+	paused_audio_players.clear()
+	paused_audio_player_states.clear()
 
 
 func show_button_feedback(button: Button, message: String) -> void:
@@ -1162,5 +1165,7 @@ func hide_menu() -> void:
 	showing_settings_menu = false
 	slot_mode = ""
 
-	# Stale references from a previous scene may still be here.
+	# Audio references from a previous scene must not survive a scene load.
+	paused_audio_players.clear()
+	paused_audio_player_states.clear()
 	paused_node_process_modes.clear()
