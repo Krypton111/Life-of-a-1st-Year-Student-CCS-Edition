@@ -503,7 +503,7 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			panic_navigation_agent.target_position = navigation_target
 			use_navigation = true
 
-			await tree.physics_frame
+			await get_tree().physics_frame
 
 	while panic_route_running and DialogueManager.is_active:
 
