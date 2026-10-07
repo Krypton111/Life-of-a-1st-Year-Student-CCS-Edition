@@ -173,13 +173,32 @@ func finish_challenge():
 		"res://scenes/main_level_scenes/comlab202.tscn"
 	)
 
-	# ComputerInteraction locks the player before entering the challenge.
-	# Clear that lock only after the return scene has loaded.
+	# The challenge was entered by locking the player in ComputerInteraction.
+	# The challenge scene creates a NEW Player when comlab202.tscn loads, so
+	# restore the global lock and the new Player's processing state here.
 	GameManager.player_controls_locked = false
 
-	var player := get_tree().get_first_node_in_group("player")
+	var player := get_tree().get_first_node_in_group("player") as CharacterBody2D
+
 	if player != null:
-		player.velocity = Vector2.ZERO
+		# Make absolutely sure the newly-created Player is allowed to process.
+		player.process_mode = Node.PROCESS_MODE_PAUSABLE
+		player.set_process(true)
 		player.set_physics_process(true)
+		player.velocity = Vector2.ZERO
+
+		if player.has_method("unlock_controls"):
+			player.unlock_controls()
+
+		print(
+			"ComLab return: Player restored. locked=",
+			GameManager.player_controls_locked,
+			" physics=",
+			player.is_physics_processing(),
+			" process_mode=",
+			player.process_mode
+		)
+	else:
+		push_error("ComLab return: Player node was not found.")
 
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
