@@ -278,6 +278,13 @@ func load_game(slot: int) -> bool:
 			if player is CharacterBody2D:
 				player.velocity = Vector2.ZERO
 
+			# A loaded scene creates a fresh Player node. Explicitly restore
+			# its processing state because an earlier pause/cutscene may have
+			# disabled physics processing on the previous Player instance.
+			player.process_mode = Node.PROCESS_MODE_INHERIT
+			player.set_process(true)
+			player.set_physics_process(true)
+
 	# Ensure the tree isn't paused and the mouse is hidden for gameplay.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
