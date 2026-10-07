@@ -46,9 +46,16 @@ var panic_route: Array[Marker2D] = []
 var panic_route_running: bool = false
 var panic_footstep_timer: float = 0.0
 var panic_navigation_agent: NavigationAgent2D = null
+var controller_active: bool = false
 
 
 func _ready() -> void:
+
+	controller_active = true
+
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		controller_active = false
+		return
 
 	if GameManager.house_opening_completed:
 		return
@@ -64,6 +71,12 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
+	if not is_inside_tree():
+		return
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		controller_active = false
+		return
+
 	await start_house_opening()
 
 
@@ -72,6 +85,9 @@ func _ready() -> void:
 # =========================================
 
 func is_player_usable() -> bool:
+	if not controller_active or not is_inside_tree():
+		return false
+
 	if player == null:
 		return false
 
@@ -88,6 +104,9 @@ func is_player_usable() -> bool:
 	if not world.space.is_valid():
 		return false
 
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		return false
+
 	# A CharacterBody2D can remain in the scene tree for a brief moment while
 	# its physics body has already been removed from the physics space.
 	if not PhysicsServer2D.body_get_space(player.get_rid()).is_valid():
@@ -101,6 +120,11 @@ func is_player_usable() -> bool:
 # =========================================
 
 func start_house_opening() -> void:
+
+	if not controller_active or not is_inside_tree():
+		return
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		return
 
 	GameManager.player_controls_locked = false
 	player.velocity = Vector2.ZERO
