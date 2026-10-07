@@ -535,6 +535,22 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 
 	while panic_route_running and DialogueManager.is_active:
 
+		# The panic route moves the Player directly with move_and_slide(),
+		# so it does not automatically stop just because the Player's own
+		# _physics_process() is paused. Explicitly suspend this coroutine
+		# while the global SceneTree is paused.
+		if panic_tree != null and panic_tree.paused:
+			player.velocity = Vector2.ZERO
+			update_panic_animation(Vector2.ZERO)
+
+			if player.get_node_or_null("FootstepSound") != null:
+				var footstep_sound = player.get_node("FootstepSound")
+				if footstep_sound.playing:
+					footstep_sound.stop()
+
+			await panic_tree.process_frame
+			continue
+
 		if not is_player_usable():
 			panic_route_running = false
 			return
