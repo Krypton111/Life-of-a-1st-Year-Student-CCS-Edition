@@ -72,6 +72,10 @@ var tina_post_hallway_sequence_started := false
 
 
 func _process(_delta: float) -> void:
+	var loader := get_node_or_null("/root/SaveManager")
+	if loader != null and bool(loader.get("is_loading")):
+		return
+
 	if not returning_from_tina_dream or dream_return_sequence_running:
 		return
 
