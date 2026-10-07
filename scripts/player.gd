@@ -46,6 +46,11 @@ var quest_pointer: Node2D = null
 
 func _ready() -> void:
 
+	# The player must obey the global SceneTree pause.
+	# PROCESS_MODE_PAUSABLE means _physics_process() stops while
+	# get_tree().paused is true, but resumes normally afterward.
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+
 	# Player stays at normal world layer.
 	z_index = 0
 
