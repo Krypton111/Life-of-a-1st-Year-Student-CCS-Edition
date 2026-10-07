@@ -1002,8 +1002,20 @@ func wait_for_dialogue_ui_entered(dialogue_ui: Control) -> void:
 	if dialogue_ui == null:
 		return
 
+	# The controller can be removed from the scene tree during a scene change
+	# or save/load operation while this coroutine is waiting. Cache the tree
+	# before awaiting so we never call get_tree() after the controller is gone.
+	var tree := get_tree()
+
+	if tree == null:
+		return
+
 	while DialogueManager.is_active and is_instance_valid(dialogue_ui) and dialogue_ui.is_entering:
-		await get_tree().process_frame
+		await tree.process_frame
+
+		# Stop immediately if this controller was removed while we were waiting.
+		if not is_inside_tree():
+			return
 
 
 # =========================================
