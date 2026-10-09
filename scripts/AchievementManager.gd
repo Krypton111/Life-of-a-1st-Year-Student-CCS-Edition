@@ -43,15 +43,24 @@ const ACHIEVEMENTS: Array[Dictionary] = [
 	{"id":"cafe_friends_all_wrong", "title":"Lotsa orders part 2.", "description":"Get every group order wrong."},
 	{"id":"cafe_no_gelo", "title":"Past is past.", "description":"Choose not to talk to Gelo."},
 
-	{"id":"secret_no_school", "title":"I DON'T WANT TO GO TO SCHOOL D:", "description":"Stay in house_game_level for 3 minutes."},
+	{"id":"life_of_a_1st_year", "title":"Life of a 1st Year.", "description":"Unlock all 26 other achievements."},
 
-	{"id":"life_of_a_1st_year", "title":"Life of a 1st Year.", "description":"Unlock all 26 other achievements."}
+	{"id":"secret_no_school", "title":"I DON'T WANT TO GO TO SCHOOL D:", "description":"Stay in house_game_level for 3 minutes.", "category":"super_secret", "counts_toward_completion":true},
+
+	{"id":"secret_school_hallway", "title":"Please do not loiter!", "description":"Stay in the school hallway for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+	{"id":"secret_comlab_chill", "title":"Wat'cha doin'? Just Chillin' part 1", "description":"Stay in COMLAB 202 for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+	{"id":"secret_maclab_chill", "title":"Wat'cha doin'? Just Chillin' part 2", "description":"Stay in the school MAC LAB for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+	{"id":"secret_lecture_chill", "title":"Wat'cha doin'? Just Chillin' part 3", "description":"Stay in the Lecture Room for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+	{"id":"secret_bookstore_loiter", "title":"Paper cuts", "description":"Stay in the bookstore for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+	{"id":"secret_cafe_chill", "title":"Sus! Marya & Hosep!", "description":"Stay in the cafe for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
+
 ]
 
 const STATE_KEY := "achievements_unlocked"
 const HOUSE_SECRET_SECONDS := 180.0
 
 var house_timer: float = 0.0
+var room_timer: float = 0.0
 var last_scene_path: String = ""
 var toast_layer: CanvasLayer = null
 var toast_panel: Panel = null
@@ -84,12 +93,41 @@ func _process(delta: float) -> void:
 	if scene_path != last_scene_path:
 		if not scene_path.ends_with("house_game_level.tscn"):
 			house_timer = 0.0
+		room_timer = 0.0
 		last_scene_path = scene_path
+
+	if get_tree().paused:
+		return
 
 	if scene_path.ends_with("house_game_level.tscn"):
 		house_timer += delta
 		if house_timer >= HOUSE_SECRET_SECONDS:
 			unlock("secret_no_school")
+
+	var room_achievement_id := get_room_dwell_achievement(scene_path)
+	if room_achievement_id.is_empty():
+		room_timer = 0.0
+		return
+
+	room_timer += delta
+	if room_timer >= HOUSE_SECRET_SECONDS:
+		unlock(room_achievement_id)
+
+
+func get_room_dwell_achievement(scene_path: String) -> String:
+	if scene_path.ends_with("/School.tscn"):
+		return "secret_school_hallway"
+	if scene_path.ends_with("/comlab202.tscn"):
+		return "secret_comlab_chill"
+	if scene_path.ends_with("/mac_lab.tscn"):
+		return "secret_maclab_chill"
+	if scene_path.ends_with("/Lecture Room.tscn"):
+		return "secret_lecture_chill"
+	if scene_path.ends_with("/Bookstore.tscn"):
+		return "secret_bookstore_loiter"
+	if scene_path.ends_with("/game.tscn"):
+		return "secret_cafe_chill"
+	return ""
 
 
 func ensure_storage() -> void:
@@ -141,6 +179,8 @@ func get_all_achievements() -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	for achievement in ACHIEVEMENTS:
 		var item := achievement.duplicate(true)
+		if not item.has("category"):
+			item["category"] = "standard"
 		item["unlocked"] = is_unlocked(str(item.get("id", "")))
 		result.append(item)
 	return result
@@ -253,6 +293,8 @@ func get_original_achievement_count_unlocked() -> int:
 	for achievement in ACHIEVEMENTS:
 		var achievement_id := str(achievement.get("id", ""))
 		if achievement_id == "life_of_a_1st_year":
+			continue
+		if not bool(achievement.get("counts_toward_completion", true)):
 			continue
 		if is_unlocked(achievement_id):
 			count += 1
