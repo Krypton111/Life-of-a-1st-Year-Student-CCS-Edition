@@ -1,11 +1,11 @@
 extends Control
 
 const OPENING_SCENE := "res://scenes/main_level_scenes/cutscenes/opening_cutscene.tscn"
-const GOLD := Color(1.0, 0.78, 0.40)
-const PALE_GOLD := Color(1.0, 0.88, 0.65)
-const CREAM := Color(0.98, 0.94, 0.84)
-const MUTED := Color(0.69, 0.68, 0.65)
-const PANEL := Color(0.055, 0.075, 0.10, 0.94)
+const GOLD := Color("#E6AD63")
+const PALE_GOLD := Color("#FFE1A8")
+const CREAM := Color("#FFF0D8")
+const MUTED := Color("#D8BEA1")
+const PANEL := Color(0.15, 0.095, 0.065, 0.96)
 const SCHOOL_ASSETS := "res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/"
 const MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png"
 
@@ -32,16 +32,16 @@ func _draw() -> void:
 	# A twilight campus scene, drawn in crisp pixel-art-inspired layers.
 	var w := size.x
 	var h := size.y
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#101b2c"))
-	draw_rect(Rect2(0, 0, w, h * 0.43), Color("#18243a"))
-	draw_rect(Rect2(0, h * 0.43, w, h * 0.22), Color("#283149"))
-	draw_rect(Rect2(0, h * 0.65, w, h * 0.35), Color("#172b32"))
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#4A3025"))
+	draw_rect(Rect2(0, 0, w, h * 0.43), Color("#956344"))
+	draw_rect(Rect2(0, h * 0.43, w, h * 0.22), Color("#B8794D"))
+	draw_rect(Rect2(0, h * 0.65, w, h * 0.35), Color("#58664A"))
 
 	# Distant dusk glow and moon.
 	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.105, Color(0.93, 0.65, 0.39, 0.08))
 	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.075, Color(0.96, 0.75, 0.50, 0.12))
-	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.047, Color("#f3d7a2"))
-	draw_circle(Vector2(w * 0.785, h * 0.205), h * 0.042, Color("#283149"))
+	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.047, Color("#FFE2A3"))
+	draw_circle(Vector2(w * 0.785, h * 0.205), h * 0.042, Color("#B8794D"))
 
 	# Tiny stars / windows in the evening sky.
 	for i in range(42):
@@ -57,34 +57,34 @@ func _draw() -> void:
 		PackedVector2Array([Vector2(w * 0.86, h * 0.55), Vector2(w * 0.86, h * 0.40), Vector2(w, h * 0.40), Vector2(w, h * 0.55)])
 	]
 	for shape in far_buildings:
-		draw_colored_polygon(shape, Color("#202c3d"))
+		draw_colored_polygon(shape, Color("#654735"))
 
 	# Main university hall on the right side.
 	var bx := w * 0.58
 	var by := h * 0.38
 	var bw := w * 0.34
 	var bh := h * 0.34
-	draw_rect(Rect2(bx, by + h * 0.06, bw, bh), Color("#111d2a"))
-	draw_rect(Rect2(bx - 20, by + h * 0.04, bw + 40, h * 0.055), Color("#d6a75f"))
-	draw_rect(Rect2(bx + bw * 0.39, by - h * 0.035, bw * 0.22, h * 0.095), Color("#d6a75f"))
+	draw_rect(Rect2(bx, by + h * 0.06, bw, bh), Color("#4A3025"))
+	draw_rect(Rect2(bx - 20, by + h * 0.04, bw + 40, h * 0.055), Color("#D99A55"))
+	draw_rect(Rect2(bx + bw * 0.39, by - h * 0.035, bw * 0.22, h * 0.095), Color("#D99A55"))
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(bx + bw * 0.34, by - h * 0.035),
 		Vector2(bx + bw * 0.5, by - h * 0.11),
 		Vector2(bx + bw * 0.66, by - h * 0.035)
-	]), Color("#e8c17c"))
+	]), Color("#F0C57A"))
 	for row in range(3):
 		for col in range(8):
 			var wx := bx + 24 + col * (bw - 48) / 8.0
 			var wy := by + h * 0.10 + row * h * 0.065
-			draw_rect(Rect2(wx, wy, 18, 28), Color("#e8b86c", 0.8 if (row + col) % 3 != 0 else 0.28))
-			draw_rect(Rect2(wx + 4, wy + 4, 10, 20), Color("#3d4854"))
+			draw_rect(Rect2(wx, wy, 18, 28), Color("#F2BC69", 0.8 if (row + col) % 3 != 0 else 0.28))
+			draw_rect(Rect2(wx + 4, wy + 4, 10, 20), Color("#704B34"))
 
 	# Foreground path, lawn, and a clean frame.
-	draw_rect(Rect2(0, h * 0.83, w, h * 0.17), Color("#101e27"))
+	draw_rect(Rect2(0, h * 0.83, w, h * 0.17), Color("#30231D"))
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(w * 0.46, h), Vector2(w * 0.59, h * 0.83),
 		Vector2(w * 0.82, h * 0.83), Vector2(w, h),
-	]), Color("#253440"))
+	]), Color("#6E5038"))
 	draw_line(Vector2(24, 24), Vector2(w - 24, 24), Color(GOLD, 0.55), 2.0)
 	draw_line(Vector2(24, h - 24), Vector2(w - 24, h - 24), Color(GOLD, 0.55), 2.0)
 	draw_line(Vector2(24, 24), Vector2(24, h - 24), Color(GOLD, 0.55), 2.0)
@@ -183,7 +183,7 @@ func build_menu() -> void:
 	var footer := Label.new()
 	footer.text = "ADVANCE GAME DESIGN  •  50054"
 	footer.add_theme_font_size_override("font_size", 12)
-	footer.add_theme_color_override("font_color", Color("#9a907e"))
+	footer.add_theme_color_override("font_color", Color("#C4A783"))
 	footer.add_theme_constant_override("letter_spacing", 2)
 	content.add_child(footer)
 
@@ -235,20 +235,20 @@ func make_menu_button(number: String, label_text: String, is_primary: bool = fal
 	button.add_theme_color_override("font_hover_color", Color("#fff3d5"))
 	button.add_theme_color_override("font_pressed_color", GOLD)
 	button.add_theme_color_override("font_focus_color", CREAM)
-	var normal := make_button_style(Color("#253044") if is_primary else Color("#182333"))
-	var hover := make_button_style(Color("#4a3b32") if is_primary else Color("#2d394a"))
-	var pressed := make_button_style(Color("#111a27"))
+	var normal := make_button_style(Color("#5A3A28") if is_primary else Color("#3A281E"))
+	var hover := make_button_style(Color("#755039") if is_primary else Color("#6B4931"))
+	var pressed := make_button_style(Color("#2B1C14"))
 	button.add_theme_stylebox_override("normal", normal)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("focus", make_button_style(Color("#303c4d")))
+	button.add_theme_stylebox_override("focus", make_button_style(Color("#815839")))
 	return button
 
 
 func make_button_style(fill: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill
-	style.border_color = Color("#c59a57")
+	style.border_color = Color("#B9824A")
 	style.set_border_width_all(1)
 	style.border_width_left = 4
 	style.set_corner_radius_all(2)
