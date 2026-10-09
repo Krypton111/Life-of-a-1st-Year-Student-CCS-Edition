@@ -8,6 +8,7 @@ const MUTED := Color("#D8BEA1")
 const PANEL := Color(0.15, 0.095, 0.065, 0.96)
 const SCHOOL_ASSETS := "res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/"
 const MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png"
+const MALE_MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Male-MC.png"
 
 var pause_menu: CanvasLayer
 var quit_dialog: PanelContainer
@@ -165,6 +166,8 @@ func build_character_art() -> void:
 	# visual anchor. Slight overlaps make the group feel gathered, not lined up.
 	add_character(SCHOOL_ASSETS + "Friends/Nathaly/Nathaly.png", Vector2(400, 440), Vector2(275, 545), 2)
 	add_character(SCHOOL_ASSETS + "Friends/Janssen/Janssen.png", Vector2(530, 465), Vector2(260, 520), 2)
+	# Keep both main characters side by side in the foreground.
+	add_character(MALE_MC_ASSET, Vector2(775, 395), Vector2(285, 620), 3)
 	add_character(MC_ASSET, Vector2(675, 365), Vector2(315, 660), 3)
 	add_character(SCHOOL_ASSETS + "Friends/Kairi/Kairi.png", Vector2(870, 435), Vector2(270, 550), 2)
 	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1075, 445), Vector2(265, 540), 2)
