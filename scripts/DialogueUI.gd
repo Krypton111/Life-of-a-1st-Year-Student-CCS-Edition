@@ -40,6 +40,7 @@ var left_base_scale: Vector2
 var right_base_scale: Vector2
 
 var multi_dialogue_active := false
+var hide_right_portrait_for_parent_call := false
 var speaker_portraits: Dictionary = {}
 var player_dialogue_texture: Texture2D
 var current_bully_speaker := ""
@@ -450,6 +451,14 @@ func start_dialogue(
 			right_texture = selected_player_texture
 
 	dialogue_data = data
+	# Parent phone-call scenes should show only the selected MC portrait.
+	# Some of those calls still pass the opposite MC portrait as the right texture.
+	hide_right_portrait_for_parent_call = false
+	for dialogue_line in data:
+		var line_speaker := str(dialogue_line.get("speaker", "")).strip_edges().to_lower()
+		if line_speaker in ["mom", "mum", "mother", "dad", "father", "parent", "parents"]:
+			hide_right_portrait_for_parent_call = true
+			break
 	current_line = 0
 	auto_next_elapsed = 0.0
 
@@ -491,7 +500,7 @@ func start_dialogue(
 	right_character.modulate = Color.WHITE
 
 	left_character.visible = true
-	right_character.visible = true
+	right_character.visible = not hide_right_portrait_for_parent_call
 	dialogue_box.visible = true
 
 	if skip_all_button != null:
