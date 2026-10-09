@@ -53,6 +53,13 @@ var panic_tree: SceneTree = null
 func _ready() -> void:
 
 	controller_active = true
+	# Initialize the SceneTree even when the house opening sequence is already
+	# complete. Returning from the cafe dream still uses this controller for
+	# the phone ring, which awaits a timer through panic_tree.
+	panic_tree = get_tree()
+	if panic_tree == null:
+		controller_active = false
+		return
 
 	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
 		controller_active = false
@@ -63,11 +70,6 @@ func _ready() -> void:
 
 	if player == null:
 		print("ERROR: HouseOpeningController could not find Player.")
-		return
-
-	panic_tree = get_tree()
-	if panic_tree == null:
-		controller_active = false
 		return
 
 	transparent_texture = create_transparent_texture()
