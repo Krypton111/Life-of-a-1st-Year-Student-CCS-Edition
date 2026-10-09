@@ -118,7 +118,7 @@ func build_ui() -> void:
 	overlay = ColorRect.new()
 	overlay.name = "PauseOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.color = Color(0.12, 0.075, 0.045, 0.70)
+	overlay.color = Color(0.16, 0.095, 0.055, 0.76)
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(overlay)
 
@@ -145,7 +145,7 @@ func build_ui() -> void:
 	title.text = "PAUSED"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 28)
-	title.add_theme_color_override("font_color", Color(0.96, 0.87, 0.68))
+	title.add_theme_color_override("font_color", Color("#FFE1A8"))
 	title.custom_minimum_size.y = 42
 	box.add_child(title)
 
@@ -207,7 +207,7 @@ func build_confirmation_ui() -> void:
 	title.text = "Quit Game?"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 25)
-	title.add_theme_color_override("font_color", Color(0.88, 0.84, 0.72))
+	title.add_theme_color_override("font_color", Color("#F4C982"))
 	box.add_child(title)
 
 	var message := Label.new()
@@ -265,7 +265,7 @@ func build_slot_ui() -> void:
 	hint.text = "Choose one of 10 independent save files."
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.add_theme_font_size_override("font_size", 14)
-	hint.add_theme_color_override("font_color", Color(0.80, 0.74, 0.64))
+	hint.add_theme_color_override("font_color", Color("#D8BEA1"))
 	box.add_child(hint)
 
 	slot_grid = GridContainer.new()
@@ -379,7 +379,7 @@ func build_settings_ui() -> void:
 	var volume_label := Label.new()
 	volume_label.text = "Volume"
 	volume_label.add_theme_font_size_override("font_size", 18)
-	volume_label.add_theme_color_override("font_color", Color(0.91, 0.82, 0.67))
+	volume_label.add_theme_color_override("font_color", Color("#F6E7D2"))
 	volume_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	volume_header.add_child(volume_label)
 
@@ -459,7 +459,7 @@ func build_settings_ui() -> void:
 	)
 	quest_pointer_toggle.add_theme_color_override(
 		"font_hover_color",
-		Color(1.0, 0.91, 0.67)
+		Color("#FFE1A8")
 	)
 	quest_pointer_toggle.toggled.connect(on_quest_pointer_toggled)
 	quest_pointer_row.add_child(quest_pointer_toggle)
@@ -971,17 +971,17 @@ func make_button(text_value: String) -> Button:
 	button.add_theme_color_override("font_hover_color", Color(1.0, 0.91, 0.67))
 	button.add_theme_color_override("font_pressed_color", Color(1.0, 1.0, 1.0))
 
-	button.add_theme_stylebox_override("normal", make_button_style(Color(0.31, 0.20, 0.13, 0.96)))
-	button.add_theme_stylebox_override("hover", make_button_style(Color(0.43, 0.29, 0.19, 0.98)))
-	button.add_theme_stylebox_override("pressed", make_button_style(Color(0.23, 0.14, 0.09, 1.0)))
+	button.add_theme_stylebox_override("normal", make_button_style(Color(0.23, 0.14, 0.09, 0.98)))
+	button.add_theme_stylebox_override("hover", make_button_style(Color(0.43, 0.27, 0.16, 0.99)))
+	button.add_theme_stylebox_override("pressed", make_button_style(Color(0.15, 0.085, 0.05, 1.0)))
 
 	return button
 
 
 func make_panel_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.24, 0.16, 0.11, 0.98)
-	style.border_color = Color(0.67, 0.50, 0.31, 1.0)
+	style.bg_color = Color(0.20, 0.125, 0.08, 0.99)
+	style.border_color = Color("#C99555")
 	style.set_border_width_all(3)
 	style.corner_radius_top_left = 8
 	style.corner_radius_top_right = 8
@@ -995,7 +995,7 @@ func make_panel_style() -> StyleBoxFlat:
 func make_button_style(background: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = background
-	style.border_color = Color(0.52, 0.37, 0.23, 1.0)
+	style.border_color = Color("#94623D")
 	style.set_border_width_all(1)
 	style.corner_radius_top_left = 4
 	style.corner_radius_top_right = 4
