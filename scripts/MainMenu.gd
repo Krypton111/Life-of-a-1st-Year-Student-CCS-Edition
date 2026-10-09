@@ -305,7 +305,7 @@ func build_profile_setup() -> void:
 	profile_dimmer = ColorRect.new()
 	profile_dimmer.name = "PlayerSetupDimmer"
 	profile_dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	profile_dimmer.color = Color(0.04, 0.025, 0.018, 0.86)
+	profile_dimmer.color = Color(0.035, 0.02, 0.015, 0.9)
 	profile_dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	profile_dimmer.visible = false
 	profile_dimmer.z_index = 100
@@ -314,141 +314,325 @@ func build_profile_setup() -> void:
 	profile_dialog = PanelContainer.new()
 	profile_dialog.name = "PlayerSetupDialog"
 	profile_dialog.set_anchors_preset(Control.PRESET_CENTER)
-	profile_dialog.position = Vector2(-310, -245)
-	profile_dialog.size = Vector2(620, 490)
-	profile_dialog.add_theme_stylebox_override("panel", make_panel_style())
+	profile_dialog.position = Vector2(-550, -390)
+	profile_dialog.size = Vector2(1100, 780)
+	profile_dialog.add_theme_stylebox_override("panel", make_profile_panel_style())
 	profile_dimmer.add_child(profile_dialog)
 
 	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 38)
-	margin.add_theme_constant_override("margin_right", 38)
+	margin.add_theme_constant_override("margin_left", 42)
+	margin.add_theme_constant_override("margin_right", 42)
 	margin.add_theme_constant_override("margin_top", 32)
 	margin.add_theme_constant_override("margin_bottom", 30)
 	profile_dialog.add_child(margin)
 
 	var steps := VBoxContainer.new()
 	steps.name = "ProfileSteps"
-	steps.add_theme_constant_override("separation", 18)
+	steps.add_theme_constant_override("separation", 20)
 	margin.add_child(steps)
 
+	var top_row := HBoxContainer.new()
+	top_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	top_row.add_theme_constant_override("separation", 12)
+	steps.add_child(top_row)
+
+	var left_rule := ColorRect.new()
+	left_rule.custom_minimum_size = Vector2(44, 2)
+	left_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	left_rule.color = GOLD
+	top_row.add_child(left_rule)
+
 	var eyebrow := Label.new()
-	eyebrow.text = "BEFORE YOUR STORY BEGINS"
+	eyebrow.text = "YOUR FIRST-YEAR ADVENTURE"
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_font_size_override("font_size", 14)
+	eyebrow.add_theme_font_size_override("font_size", 15)
 	eyebrow.add_theme_color_override("font_color", GOLD)
-	eyebrow.add_theme_constant_override("letter_spacing", 2)
-	steps.add_child(eyebrow)
+	eyebrow.add_theme_constant_override("letter_spacing", 3)
+	top_row.add_child(eyebrow)
+
+	var right_rule := ColorRect.new()
+	right_rule.custom_minimum_size = Vector2(44, 2)
+	right_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	right_rule.color = GOLD
+	top_row.add_child(right_rule)
 
 	profile_name_step = VBoxContainer.new()
 	profile_name_step.name = "NameStep"
-	profile_name_step.add_theme_constant_override("separation", 14)
+	profile_name_step.add_theme_constant_override("separation", 17)
+	profile_name_step.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	steps.add_child(profile_name_step)
 
 	var name_title := Label.new()
-	name_title.text = "WHAT SHOULD WE CALL YOU?"
+	name_title.text = "FIRST, WHAT'S YOUR NAME?"
 	name_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	name_title.add_theme_font_size_override("font_size", 27)
+	name_title.add_theme_font_size_override("font_size", 38)
 	name_title.add_theme_color_override("font_color", CREAM)
 	profile_name_step.add_child(name_title)
 
 	var name_hint := Label.new()
-	name_hint.text = "Enter the name you'd like to use for your first-year story."
+	name_hint.text = "This is how your classmates will know you. Choose the name you want on your story."
 	name_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	name_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	name_hint.add_theme_font_size_override("font_size", 15)
+	name_hint.add_theme_font_size_override("font_size", 17)
 	name_hint.add_theme_color_override("font_color", MUTED)
 	profile_name_step.add_child(name_hint)
 
+	var name_spacer := Control.new()
+	name_spacer.custom_minimum_size.y = 8
+	profile_name_step.add_child(name_spacer)
+
+	var name_label := Label.new()
+	name_label.text = "PLAYER NAME"
+	name_label.add_theme_font_size_override("font_size", 14)
+	name_label.add_theme_color_override("font_color", PALE_GOLD)
+	name_label.add_theme_constant_override("letter_spacing", 2)
+	profile_name_step.add_child(name_label)
+
 	profile_name_input = LineEdit.new()
 	profile_name_input.name = "PlayerNameInput"
-	profile_name_input.placeholder_text = "Your name..."
-	profile_name_input.custom_minimum_size = Vector2(0, 52)
+	profile_name_input.placeholder_text = "Type your name here..."
+	profile_name_input.custom_minimum_size = Vector2(0, 66)
 	profile_name_input.max_length = 24
 	profile_name_input.clear_button_enabled = true
-	profile_name_input.add_theme_font_size_override("font_size", 20)
+	profile_name_input.add_theme_font_size_override("font_size", 24)
 	profile_name_input.add_theme_color_override("font_color", CREAM)
 	profile_name_input.add_theme_color_override("font_placeholder_color", Color("#B59A7C"))
 	var input_style := StyleBoxFlat.new()
 	input_style.bg_color = Color("#2B1C14")
 	input_style.border_color = Color("#B9824A")
 	input_style.set_border_width_all(2)
-	input_style.set_corner_radius_all(4)
-	input_style.content_margin_left = 14
-	input_style.content_margin_right = 14
+	input_style.set_corner_radius_all(5)
+	input_style.content_margin_left = 18
+	input_style.content_margin_right = 18
+	input_style.content_margin_top = 10
+	input_style.content_margin_bottom = 10
 	profile_name_input.add_theme_stylebox_override("normal", input_style)
-	profile_name_input.add_theme_stylebox_override("focus", input_style)
+	profile_name_input.add_theme_stylebox_override("focus", make_focused_input_style())
 	profile_name_input.text_submitted.connect(_on_profile_name_submitted)
 	profile_name_step.add_child(profile_name_input)
 
 	profile_name_error = Label.new()
-	profile_name_error.text = "Please enter a name to continue."
+	profile_name_error.text = "Your story needs a name first — enter one to continue."
 	profile_name_error.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	profile_name_error.add_theme_font_size_override("font_size", 14)
+	profile_name_error.add_theme_font_size_override("font_size", 15)
 	profile_name_error.add_theme_color_override("font_color", Color("#E6A078"))
 	profile_name_error.visible = false
 	profile_name_step.add_child(profile_name_error)
 
+	var name_button_spacer := Control.new()
+	name_button_spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	profile_name_step.add_child(name_button_spacer)
+
 	var name_buttons := HBoxContainer.new()
 	name_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	name_buttons.add_theme_constant_override("separation", 14)
+	name_buttons.add_theme_constant_override("separation", 18)
 	profile_name_step.add_child(name_buttons)
 
 	var cancel_button := make_menu_button("×", "CANCEL")
-	cancel_button.custom_minimum_size = Vector2(190, 50)
+	cancel_button.custom_minimum_size = Vector2(220, 58)
 	cancel_button.pressed.connect(close_profile_setup)
 	name_buttons.add_child(cancel_button)
 
-	var continue_button := make_menu_button("→", "CONTINUE", true)
-	continue_button.custom_minimum_size = Vector2(190, 50)
+	var continue_button := make_menu_button("→", "LET'S GO", true)
+	continue_button.custom_minimum_size = Vector2(260, 58)
 	continue_button.pressed.connect(continue_from_name)
 	name_buttons.add_child(continue_button)
 
 	profile_gender_step = VBoxContainer.new()
 	profile_gender_step.name = "GenderStep"
-	profile_gender_step.add_theme_constant_override("separation", 16)
+	profile_gender_step.add_theme_constant_override("separation", 14)
 	profile_gender_step.visible = false
+	profile_gender_step.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	steps.add_child(profile_gender_step)
 
 	var gender_title := Label.new()
-	gender_title.text = "CHOOSE YOUR PLAYER CHARACTER"
+	gender_title.text = "PICK YOUR PLAYER CHARACTER"
 	gender_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	gender_title.add_theme_font_size_override("font_size", 25)
+	gender_title.add_theme_font_size_override("font_size", 32)
 	gender_title.add_theme_color_override("font_color", CREAM)
 	profile_gender_step.add_child(gender_title)
 
 	var gender_hint := Label.new()
-	gender_hint.text = "Which version of the main character would you like to play?"
+	gender_hint.text = "Meet both versions of your main character. Choose the one you want to take into your first year."
 	gender_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	gender_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	gender_hint.add_theme_font_size_override("font_size", 15)
+	gender_hint.add_theme_font_size_override("font_size", 16)
 	gender_hint.add_theme_color_override("font_color", MUTED)
 	profile_gender_step.add_child(gender_hint)
 
-	var male_button := make_menu_button("M", "MALE MC", true)
-	male_button.custom_minimum_size = Vector2(0, 62)
-	male_button.pressed.connect(choose_player_gender.bind("male"))
-	profile_gender_step.add_child(male_button)
+	var character_cards := HBoxContainer.new()
+	character_cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	character_cards.add_theme_constant_override("separation", 24)
+	profile_gender_step.add_child(character_cards)
 
-	var female_button := make_menu_button("F", "FEMALE MC")
-	female_button.custom_minimum_size = Vector2(0, 62)
-	female_button.pressed.connect(choose_player_gender.bind("female"))
-	profile_gender_step.add_child(female_button)
+	character_cards.add_child(make_character_preview_card(
+		"MALE MC",
+		"res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/8-bit Sprite Models/MC/male mc.png",
+		"res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Male-MC.png",
+		"male"
+	))
+	character_cards.add_child(make_character_preview_card(
+		"FEMALE MC",
+		"res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/8-bit Sprite Models/MC/female mc.png",
+		"res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png",
+		"female"
+	))
 
 	var gender_buttons := HBoxContainer.new()
 	gender_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	gender_buttons.add_theme_constant_override("separation", 14)
+	gender_buttons.add_theme_constant_override("separation", 18)
 	profile_gender_step.add_child(gender_buttons)
 
-	var back_button := make_menu_button("←", "BACK")
-	back_button.custom_minimum_size = Vector2(190, 48)
+	var back_button := make_menu_button("←", "BACK TO NAME")
+	back_button.custom_minimum_size = Vector2(240, 52)
 	back_button.pressed.connect(show_name_step)
 	gender_buttons.add_child(back_button)
 
 	var gender_cancel_button := make_menu_button("×", "CANCEL")
-	gender_cancel_button.custom_minimum_size = Vector2(190, 48)
+	gender_cancel_button.custom_minimum_size = Vector2(200, 52)
 	gender_cancel_button.pressed.connect(close_profile_setup)
 	gender_buttons.add_child(gender_cancel_button)
 
+
+func make_profile_panel_style() -> StyleBoxFlat:
+	var style := make_panel_style()
+	style.bg_color = Color("#281A13")
+	style.border_color = Color("#D5A15E")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.shadow_size = 28
+	style.shadow_offset = Vector2(0, 12)
+	return style
+
+
+func make_focused_input_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#352218")
+	style.border_color = PALE_GOLD
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(5)
+	style.content_margin_left = 18
+	style.content_margin_right = 18
+	style.content_margin_top = 10
+	style.content_margin_bottom = 10
+	return style
+
+
+func make_character_preview_card(title_text: String, sprite_sheet_path: String, portrait_path: String, chosen_gender: String) -> PanelContainer:
+	var card := PanelContainer.new()
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color("#3A271D")
+	card_style.border_color = Color("#94673F")
+	card_style.set_border_width_all(2)
+	card_style.set_corner_radius_all(6)
+	card_style.content_margin_left = 16
+	card_style.content_margin_right = 16
+	card_style.content_margin_top = 12
+	card_style.content_margin_bottom = 12
+	card.add_theme_stylebox_override("panel", card_style)
+
+	var card_content := VBoxContainer.new()
+	card_content.alignment = BoxContainer.ALIGNMENT_CENTER
+	card_content.add_theme_constant_override("separation", 8)
+	card.add_child(card_content)
+
+	var character_title := Label.new()
+	character_title.text = title_text
+	character_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	character_title.add_theme_font_size_override("font_size", 24)
+	character_title.add_theme_color_override("font_color", PALE_GOLD)
+	character_title.add_theme_constant_override("letter_spacing", 2)
+	card_content.add_child(character_title)
+
+	var art_row := HBoxContainer.new()
+	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	art_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	art_row.add_theme_constant_override("separation", 10)
+	card_content.add_child(art_row)
+
+	var pixel_column := VBoxContainer.new()
+	pixel_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	pixel_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pixel_column.add_theme_constant_override("separation", 4)
+	art_row.add_child(pixel_column)
+
+	var pixel_label := Label.new()
+	pixel_label.text = "IN-GAME SPRITE"
+	pixel_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pixel_label.add_theme_font_size_override("font_size", 11)
+	pixel_label.add_theme_color_override("font_color", MUTED)
+	pixel_column.add_child(pixel_label)
+
+	var pixel_frame := PanelContainer.new()
+	pixel_frame.custom_minimum_size = Vector2(120, 145)
+	pixel_frame.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var pixel_style := StyleBoxFlat.new()
+	pixel_style.bg_color = Color("#241811")
+	pixel_style.border_color = Color("#775337")
+	pixel_style.set_border_width_all(1)
+	pixel_style.set_corner_radius_all(4)
+	pixel_frame.add_theme_stylebox_override("panel", pixel_style)
+	pixel_column.add_child(pixel_frame)
+
+	var pixel_margin := CenterContainer.new()
+	pixel_frame.add_child(pixel_margin)
+	var pixel_sprite := TextureRect.new()
+	pixel_sprite.custom_minimum_size = Vector2(92, 112)
+	pixel_sprite.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pixel_sprite.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	pixel_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var sprite_sheet := load(sprite_sheet_path) as Texture2D
+	if sprite_sheet != null:
+		var idle_frame := AtlasTexture.new()
+		idle_frame.atlas = sprite_sheet
+		idle_frame.region = Rect2(0, 0, 64, 64)
+		pixel_sprite.texture = idle_frame
+	pixel_margin.add_child(pixel_sprite)
+
+	var portrait_column := VBoxContainer.new()
+	portrait_column.alignment = BoxContainer.ALIGNMENT_CENTER
+	portrait_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	portrait_column.add_theme_constant_override("separation", 4)
+	art_row.add_child(portrait_column)
+
+	var portrait_label := Label.new()
+	portrait_label.text = "32-BIT CHARACTER ART"
+	portrait_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	portrait_label.add_theme_font_size_override("font_size", 11)
+	portrait_label.add_theme_color_override("font_color", MUTED)
+	portrait_column.add_child(portrait_label)
+
+	var portrait_frame := PanelContainer.new()
+	portrait_frame.custom_minimum_size = Vector2(190, 240)
+	portrait_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var portrait_style := StyleBoxFlat.new()
+	portrait_style.bg_color = Color("#241811")
+	portrait_style.border_color = Color("#775337")
+	portrait_style.set_border_width_all(1)
+	portrait_style.set_corner_radius_all(4)
+	portrait_frame.add_theme_stylebox_override("panel", portrait_style)
+	portrait_column.add_child(portrait_frame)
+
+	var portrait := TextureRect.new()
+	portrait.custom_minimum_size = Vector2(170, 220)
+	portrait.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	portrait.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if ResourceLoader.exists(portrait_path):
+		portrait.texture = load(portrait_path) as Texture2D
+	else:
+		push_warning("32-bit player artwork not found: " + portrait_path)
+	portrait_frame.add_child(portrait)
+
+	var select_button := make_menu_button("✦", "PLAY AS " + title_text, chosen_gender == "female")
+	select_button.custom_minimum_size = Vector2(0, 54)
+	select_button.pressed.connect(choose_player_gender.bind(chosen_gender))
+	card_content.add_child(select_button)
+	return card
 
 func open_profile_setup() -> void:
 	profile_name_input.text = ""
