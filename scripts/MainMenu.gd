@@ -392,7 +392,7 @@ func build_profile_setup() -> void:
 	profile_name_input.name = "PlayerNameInput"
 	profile_name_input.placeholder_text = "Type your name here..."
 	profile_name_input.custom_minimum_size = Vector2(0, 66)
-	profile_name_input.max_length = 24
+	profile_name_input.max_length = 12
 	profile_name_input.clear_button_enabled = true
 	profile_name_input.add_theme_font_size_override("font_size", 24)
 	profile_name_input.add_theme_color_override("font_color", CREAM)
@@ -668,7 +668,7 @@ func continue_from_name() -> void:
 	PlayerSetup.player_name = chosen_name
 	profile_name_step.visible = false
 	profile_gender_step.visible = true
-	profile_gender_step.get_child(2).get_child(0).get_child(2).grab_focus()
+	# Avoid relying on nested child indices; the character cards handle their own selection.
 
 
 func choose_player_gender(chosen_gender: String) -> void:
