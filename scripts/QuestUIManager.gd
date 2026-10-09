@@ -190,10 +190,10 @@ func refresh_ui() -> void:
 	if panel == null or content == null:
 		return
 	var scene_path := get_current_scene_path()
-	if scene_path == "" or scene_path.ends_with("/mainmenu.tscn"):
+	if scene_path == "" or scene_path.ends_with("/mainmenu.tscn") or scene_path.contains("opening_cutscene"):
 		if panel_tween != null and panel_tween.is_valid():
 			panel_tween.kill()
-		panel_hidden = false
+		panel_hidden = scene_path.contains("opening_cutscene")
 		panel.visible = false
 		return
 	position_panel()
