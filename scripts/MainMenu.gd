@@ -37,66 +37,141 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	# A twilight campus scene, drawn in crisp pixel-art-inspired layers.
+	# A composed campus vista at golden hour: layered sky, distant tree line,
+	# a recognizable university facade, and a walkway that leads into the scene.
 	var w := size.x
 	var h := size.y
-	draw_rect(Rect2(Vector2.ZERO, size), Color("#4A3025"))
-	draw_rect(Rect2(0, 0, w, h * 0.43), Color("#956344"))
-	draw_rect(Rect2(0, h * 0.43, w, h * 0.22), Color("#B8794D"))
-	draw_rect(Rect2(0, h * 0.65, w, h * 0.35), Color("#58664A"))
 
-	# Distant dusk glow and moon.
-	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.105, Color(0.93, 0.65, 0.39, 0.08))
-	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.075, Color(0.96, 0.75, 0.50, 0.12))
-	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.047, Color("#FFE2A3"))
-	draw_circle(Vector2(w * 0.785, h * 0.205), h * 0.042, Color("#B8794D"))
+	# Smooth, restrained sunset gradient built from broad horizontal bands.
+	var sky_top := Color("#493448")
+	var sky_mid := Color("#A85F55")
+	var sky_horizon := Color("#E4A36B")
+	for band in range(48):
+		var t := float(band) / 47.0
+		var band_color: Color
+		if t < 0.58:
+			band_color = sky_top.lerp(sky_mid, t / 0.58)
+		else:
+			band_color = sky_mid.lerp(sky_horizon, (t - 0.58) / 0.42)
+		var band_y := h * 0.61 * t
+		var next_y := h * 0.61 * float(band + 1) / 48.0
+		draw_rect(Rect2(0, band_y, w, next_y - band_y + 1.0), band_color)
 
-	# Tiny stars / windows in the evening sky.
-	for i in range(42):
-		var px := fposmod(float(i * 173 + 71), w)
-		var py := fposmod(float(i * 67 + 31), h * 0.46)
-		var radius := 1.4 if i % 5 == 0 else 0.8
-		draw_rect(Rect2(Vector2(px, py), Vector2(radius * 2.0, radius * 2.0)), Color(1.0, 0.86, 0.62, 0.72 if i % 5 == 0 else 0.35))
+	# A warm sun sits low behind the campus, not competing with the menu.
+	draw_circle(Vector2(w * 0.78, h * 0.29), h * 0.115, Color("#F6C27D", 0.10))
+	draw_circle(Vector2(w * 0.78, h * 0.29), h * 0.078, Color("#F6C27D", 0.17))
+	draw_circle(Vector2(w * 0.78, h * 0.29), h * 0.048, Color("#FFD99A"))
 
-	# Campus building silhouettes.
-	var far_buildings := [
-		PackedVector2Array([Vector2(0, h * 0.54), Vector2(0, h * 0.43), Vector2(w * 0.08, h * 0.43), Vector2(w * 0.08, h * 0.54)]),
-		PackedVector2Array([Vector2(w * 0.35, h * 0.56), Vector2(w * 0.35, h * 0.39), Vector2(w * 0.44, h * 0.39), Vector2(w * 0.44, h * 0.56)]),
-		PackedVector2Array([Vector2(w * 0.86, h * 0.55), Vector2(w * 0.86, h * 0.40), Vector2(w, h * 0.40), Vector2(w, h * 0.55)])
+	# A few carefully spaced, quiet evening stars.
+	var stars := [
+		Vector2(w * 0.48, h * 0.12), Vector2(w * 0.58, h * 0.20),
+		Vector2(w * 0.68, h * 0.10), Vector2(w * 0.89, h * 0.13),
+		Vector2(w * 0.94, h * 0.25), Vector2(w * 0.54, h * 0.30)
 	]
-	for shape in far_buildings:
-		draw_colored_polygon(shape, Color("#654735"))
+	for i in range(stars.size()):
+		var star_size := 3.0 if i % 2 == 0 else 2.0
+		draw_rect(Rect2(stars[i], Vector2(star_size, star_size)), Color("#FFE8BE", 0.72 if i % 2 == 0 else 0.42))
 
-	# Main university hall on the right side.
-	var bx := w * 0.58
-	var by := h * 0.38
-	var bw := w * 0.34
-	var bh := h * 0.34
-	draw_rect(Rect2(bx, by + h * 0.06, bw, bh), Color("#4A3025"))
-	draw_rect(Rect2(bx - 20, by + h * 0.04, bw + 40, h * 0.055), Color("#D99A55"))
-	draw_rect(Rect2(bx + bw * 0.39, by - h * 0.035, bw * 0.22, h * 0.095), Color("#D99A55"))
+	# Distant campus roofs create a clear horizon line behind the main hall.
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(bx + bw * 0.34, by - h * 0.035),
-		Vector2(bx + bw * 0.5, by - h * 0.11),
-		Vector2(bx + bw * 0.66, by - h * 0.035)
-	]), Color("#F0C57A"))
+		Vector2(0, h * 0.56), Vector2(0, h * 0.49),
+		Vector2(w * 0.07, h * 0.49), Vector2(w * 0.10, h * 0.45),
+		Vector2(w * 0.13, h * 0.49), Vector2(w * 0.25, h * 0.49),
+		Vector2(w * 0.28, h * 0.53), Vector2(w * 0.40, h * 0.53),
+		Vector2(w * 0.44, h * 0.48), Vector2(w * 0.50, h * 0.53),
+		Vector2(w * 0.57, h * 0.53), Vector2(w * 0.57, h * 0.61),
+		Vector2(0, h * 0.61)
+	]), Color("#624453"))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(w * 0.83, h * 0.56), Vector2(w * 0.86, h * 0.50),
+		Vector2(w * 0.90, h * 0.50), Vector2(w * 0.93, h * 0.46),
+		Vector2(w * 0.97, h * 0.50), Vector2(w, h * 0.50),
+		Vector2(w, h * 0.62), Vector2(w * 0.83, h * 0.62)
+	]), Color("#624453"))
+
+	# The university hall is symmetrical and architectural: wings, cornice,
+	# central pediment, evenly spaced windows, and a warmly lit entrance.
+	var hall_left := w * 0.565
+	var hall_top := h * 0.355
+	var hall_width := w * 0.355
+	var hall_bottom := h * 0.705
+	draw_rect(Rect2(hall_left, hall_top + h * 0.065, hall_width, hall_bottom - hall_top - h * 0.065), Color("#503447"))
+	draw_rect(Rect2(hall_left - 14, hall_top + h * 0.045, hall_width + 28, h * 0.035), Color("#D18B5D"))
+	draw_rect(Rect2(hall_left + hall_width * 0.39, hall_top - h * 0.005, hall_width * 0.22, h * 0.105), Color("#704653"))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(hall_left + hall_width * 0.34, hall_top + h * 0.015),
+		Vector2(hall_left + hall_width * 0.50, hall_top - h * 0.085),
+		Vector2(hall_left + hall_width * 0.66, hall_top + h * 0.015)
+	]), Color("#F0B873"))
+	draw_rect(Rect2(hall_left + hall_width * 0.475, hall_top + h * 0.018, hall_width * 0.05, h * 0.034), Color("#FFE0A3"))
+	draw_rect(Rect2(hall_left + hall_width * 0.485, hall_top + h * 0.012, hall_width * 0.03, h * 0.012), Color("#FFF0D0"))
+
+	# Long, aligned window bays make the building feel like a real school.
 	for row in range(3):
-		for col in range(8):
-			var wx := bx + 24 + col * (bw - 48) / 8.0
-			var wy := by + h * 0.10 + row * h * 0.065
-			draw_rect(Rect2(wx, wy, 18, 28), Color("#F2BC69", 0.8 if (row + col) % 3 != 0 else 0.28))
-			draw_rect(Rect2(wx + 4, wy + 4, 10, 20), Color("#704B34"))
+		for col in range(9):
+			var wx := hall_left + 22 + float(col) * (hall_width - 44) / 9.0
+			var wy := hall_top + h * 0.105 + float(row) * h * 0.067
+			var window_color := Color("#F8C879") if (row + col) % 4 != 0 else Color("#A76C61")
+			draw_rect(Rect2(wx, wy, 20, 31), Color("#3E2D3A"))
+			draw_rect(Rect2(wx + 3, wy + 3, 14, 25), window_color)
+			draw_rect(Rect2(wx + 9, wy + 3, 2, 25), Color("#76504B", 0.9))
+			draw_rect(Rect2(wx + 3, wy + 14, 14, 2), Color("#76504B", 0.9))
 
-	# Foreground path, lawn, and a clean frame.
-	draw_rect(Rect2(0, h * 0.83, w, h * 0.17), Color("#30231D"))
+	# Broad front steps and a central entrance anchor the perspective.
+	var entrance_x := hall_left + hall_width * 0.43
+	var entrance_w := hall_width * 0.14
+	draw_rect(Rect2(entrance_x - 10, h * 0.625, entrance_w + 20, h * 0.08), Color("#3B2934"))
+	draw_rect(Rect2(entrance_x - 18, h * 0.682, entrance_w + 36, h * 0.018), Color("#D49A68"))
+	draw_rect(Rect2(entrance_x, h * 0.58, entrance_w, h * 0.125), Color("#302632"))
+	draw_rect(Rect2(entrance_x + 7, h * 0.592, entrance_w - 14, h * 0.113), Color("#E6AA6A"))
+	draw_rect(Rect2(entrance_x + entrance_w * 0.48, h * 0.592, 3, h * 0.113), Color("#6A4143"))
+
+	# Campus lawn and a central stone path with perspective edges.
+	draw_rect(Rect2(0, h * 0.61, w, h * 0.39), Color("#59634A"))
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(w * 0.46, h), Vector2(w * 0.59, h * 0.83),
-		Vector2(w * 0.82, h * 0.83), Vector2(w, h),
-	]), Color("#6E5038"))
-	draw_line(Vector2(24, 24), Vector2(w - 24, 24), Color(GOLD, 0.55), 2.0)
-	draw_line(Vector2(24, h - 24), Vector2(w - 24, h - 24), Color(GOLD, 0.55), 2.0)
-	draw_line(Vector2(24, 24), Vector2(24, h - 24), Color(GOLD, 0.55), 2.0)
-	draw_line(Vector2(w - 24, 24), Vector2(w - 24, h - 24), Color(GOLD, 0.55), 2.0)
+		Vector2(w * 0.43, h), Vector2(w * 0.58, h * 0.705),
+		Vector2(w * 0.79, h * 0.705), Vector2(w, h)
+	]), Color("#A47A5A"))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(w * 0.49, h), Vector2(w * 0.615, h * 0.72),
+		Vector2(w * 0.755, h * 0.72), Vector2(w * 0.90, h)
+	]), Color("#B58B68"))
+
+	# The path's restrained paving seams reinforce depth instead of adding clutter.
+	for i in range(1, 7):
+		var t := float(i) / 7.0
+		var seam_y := lerpf(h * 0.735, h * 0.985, t)
+		var left_x := lerpf(w * 0.605, w * 0.445, t)
+		var right_x := lerpf(w * 0.765, w * 0.98, t)
+		draw_line(Vector2(left_x, seam_y), Vector2(right_x, seam_y), Color("#775846", 0.55), 2.0)
+
+	# Framing trees are placed at the lawn edges, leaving the hall and cast visible.
+	for tree in [
+		Vector2(w * 0.10, h * 0.60), Vector2(w * 0.22, h * 0.625),
+		Vector2(w * 0.91, h * 0.605), Vector2(w * 0.98, h * 0.62)
+	]:
+		var trunk_w := 16.0
+		draw_rect(Rect2(tree.x - trunk_w * 0.5, tree.y - 3, trunk_w, h * 0.17), Color("#49342D"))
+		draw_rect(Rect2(tree.x - 45, tree.y - 78, 90, 54), Color("#384A42"))
+		draw_rect(Rect2(tree.x - 32, tree.y - 105, 64, 47), Color("#405448"))
+		draw_rect(Rect2(tree.x - 18, tree.y - 122, 36, 30), Color("#4B6050"))
+		draw_rect(Rect2(tree.x - 32, tree.y - 63, 20, 13), Color("#617052", 0.8))
+		draw_rect(Rect2(tree.x + 12, tree.y - 91, 18, 13), Color("#617052", 0.8))
+
+	# Low garden borders give the foreground a finished, campus-quad feel.
+	draw_rect(Rect2(0, h * 0.88, w * 0.22, h * 0.035), Color("#3C4637"))
+	draw_rect(Rect2(w * 0.84, h * 0.88, w * 0.16, h * 0.035), Color("#3C4637"))
+	for x in [w * 0.025, w * 0.065, w * 0.105, w * 0.145, w * 0.185, w * 0.865, w * 0.905, w * 0.945, w * 0.985]:
+		draw_rect(Rect2(x, h * 0.855, 20, 18), Color("#839064"))
+		draw_rect(Rect2(x + 5, h * 0.84, 10, 18), Color("#A1A66F"))
+
+	# A subtle vignette and fine inset frame tie the illustration together.
+	draw_rect(Rect2(0, 0, w, h * 0.045), Color("#2B2130", 0.20))
+	draw_rect(Rect2(0, h * 0.955, w, h * 0.045), Color("#2B2130", 0.28))
+	draw_line(Vector2(24, 24), Vector2(w - 24, 24), Color(GOLD, 0.58), 2.0)
+	draw_line(Vector2(24, h - 24), Vector2(w - 24, h - 24), Color(GOLD, 0.58), 2.0)
+	draw_line(Vector2(24, 24), Vector2(24, h - 24), Color(GOLD, 0.58), 2.0)
+	draw_line(Vector2(w - 24, 24), Vector2(w - 24, h - 24), Color(GOLD, 0.58), 2.0)
 
 
 func build_menu() -> void:
