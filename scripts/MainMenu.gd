@@ -72,6 +72,8 @@ func _draw() -> void:
 		var star_size := 3.0 if i % 2 == 0 else 2.0
 		draw_rect(Rect2(stars[i], Vector2(star_size, star_size)), Color("#FFE8BE", 0.72 if i % 2 == 0 else 0.42))
 
+	draw_rect(Rect2(0, h * 0.61, w, h * 0.39), Color("#59634A"))
+
 	# Distant campus roofs create a clear horizon line behind the main hall.
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(0, h * 0.56), Vector2(0, h * 0.49),
@@ -127,7 +129,6 @@ func _draw() -> void:
 	draw_rect(Rect2(entrance_x + entrance_w * 0.48, h * 0.592, 3, h * 0.113), Color("#6A4143"))
 
 	# Campus lawn and a central stone path with perspective edges.
-	draw_rect(Rect2(0, h * 0.61, w, h * 0.39), Color("#59634A"))
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(w * 0.43, h), Vector2(w * 0.58, h * 0.705),
 		Vector2(w * 0.79, h * 0.705), Vector2(w, h)
