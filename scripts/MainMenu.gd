@@ -117,7 +117,7 @@ func make_button_click_sound() -> AudioStreamWAV:
 func _play_typewriter_sound() -> void:
 	# Generate a tiny, muted mechanical tap so no extra asset is required.
 	var sample_rate := 22050
-	var duration := 0.025
+	var duration := 0.050
 	var sample_count := int(sample_rate * duration)
 	var pcm_data := PackedByteArray()
 	pcm_data.resize(sample_count * 2)
@@ -140,7 +140,7 @@ func _play_typewriter_sound() -> void:
 	var player := AudioStreamPlayer.new()
 	player.name = "TypewriterKeySound"
 	player.stream = type_sound
-	player.volume_db = -17.0
+	player.volume_db = +1.0
 	add_child(player)
 	player.finished.connect(player.queue_free)
 	player.play()
