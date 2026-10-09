@@ -37,67 +37,24 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	# Minimal, calm pixel-art backdrop. Keep the scenery soft and uncluttered
-	# so the character group and menu remain the focus.
+	# Simple cream gradient: lighter toward the top, gently darker toward the bottom.
 	var w := size.x
 	var h := size.y
+	var top_color := Color("#FFF8E9")
+	var middle_color := Color("#F5E8D2")
+	var bottom_color := Color("#E7D2B5")
+	var gradient_height := maxf(h, 1.0)
 
-	# Muted dusk gradient: plum overhead, fading into a warm peach horizon.
-	var sky_top := Color("#554253")
-	var sky_bottom := Color("#D69A78")
-	for band in range(36):
-		var t := float(band) / 35.0
-		var y := h * 0.72 * t
-		var next_y := h * 0.72 * float(band + 1) / 36.0
-		draw_rect(Rect2(0, y, w, next_y - y + 1.0), sky_top.lerp(sky_bottom, t))
-
-	# One quiet sun with a soft halo.
-	var sun := Vector2(w * 0.79, h * 0.28)
-	draw_circle(sun, h * 0.105, Color("#F6C68D", 0.10))
-	draw_circle(sun, h * 0.075, Color("#F6C68D", 0.16))
-	draw_circle(sun, h * 0.047, Color("#F8D7A2"))
-
-	# Two broad, low silhouettes give the horizon depth without visual noise.
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(0, h * 0.66), Vector2(0, h * 0.59),
-		Vector2(w * 0.16, h * 0.55), Vector2(w * 0.32, h * 0.62),
-		Vector2(w * 0.49, h * 0.56), Vector2(w * 0.67, h * 0.63),
-		Vector2(w * 0.84, h * 0.57), Vector2(w, h * 0.61),
-		Vector2(w, h * 0.75), Vector2(0, h * 0.75)
-	]), Color("#795568"))
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(0, h * 0.70), Vector2(w * 0.20, h * 0.65),
-		Vector2(w * 0.38, h * 0.69), Vector2(w * 0.58, h * 0.64),
-		Vector2(w * 0.78, h * 0.69), Vector2(w, h * 0.65),
-		Vector2(w, h * 0.77), Vector2(0, h * 0.77)
-	]), Color("#59604E"))
-
-	# A simple university silhouette anchors the setting on the right.
-	# Its low contrast intentionally keeps the cast readable.
-	var building_x := w * 0.64
-	var building_y := h * 0.435
-	var building_w := w * 0.29
-	var building_h := h * 0.235
-	draw_rect(Rect2(building_x, building_y, building_w, building_h), Color("#69505A"))
-	draw_rect(Rect2(building_x - 10, building_y - 9, building_w + 20, 10), Color("#A87569"))
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(building_x + building_w * 0.35, building_y - 9),
-		Vector2(building_x + building_w * 0.5, building_y - h * 0.055),
-		Vector2(building_x + building_w * 0.65, building_y - 9)
-	]), Color("#A87569"))
-	for col in range(6):
-		var window_x := building_x + 17 + float(col) * (building_w - 34) / 6.0
-		draw_rect(Rect2(window_x, building_y + 25, 15, 25), Color("#F2C58A", 0.72))
-		draw_rect(Rect2(window_x, building_y + 66, 15, 25), Color("#F2C58A", 0.52))
-
-	# One quiet foreground plane finishes the scene; no decorative clutter.
-	draw_rect(Rect2(0, h * 0.72, w, h * 0.28), Color("#454B3D"))
-	draw_rect(Rect2(0, h * 0.72, w, 5), Color("#9B8064", 0.65))
-
-	# A subtle warm edge treatment ties the scene into the existing UI palette.
-	draw_rect(Rect2(0, 0, w, 18), Color("#2B2130", 0.12))
-	draw_line(Vector2(26, h - 26), Vector2(w - 26, h - 26), Color(GOLD, 0.38), 1.0)
-
+	for band in range(64):
+		var t := float(band) / 63.0
+		var color: Color
+		if t < 0.72:
+			color = top_color.lerp(middle_color, t / 0.72)
+		else:
+			color = middle_color.lerp(bottom_color, (t - 0.72) / 0.28)
+		var y := gradient_height * t
+		var next_y := gradient_height * float(band + 1) / 64.0
+		draw_rect(Rect2(0, y, w, next_y - y + 1.0), color)
 
 func build_menu() -> void:
 	var left_panel := PanelContainer.new()
