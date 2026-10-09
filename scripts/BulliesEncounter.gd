@@ -333,7 +333,7 @@ func bullies_approach_player() -> void:
 	var joey_target: Vector2 = player_position + Vector2(0.0, 65.0)
 	var joseph_target: Vector2 = player_position + Vector2(85.0, -25.0)
 
-	var walk_speed: float = 55.0
+	var walk_speed: float = 65.0
 
 	var joe_finished := false
 	var joey_finished := false
@@ -607,7 +607,7 @@ func bullies_walk_offscreen() -> void:
 	var camera_position: Vector2 = cinematic_camera.global_position
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 
-	var screen_distance: float = viewport_size.x * 0.7
+	var screen_distance: float = viewport_size.x * 0.5
 
 	var joe_target := Vector2(
 		camera_position.x + screen_distance,

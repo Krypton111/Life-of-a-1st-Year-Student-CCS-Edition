@@ -56,6 +56,11 @@ var is_switching_bully := false
 @onready var continue_prompt: Label = $ContinuePrompt
 
 var skip_all_button: Button
+var auto_next_button: Button
+var auto_next_enabled := false
+var auto_next_elapsed := 0.0
+@export var auto_next_delay: float = 1.25
+
 var skip_confirmation_panel: PanelContainer
 var skip_confirmation_check: CheckButton
 var skip_confirmation_yes: Button
@@ -76,10 +81,16 @@ func _ready() -> void:
 	continue_prompt.visible = true
 
 	create_skip_all_button()
+	create_auto_next_button()
+
+	# Reserve a small footer area for the Auto Next control.
+	dialogue_text.offset_bottom = minf(dialogue_text.offset_bottom, dialogue_box.size.y - 48.0)
 
 	dialogue_box.visible = false
 	if skip_all_button != null:
 		skip_all_button.visible = false
+	if auto_next_button != null:
+		auto_next_button.visible = false
 	left_character.visible = false
 	right_character.visible = false
 
@@ -140,6 +151,51 @@ func create_skip_all_button() -> void:
 	dialogue_box.add_child(skip_all_button)
 
 	create_skip_confirmation_popup()
+
+
+func create_auto_next_button() -> void:
+	if auto_next_button != null:
+		return
+
+	auto_next_button = Button.new()
+	auto_next_button.name = "AutoNextButton"
+	auto_next_button.text = "AUTO NEXT: OFF"
+	auto_next_button.custom_minimum_size = Vector2(160.0, 30.0)
+	auto_next_button.size = Vector2(160.0, 30.0)
+	auto_next_button.position = Vector2(
+		(dialogue_box.size.x - 160.0) / 2.0,
+		dialogue_box.size.y - 38.0
+	)
+	auto_next_button.flat = true
+	auto_next_button.focus_mode = Control.FOCUS_NONE
+	auto_next_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	auto_next_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	auto_next_button.z_index = 25
+	auto_next_button.add_theme_font_size_override("font_size", 13)
+	auto_next_button.add_theme_color_override("font_color", Color("#CFAF8C"))
+	auto_next_button.add_theme_color_override("font_hover_color", Color("#FFF1D6"))
+	auto_next_button.add_theme_color_override("font_pressed_color", Color("#D8A15D"))
+	auto_next_button.pressed.connect(toggle_auto_next)
+	dialogue_box.add_child(auto_next_button)
+
+
+func toggle_auto_next() -> void:
+	auto_next_enabled = not auto_next_enabled
+	auto_next_elapsed = 0.0
+	if auto_next_button != null:
+		auto_next_button.text = "AUTO NEXT: ON" if auto_next_enabled else "AUTO NEXT: OFF"
+
+
+func _process(delta: float) -> void:
+	if not auto_next_enabled or dialogue_ended or not visible:
+		return
+	if not input_enabled or is_entering or is_typing or is_advancing or is_switching_bully:
+		return
+
+	auto_next_elapsed += delta
+	if auto_next_elapsed >= auto_next_delay:
+		auto_next_elapsed = 0.0
+		handle_dialogue_input()
 
 
 func create_skip_confirmation_popup() -> void:
@@ -381,6 +437,7 @@ func start_dialogue(
 
 	dialogue_data = data
 	current_line = 0
+	auto_next_elapsed = 0.0
 
 	is_typing = false
 	is_entering = true
@@ -425,6 +482,8 @@ func start_dialogue(
 
 	if skip_all_button != null:
 		skip_all_button.visible = true
+	if auto_next_button != null:
+		auto_next_button.visible = true
 	if skip_confirmation_panel != null:
 		skip_confirmation_panel.visible = false
 
@@ -879,6 +938,12 @@ func _input(event) -> void:
 	if Time.get_ticks_msec() < ignore_input_until:
 		return
 
+	# Clicking the Auto Next toggle must not also advance the dialogue.
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and auto_next_button != null and auto_next_button.visible:
+			if auto_next_button.get_global_rect().has_point(event.position):
+				return
+
 	var current_time := Time.get_ticks_msec() / 1000.0
 
 	if last_input_time >= 0.0 and current_time - last_input_time < input_cooldown:
@@ -909,6 +974,8 @@ func _input(event) -> void:
 
 
 func handle_dialogue_input() -> void:
+
+	auto_next_elapsed = 0.0
 
 	if dialogue_ended:
 		return
@@ -983,6 +1050,8 @@ func end_dialogue() -> void:
 	dialogue_box.visible = false
 	if skip_all_button != null:
 		skip_all_button.visible = false
+	if auto_next_button != null:
+		auto_next_button.visible = false
 	if skip_confirmation_panel != null:
 		skip_confirmation_panel.visible = false
 	left_character.visible = false

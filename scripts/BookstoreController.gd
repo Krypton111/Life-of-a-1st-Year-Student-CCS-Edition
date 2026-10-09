@@ -1821,7 +1821,7 @@ func start_ate_libro_purchase_sequence() -> void:
 	stop_player()
 
 	var portraits: Dictionary = {
-		"Ate Libro": get_character_texture(ate_libro)
+		"Ate Libro": ATE_LIBRO_HD
 	}
 
 	var dialogue = [
