@@ -362,10 +362,16 @@ func collect_game_manager_state() -> Dictionary:
 
 
 func restore_game_manager_state(state: Variant) -> void:
-	if not state is Dictionary:
+	if not is_instance_valid(GameManager):
 		return
 
-	if not is_instance_valid(GameManager):
+	# Never carry achievements from the previously loaded session into a save
+	# that predates achievement support or lacks this field. A saved dictionary
+	# below replaces this empty one when the slot contains achievement history.
+	if property_exists(GameManager, "achievements_unlocked"):
+		GameManager.set("achievements_unlocked", {})
+
+	if not state is Dictionary:
 		return
 
 	for property_name in state.keys():
@@ -397,6 +403,11 @@ func collect_metadata() -> Dictionary:
 
 
 func restore_metadata(metadata: Variant) -> void:
+	# Metadata absent from an older/other save must not leak across save slots.
+	for key in META_KEYS:
+		if GameManager.has_meta(key):
+			GameManager.remove_meta(key)
+
 	if not metadata is Dictionary:
 		return
 
