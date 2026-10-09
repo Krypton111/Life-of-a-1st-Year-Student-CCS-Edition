@@ -299,18 +299,22 @@ func add_character(path: String, at: Vector2, dimensions: Vector2, z_layer: int 
 		push_warning("Main menu character artwork could not be loaded: " + path)
 		return
 
-	var character := TextureRect.new()
+	var character := TextureButton.new()
 	character.name = "CharacterArt_" + path.get_file().get_basename()
-	character.texture = texture
+	character.texture_normal = texture
 	character.position = at
 	character.size = dimensions
 	character.z_index = z_layer
 	character.modulate = Color(1.0, 1.0, 1.0, opacity)
-	character.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	character.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	character.ignore_texture_size = true
+	character.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	character.mouse_filter = Control.MOUSE_FILTER_STOP
 	character.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	character.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	# Only opaque sprite pixels receive clicks, so transparent parts don't block menu buttons.
+	var click_mask := BitMap.new()
+	click_mask.create_from_image_alpha(texture.get_image())
+	character.texture_click_mask = click_mask
 	character.set_meta("dialogue_key", path.get_file().get_basename().to_lower())
 	character.gui_input.connect(_on_character_gui_input.bind(character))
 	add_child(character)
@@ -378,7 +382,7 @@ func make_dialogue_panel_style() -> StyleBoxFlat:
 	return style
 
 
-func _on_character_gui_input(event: InputEvent, character: TextureRect) -> void:
+func _on_character_gui_input(event: InputEvent, character: TextureButton) -> void:
 	if not (event is InputEventMouseButton):
 		return
 	var mouse_event := event as InputEventMouseButton
