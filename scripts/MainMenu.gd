@@ -1,15 +1,19 @@
 extends Control
 
 const OPENING_SCENE := "res://scenes/main_level_scenes/cutscenes/opening_cutscene.tscn"
-
-const PANEL_COLOR := Color(0.10, 0.075, 0.06, 0.97)
-const GOLD := Color(0.91, 0.78, 0.55)
-const TEXT_COLOR := Color(0.96, 0.89, 0.77)
+const GOLD := Color(1.0, 0.78, 0.40)
+const PALE_GOLD := Color(1.0, 0.88, 0.65)
+const CREAM := Color(0.98, 0.94, 0.84)
+const MUTED := Color(0.69, 0.68, 0.65)
+const PANEL := Color(0.055, 0.075, 0.10, 0.94)
+const SCHOOL_ASSETS := "res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/"
+const MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png"
 
 var pause_menu: CanvasLayer
 var quit_dialog: PanelContainer
 var quit_button: Button
 var cancel_quit_button: Button
+var menu_buttons: Array[Button] = []
 
 
 func _ready() -> void:
@@ -17,128 +21,253 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	build_menu()
+	build_character_art()
 	pause_menu = get_node("PauseMenu") as CanvasLayer
 	if pause_menu != null:
 		pause_menu.set("main_menu_mode", true)
+	queue_redraw()
+
+
+func _draw() -> void:
+	# A twilight campus scene, drawn in crisp pixel-art-inspired layers.
+	var w := size.x
+	var h := size.y
+	draw_rect(Rect2(Vector2.ZERO, size), Color("#101b2c"))
+	draw_rect(Rect2(0, 0, w, h * 0.43), Color("#18243a"))
+	draw_rect(Rect2(0, h * 0.43, w, h * 0.22), Color("#283149"))
+	draw_rect(Rect2(0, h * 0.65, w, h * 0.35), Color("#172b32"))
+
+	# Distant dusk glow and moon.
+	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.105, Color(0.93, 0.65, 0.39, 0.08))
+	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.075, Color(0.96, 0.75, 0.50, 0.12))
+	draw_circle(Vector2(w * 0.77, h * 0.22), h * 0.047, Color("#f3d7a2"))
+	draw_circle(Vector2(w * 0.785, h * 0.205), h * 0.042, Color("#283149"))
+
+	# Tiny stars / windows in the evening sky.
+	for i in range(42):
+		var px := fposmod(float(i * 173 + 71), w)
+		var py := fposmod(float(i * 67 + 31), h * 0.46)
+		var radius := 1.4 if i % 5 == 0 else 0.8
+		draw_rect(Rect2(Vector2(px, py), Vector2(radius * 2.0, radius * 2.0)), Color(1.0, 0.86, 0.62, 0.72 if i % 5 == 0 else 0.35))
+
+	# Campus building silhouettes.
+	var far_buildings := [
+		PackedVector2Array([Vector2(0, h * 0.54), Vector2(0, h * 0.43), Vector2(w * 0.08, h * 0.43), Vector2(w * 0.08, h * 0.54)]),
+		PackedVector2Array([Vector2(w * 0.35, h * 0.56), Vector2(w * 0.35, h * 0.39), Vector2(w * 0.44, h * 0.39), Vector2(w * 0.44, h * 0.56)]),
+		PackedVector2Array([Vector2(w * 0.86, h * 0.55), Vector2(w * 0.86, h * 0.40), Vector2(w, h * 0.40), Vector2(w, h * 0.55)])
+	]
+	for shape in far_buildings:
+		draw_colored_polygon(shape, Color("#202c3d"))
+
+	# Main university hall on the right side.
+	var bx := w * 0.58
+	var by := h * 0.38
+	var bw := w * 0.34
+	var bh := h * 0.34
+	draw_rect(Rect2(bx, by + h * 0.06, bw, bh), Color("#111d2a"))
+	draw_rect(Rect2(bx - 20, by + h * 0.04, bw + 40, h * 0.055), Color("#d6a75f"))
+	draw_rect(Rect2(bx + bw * 0.39, by - h * 0.035, bw * 0.22, h * 0.095), Color("#d6a75f"))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(bx + bw * 0.34, by - h * 0.035),
+		Vector2(bx + bw * 0.5, by - h * 0.11),
+		Vector2(bx + bw * 0.66, by - h * 0.035)
+	]), Color("#e8c17c"))
+	for row in range(3):
+		for col in range(8):
+			var wx := bx + 24 + col * (bw - 48) / 8.0
+			var wy := by + h * 0.10 + row * h * 0.065
+			draw_rect(Rect2(wx, wy, 18, 28), Color("#e8b86c", 0.8 if (row + col) % 3 != 0 else 0.28))
+			draw_rect(Rect2(wx + 4, wy + 4, 10, 20), Color("#3d4854"))
+
+	# Foreground path, lawn, and a clean frame.
+	draw_rect(Rect2(0, h * 0.83, w, h * 0.17), Color("#101e27"))
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(w * 0.46, h), Vector2(w * 0.59, h * 0.83),
+		Vector2(w * 0.82, h * 0.83), Vector2(w, h),
+	]), Color("#253440"))
+	draw_line(Vector2(24, 24), Vector2(w - 24, 24), Color(GOLD, 0.55), 2.0)
+	draw_line(Vector2(24, h - 24), Vector2(w - 24, h - 24), Color(GOLD, 0.55), 2.0)
+	draw_line(Vector2(24, 24), Vector2(24, h - 24), Color(GOLD, 0.55), 2.0)
+	draw_line(Vector2(w - 24, 24), Vector2(w - 24, h - 24), Color(GOLD, 0.55), 2.0)
 
 
 func build_menu() -> void:
-	var background := ColorRect.new()
-	background.name = "Background"
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.color = Color(0.055, 0.045, 0.04, 1.0)
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(background)
+	var left_panel := PanelContainer.new()
+	left_panel.name = "MenuPanel"
+	left_panel.position = Vector2(105, 76)
+	left_panel.size = Vector2(635, 925)
+	left_panel.add_theme_stylebox_override("panel", make_panel_style())
+	add_child(left_panel)
 
-	var left_accent := ColorRect.new()
-	left_accent.position = Vector2(0, 0)
-	left_accent.size = Vector2(12, 1080)
-	left_accent.color = Color(0.70, 0.48, 0.27, 1.0)
-	left_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	background.add_child(left_accent)
-
-	var right_accent := ColorRect.new()
-	right_accent.anchor_left = 1.0
-	right_accent.anchor_right = 1.0
-	right_accent.offset_left = -12
-	right_accent.offset_right = 0
-	right_accent.anchor_bottom = 1.0
-	right_accent.color = Color(0.70, 0.48, 0.27, 1.0)
-	right_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	background.add_child(right_accent)
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 48)
+	margin.add_theme_constant_override("margin_right", 48)
+	margin.add_theme_constant_override("margin_top", 38)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	left_panel.add_child(margin)
 
 	var content := VBoxContainer.new()
-	content.name = "MenuContent"
-	content.set_anchors_preset(Control.PRESET_CENTER)
-	content.position = Vector2(-190, -355)
-	content.size = Vector2(380, 710)
 	content.add_theme_constant_override("separation", 13)
-	add_child(content)
+	margin.add_child(content)
+
+	var eyebrow := Label.new()
+	eyebrow.text = "A CAMPUS LIFE ADVENTURE"
+	eyebrow.add_theme_font_size_override("font_size", 15)
+	eyebrow.add_theme_color_override("font_color", GOLD)
+	content.add_child(eyebrow)
 
 	var title := Label.new()
 	title.text = "LIFE OF A\n1ST YEAR STUDENT"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 44)
+	title.add_theme_color_override("font_color", CREAM)
+	title.add_theme_constant_override("line_spacing", -4)
 	title.autowrap_mode = TextServer.AUTOWRAP_OFF
-	title.add_theme_font_size_override("font_size", 37)
-	title.add_theme_color_override("font_color", GOLD)
-	title.custom_minimum_size = Vector2(0, 112)
+	title.custom_minimum_size = Vector2(0, 120)
 	content.add_child(title)
 
-	var subtitle := Label.new()
-	subtitle.text = "CCS EDITION"
-	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.add_theme_font_size_override("font_size", 18)
-	subtitle.add_theme_color_override("font_color", TEXT_COLOR)
-	content.add_child(subtitle)
+	var edition_row := HBoxContainer.new()
+	edition_row.add_theme_constant_override("separation", 12)
+	content.add_child(edition_row)
+	var edition_rule := ColorRect.new()
+	edition_rule.custom_minimum_size = Vector2(36, 3)
+	edition_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	edition_rule.color = GOLD
+	edition_row.add_child(edition_rule)
+	var edition := Label.new()
+	edition.text = "CCS EDITION"
+	edition.add_theme_font_size_override("font_size", 18)
+	edition.add_theme_color_override("font_color", PALE_GOLD)
+	edition.add_theme_constant_override("letter_spacing", 4)
+	edition_row.add_child(edition)
 
-	var divider := ColorRect.new()
-	divider.custom_minimum_size = Vector2(110, 2)
-	divider.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	divider.color = Color(0.70, 0.48, 0.27, 1.0)
-	content.add_child(divider)
+	var description := Label.new()
+	description.text = "New semester. New faces.\nYour story starts here."
+	description.add_theme_font_size_override("font_size", 17)
+	description.add_theme_color_override("font_color", MUTED)
+	description.add_theme_constant_override("line_spacing", 4)
+	content.add_child(description)
 
-	var gap := Control.new()
-	gap.custom_minimum_size.y = 8
-	content.add_child(gap)
+	var spacer := Control.new()
+	spacer.custom_minimum_size.y = 12
+	content.add_child(spacer)
 
-	var start_button := make_menu_button("START GAME")
+	var start_button := make_menu_button("01", "START GAME", true)
 	start_button.pressed.connect(start_game)
 	content.add_child(start_button)
+	menu_buttons.append(start_button)
 
-	var load_button := make_menu_button("LOAD GAME")
+	var load_button := make_menu_button("02", "LOAD GAME")
 	load_button.pressed.connect(open_load_menu)
 	content.add_child(load_button)
+	menu_buttons.append(load_button)
 
-	var settings_button := make_menu_button("SETTINGS")
+	var settings_button := make_menu_button("03", "SETTINGS")
 	settings_button.pressed.connect(open_settings_menu)
 	content.add_child(settings_button)
+	menu_buttons.append(settings_button)
 
-	var credits_button := make_menu_button("CREDITS")
+	var credits_button := make_menu_button("04", "CREDITS")
 	credits_button.pressed.connect(credits_dud)
 	content.add_child(credits_button)
+	menu_buttons.append(credits_button)
 
-	quit_button = make_menu_button("QUIT")
+	quit_button = make_menu_button("05", "QUIT")
 	quit_button.pressed.connect(show_quit_confirmation)
 	content.add_child(quit_button)
+	menu_buttons.append(quit_button)
+
+	var footer_gap := Control.new()
+	footer_gap.custom_minimum_size.y = 4
+	content.add_child(footer_gap)
 
 	var footer := Label.new()
-	footer.text = "Advance Game Design (50054)"
-	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	footer.text = "ADVANCE GAME DESIGN  •  50054"
 	footer.add_theme_font_size_override("font_size", 12)
-	footer.add_theme_color_override("font_color", Color(0.54, 0.46, 0.38))
+	footer.add_theme_color_override("font_color", Color("#9a907e"))
+	footer.add_theme_constant_override("letter_spacing", 2)
 	content.add_child(footer)
 
 	build_quit_dialog()
 
 
-func make_menu_button(label_text: String) -> Button:
+func build_character_art() -> void:
+	# Reuse the project's own 32-bit character artwork; no duplicate assets.
+	add_character(MC_ASSET, Vector2(760, 210), Vector2(390, 735), 1.0)
+	add_character(SCHOOL_ASSETS + "Friends/Kairi/Kairi.png", Vector2(1115, 300), Vector2(320, 620), 0.94)
+	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1390, 320), Vector2(300, 600), 0.90)
+
+	var character_caption := Label.new()
+	character_caption.text = "YOUR PEOPLE. YOUR CHOICES. YOUR FIRST YEAR."
+	character_caption.position = Vector2(850, 900)
+	character_caption.size = Vector2(820, 32)
+	character_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	character_caption.add_theme_font_size_override("font_size", 15)
+	character_caption.add_theme_color_override("font_color", PALE_GOLD)
+	character_caption.add_theme_constant_override("letter_spacing", 2)
+	add_child(character_caption)
+
+
+func add_character(path: String, at: Vector2, dimensions: Vector2, scale_factor: float) -> void:
+	if not ResourceLoader.exists(path):
+		push_warning("Main menu character artwork not found: " + path)
+		return
+	var character := TextureRect.new()
+	character.name = "CharacterArt"
+	character.texture = load(path) as Texture2D
+	character.position = at
+	character.size = dimensions * scale_factor
+	character.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	character.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	character.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	character.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(character)
+
+
+func make_menu_button(number: String, label_text: String, is_primary: bool = false) -> Button:
 	var button := Button.new()
-	button.text = label_text
-	button.custom_minimum_size = Vector2(360, 48)
-	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	button.text = number + "     " + label_text
+	button.custom_minimum_size = Vector2(0, 59)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size", 18)
-	button.add_theme_color_override("font_color", TEXT_COLOR)
-	button.add_theme_color_override("font_hover_color", Color(1.0, 0.91, 0.72))
-	button.add_theme_color_override("font_pressed_color", Color.WHITE)
-	button.add_theme_stylebox_override("normal", make_button_style(Color(0.15, 0.105, 0.075, 0.96)))
-	button.add_theme_stylebox_override("hover", make_button_style(Color(0.27, 0.18, 0.12, 1.0)))
-	button.add_theme_stylebox_override("pressed", make_button_style(Color(0.09, 0.065, 0.05, 1.0)))
+	button.add_theme_color_override("font_color", CREAM)
+	button.add_theme_color_override("font_hover_color", Color("#fff3d5"))
+	button.add_theme_color_override("font_pressed_color", GOLD)
+	button.add_theme_color_override("font_focus_color", CREAM)
+	var normal := make_button_style(Color("#253044") if is_primary else Color("#182333"))
+	var hover := make_button_style(Color("#4a3b32") if is_primary else Color("#2d394a"))
+	var pressed := make_button_style(Color("#111a27"))
+	button.add_theme_stylebox_override("normal", normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_stylebox_override("focus", make_button_style(Color("#303c4d")))
 	return button
 
 
 func make_button_style(fill: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill
-	style.border_color = Color(0.54, 0.38, 0.24, 1.0)
+	style.border_color = Color("#c59a57")
 	style.set_border_width_all(1)
-	style.corner_radius_top_left = 5
-	style.corner_radius_top_right = 5
-	style.corner_radius_bottom_left = 5
-	style.corner_radius_bottom_right = 5
-	style.content_margin_left = 16
-	style.content_margin_right = 16
+	style.border_width_left = 4
+	style.set_corner_radius_all(2)
+	style.content_margin_left = 22
+	style.content_margin_right = 18
+	style.content_margin_top = 12
+	style.content_margin_bottom = 12
+	return style
+
+
+func make_panel_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = PANEL
+	style.border_color = Color(0.75, 0.57, 0.32, 0.85)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(4)
+	style.shadow_color = Color(0, 0, 0, 0.38)
+	style.shadow_size = 18
+	style.shadow_offset = Vector2(0, 8)
 	return style
 
 
@@ -167,7 +296,7 @@ func build_quit_dialog() -> void:
 	var dimmer := ColorRect.new()
 	dimmer.name = "QuitDimmer"
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.72)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.78)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.visible = false
 	add_child(dimmer)
@@ -203,7 +332,7 @@ func build_quit_dialog() -> void:
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	message.add_theme_font_size_override("font_size", 16)
-	message.add_theme_color_override("font_color", TEXT_COLOR)
+	message.add_theme_color_override("font_color", CREAM)
 	box.add_child(message)
 
 	var buttons := HBoxContainer.new()
@@ -211,12 +340,12 @@ func build_quit_dialog() -> void:
 	buttons.add_theme_constant_override("separation", 14)
 	box.add_child(buttons)
 
-	var yes_button := make_menu_button("YES, QUIT")
+	var yes_button := make_menu_button("!", "YES, QUIT")
 	yes_button.custom_minimum_size = Vector2(170, 46)
 	yes_button.pressed.connect(confirm_quit)
 	buttons.add_child(yes_button)
 
-	cancel_quit_button = make_menu_button("CANCEL")
+	cancel_quit_button = make_menu_button("×", "CANCEL")
 	cancel_quit_button.custom_minimum_size = Vector2(170, 46)
 	cancel_quit_button.pressed.connect(cancel_quit)
 	buttons.add_child(cancel_quit_button)
@@ -226,10 +355,10 @@ func build_quit_dialog() -> void:
 
 func make_quit_panel_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = PANEL_COLOR
-	style.border_color = Color(0.70, 0.48, 0.27, 1.0)
+	style.bg_color = PANEL
+	style.border_color = GOLD
 	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
+	style.set_corner_radius_all(4)
 	return style
 
 
