@@ -64,7 +64,7 @@ func setup_menu_audio() -> void:
 	# Play the hallway ambience for as long as the main menu is open.
 	menu_music = AudioStreamPlayer.new()
 	menu_music.name = "MainMenuMusic"
-	menu_music.volume_db = -12.0
+	menu_music.volume_db = +2.0
 	var music_stream := load(MENU_MUSIC_PATH) as AudioStreamMP3
 	if music_stream != null:
 		music_stream.loop = true
