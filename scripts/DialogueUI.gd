@@ -435,6 +435,20 @@ func start_dialogue(
 	multi_player_texture: Texture2D = null
 ) -> void:
 
+	# Resolve the chosen character's 32-bit portrait centrally so dialogues
+	# remain correct even when callers still pass the default female portrait.
+	var selected_player_texture: Texture2D = null
+	if is_instance_valid(PlayerSetup) and PlayerSetup.has_method("get_player_portrait"):
+		selected_player_texture = PlayerSetup.get_player_portrait()
+
+	if selected_player_texture != null:
+		if multi_mode:
+			multi_player_texture = selected_player_texture
+		else:
+			if left_texture == right_texture:
+				left_texture = selected_player_texture
+			right_texture = selected_player_texture
+
 	dialogue_data = data
 	current_line = 0
 	auto_next_elapsed = 0.0
@@ -681,7 +695,7 @@ func show_line() -> void:
 	# Change the speaker name only after the portrait transition finishes.
 	# This prevents the name from showing the next speaker while the previous
 	# character is still leaving the dialogue screen.
-	speaker_name.text = speaker
+	speaker_name.text = PlayerSetup.get_display_name() if speaker == "Player" and is_instance_valid(PlayerSetup) else speaker
 
 	update_character_highlight(speaker)
 
