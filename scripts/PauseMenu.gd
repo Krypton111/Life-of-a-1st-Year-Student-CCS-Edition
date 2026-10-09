@@ -1015,9 +1015,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if main_menu_mode:
 		if showing_settings_menu:
 			close_settings()
+			get_viewport().set_input_as_handled()
 		elif showing_slot_menu:
 			close_slot_menu()
-		get_viewport().set_input_as_handled()
+			get_viewport().set_input_as_handled()
 		return
 
 	if showing_settings_menu:
