@@ -37,24 +37,22 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	# Simple cream gradient: lighter toward the top, gently darker toward the bottom.
+	# Smooth cream gradient, rendered as one continuous shader-free blend.
 	var w := size.x
 	var h := size.y
 	var top_color := Color("#FFF8E9")
 	var middle_color := Color("#F5E8D2")
 	var bottom_color := Color("#E7D2B5")
-	var gradient_height := maxf(h, 1.0)
 
-	for band in range(64):
-		var t := float(band) / 63.0
+	# A fine per-pixel vertical blend avoids visible horizontal bands.
+	for y in range(ceili(h)):
+		var t := float(y) / maxf(h - 1.0, 1.0)
 		var color: Color
 		if t < 0.72:
 			color = top_color.lerp(middle_color, t / 0.72)
 		else:
 			color = middle_color.lerp(bottom_color, (t - 0.72) / 0.28)
-		var y := gradient_height * t
-		var next_y := gradient_height * float(band + 1) / 64.0
-		draw_rect(Rect2(0, y, w, next_y - y + 1.0), color)
+		draw_line(Vector2(0, y), Vector2(w, y), color, 1.0)
 
 func build_menu() -> void:
 	var left_panel := PanelContainer.new()
