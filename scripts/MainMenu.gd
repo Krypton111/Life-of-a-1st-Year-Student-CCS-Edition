@@ -31,6 +31,7 @@ func _ready() -> void:
 	build_menu()
 	build_character_art()
 	build_profile_setup()
+	animate_menu_intro()
 	pause_menu = get_node("PauseMenu") as CanvasLayer
 	if pause_menu != null:
 		pause_menu.set("main_menu_mode", true)
@@ -62,6 +63,13 @@ func build_menu() -> void:
 	left_panel.size = Vector2(635, 925)
 	left_panel.add_theme_stylebox_override("panel", make_panel_style())
 	add_child(left_panel)
+	left_panel.modulate.a = 0.0
+	left_panel.position.y += 24
+	var panel_tween := create_tween()
+	panel_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	panel_tween.set_parallel(true)
+	panel_tween.tween_property(left_panel, "modulate:a", 1.0, 0.75).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	panel_tween.tween_property(left_panel, "position:y", 76.0, 0.8).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
 	var margin := MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 48)
@@ -207,6 +215,19 @@ func add_character(path: String, at: Vector2, dimensions: Vector2, z_layer: int 
 	character.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	character.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(character)
+	# Characters softly fade in and float by a few pixels for a calm, living menu.
+	var final_position := character.position
+	character.position.y += 18
+	character.modulate.a = 0.0
+	var entrance := create_tween()
+	entrance.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	entrance.set_parallel(true)
+	entrance.tween_property(character, "position", final_position, 0.85 + float(z_layer) * 0.07).set_delay(float(get_child_count() % 7) * 0.07).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	entrance.tween_property(character, "modulate:a", opacity, 0.75).set_delay(float(get_child_count() % 7) * 0.07).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	var float_tween := create_tween()
+	float_tween.set_loops()
+	float_tween.tween_property(character, "position:y", final_position.y - 4.0, 2.4 + float(z_layer) * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	float_tween.tween_property(character, "position:y", final_position.y + 3.0, 2.4 + float(z_layer) * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func make_menu_button(number: String, label_text: String, is_primary: bool = false) -> Button:
@@ -228,6 +249,9 @@ func make_menu_button(number: String, label_text: String, is_primary: bool = fal
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", pressed)
 	button.add_theme_stylebox_override("focus", make_button_style(Color("#815839")))
+	button.pivot_offset = Vector2(0, 29.5)
+	button.mouse_entered.connect(_animate_button_hover.bind(button, true))
+	button.mouse_exited.connect(_animate_button_hover.bind(button, false))
 	return button
 
 
@@ -256,6 +280,28 @@ func make_panel_style() -> StyleBoxFlat:
 	style.shadow_offset = Vector2(0, 8)
 	return style
 
+
+func animate_menu_intro() -> void:
+	# Stagger the menu controls so the interface settles in after the artwork.
+	for i in range(menu_buttons.size()):
+		var button := menu_buttons[i]
+		var final_position := button.position
+		button.position.x -= 18
+		button.modulate.a = 0.0
+		var tween := create_tween()
+		tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		tween.set_parallel(true)
+		tween.tween_property(button, "position:x", final_position.x, 0.42).set_delay(0.22 + i * 0.075).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(button, "modulate:a", 1.0, 0.38).set_delay(0.22 + i * 0.075)
+
+func _animate_button_hover(button: Button, hovered: bool) -> void:
+	if not is_instance_valid(button):
+		return
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_parallel(true)
+	tween.tween_property(button, "scale", Vector2(1.025, 1.025) if hovered else Vector2.ONE, 0.16).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "modulate", Color("#FFF0D8") if hovered else Color.WHITE, 0.16)
 
 func start_game() -> void:
 	open_profile_setup()
@@ -599,11 +645,22 @@ func open_profile_setup() -> void:
 	profile_name_error.visible = false
 	show_name_step()
 	profile_dimmer.visible = true
+	profile_dimmer.modulate.a = 0.0
+	profile_dialog.scale = Vector2(0.96, 0.96)
+	profile_dialog.pivot_offset = profile_dialog.size / 2.0
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_parallel(true)
+	tween.tween_property(profile_dimmer, "modulate:a", 1.0, 0.22)
+	tween.tween_property(profile_dialog, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	profile_name_input.grab_focus()
 
 
 func close_profile_setup() -> void:
-	profile_dimmer.visible = false
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(profile_dimmer, "modulate:a", 0.0, 0.16)
+	tween.tween_callback(func(): profile_dimmer.visible = false)
 	if not menu_buttons.is_empty():
 		menu_buttons[0].grab_focus()
 
@@ -731,12 +788,23 @@ func make_quit_panel_style() -> StyleBoxFlat:
 func show_quit_confirmation() -> void:
 	var dimmer := quit_dialog.get_meta("dimmer") as ColorRect
 	dimmer.visible = true
+	dimmer.modulate.a = 0.0
+	quit_dialog.scale = Vector2(0.94, 0.94)
+	quit_dialog.pivot_offset = quit_dialog.size / 2.0
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.set_parallel(true)
+	tween.tween_property(dimmer, "modulate:a", 1.0, 0.18)
+	tween.tween_property(quit_dialog, "scale", Vector2.ONE, 0.24).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	cancel_quit_button.grab_focus()
 
 
 func cancel_quit() -> void:
 	var dimmer := quit_dialog.get_meta("dimmer") as ColorRect
-	dimmer.visible = false
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(dimmer, "modulate:a", 0.0, 0.14)
+	tween.tween_callback(func(): dimmer.visible = false)
 	quit_button.grab_focus()
 
 
