@@ -377,7 +377,7 @@ func build_profile_setup() -> void:
 	input_style.content_margin_right = 14
 	profile_name_input.add_theme_stylebox_override("normal", input_style)
 	profile_name_input.add_theme_stylebox_override("focus", input_style)
-	profile_name_input.text_submitted.connect(func(_submitted: String) -> void: continue_from_name())
+	profile_name_input.text_submitted.connect(_on_profile_name_submitted)
 	profile_name_step.add_child(profile_name_input)
 
 	profile_name_error = Label.new()
@@ -426,12 +426,12 @@ func build_profile_setup() -> void:
 
 	var male_button := make_menu_button("M", "MALE MC", true)
 	male_button.custom_minimum_size = Vector2(0, 62)
-	male_button.pressed.connect(func() -> void: choose_player_gender("male"))
+	male_button.pressed.connect(choose_player_gender.bind("male"))
 	profile_gender_step.add_child(male_button)
 
 	var female_button := make_menu_button("F", "FEMALE MC")
 	female_button.custom_minimum_size = Vector2(0, 62)
-	female_button.pressed.connect(func() -> void: choose_player_gender("female"))
+	female_button.pressed.connect(choose_player_gender.bind("female"))
 	profile_gender_step.add_child(female_button)
 
 	var gender_buttons := HBoxContainer.new()
@@ -469,6 +469,10 @@ func show_name_step() -> void:
 	profile_gender_step.visible = false
 	profile_name_error.visible = false
 	profile_name_input.grab_focus()
+
+
+func _on_profile_name_submitted(_submitted: String) -> void:
+	continue_from_name()
 
 
 func continue_from_name() -> void:
