@@ -114,4 +114,26 @@ func change_scene_with_fade(scene_path: String):
 
 	get_tree().change_scene_to_file(scene_path)
 	await get_tree().process_frame
+
+	# Challenge scenes can be freed during this transition, so restore the
+	# ComLab player's controls from this persistent autoload after the new
+	# scene and its Player have entered the tree.
+	if scene_path == "res://scenes/main_level_scenes/comlab202.tscn":
+		GameManager.player_controls_locked = false
+
+		var player := get_tree().get_first_node_in_group("player") as CharacterBody2D
+
+		if player != null:
+			player.process_mode = Node.PROCESS_MODE_PAUSABLE
+			player.set_process(true)
+			player.set_physics_process(true)
+			player.velocity = Vector2.ZERO
+
+			if player.has_method("unlock_controls"):
+				player.unlock_controls()
+
+			print("ComLab recovery completed. Player controls unlocked.")
+		else:
+			push_error("ComLab recovery failed: Player not found.")
+
 	await fade_in(1.0)
