@@ -196,6 +196,59 @@ func _run_tina_go_home_sequence(portrait: Texture2D) -> void:
 	await FadeManager.change_scene_with_fade("res://scenes/main_level_scenes/house_game_level.tscn")
 
 
+
+func reset_day_loop_progress() -> void:
+	# The dream ends the current day and returns the player to the beginning.
+	# Reset school/challenge progression so the player must go through the day
+	# again before Tina's hallway encounter can trigger.
+	comlab_professor_talked = false
+	comlab_second_professor_talked = false
+	maclab_professor_talked = false
+	maclab_second_professor_talked = false
+	lecture_professor_talked = false
+	lecture_second_professor_talked = false
+
+	has_baon = false
+	house_opening_completed = false
+	lecture_bully_interruption_done = false
+
+	quiz_completed = false
+	maclab_challenge_completed = false
+	lecture_challenge_completed = false
+	tina_hallway_encounter_done = false
+	cafe_route = ""
+
+	comlab_performance_score = -1.0
+	maclab_performance_score = -1.0
+	lecture_performance_score = -1.0
+
+	friends_encounter_done = false
+	friends_bookstore_choice = 0
+
+	miss_joyz_first_dialogue_done = false
+	miss_joyz_second_dialogue_done = false
+	sir_mico_dialogue_done = false
+	sir_mico_second_dialogue_done = false
+	sir_charles_dialogue_done = false
+	sir_charles_second_dialogue_done = false
+
+	computer_unlocked = false
+	mac_computer_unlocked = false
+	lecture_computer_unlocked = false
+
+	bullies_encounter_done = false
+
+	# Clear one-time sequence guards so a future loop can run normally.
+	tina_post_hallway_sequence_running = false
+	tina_post_hallway_sequence_started = false
+	returning_from_tina_dream = false
+	dream_return_sequence_running = false
+	player_controls_locked = false
+
+	# Do not erase bookstore inventory/choices, saved positions, or achievements;
+	# those are persistent side progress rather than this day's school sequence.
+
+
 func _play_tina_alarm() -> void:
 	var alarm_player := AudioStreamPlayer.new()
 	var generator := AudioStreamGenerator.new()
@@ -306,6 +359,9 @@ func _run_tina_dream_return_sequence() -> void:
 			await house_controller.play_phone_ring()
 		if house_controller.has_method("play_parent_phone_call"):
 			await house_controller.play_parent_phone_call()
+
+	# Start a fresh day after the dream and morning phone call have played.
+	reset_day_loop_progress()
 
 	if player != null:
 		player.set_physics_process(true)
