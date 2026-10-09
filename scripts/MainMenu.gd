@@ -764,16 +764,21 @@ func show_name_step() -> void:
 
 
 func _on_player_name_gui_input(event: InputEvent) -> void:
-	# Play a quiet typewriter tick for each character the player types,
-	# but ignore navigation keys, shortcuts, and deletions.
-	if event is InputEventKey and event.pressed and not event.echo:
-		var key_event := event as InputEventKey
-		if key_event.ctrl_pressed or key_event.alt_pressed or key_event.meta_pressed:
-			return
-		if key_event.keycode == KEY_BACKSPACE or key_event.keycode == KEY_DELETE:
-			return
-		if key_event.unicode > 0 and not key_event.unicode in [KEY_ENTER, KEY_KP_ENTER, KEY_TAB]:
-			_play_typewriter_sound()
+	# Play a quiet typewriter tick for typed characters and deletion keys.
+	# Ignore key-repeat events, shortcuts, and keys that do not edit the name.
+	if not (event is InputEventKey):
+		return
+
+	var key_event := event as InputEventKey
+	if not key_event.pressed or key_event.echo:
+		return
+	if key_event.ctrl_pressed or key_event.alt_pressed or key_event.meta_pressed:
+		return
+	if key_event.keycode in [KEY_BACKSPACE, KEY_DELETE]:
+		_play_typewriter_sound()
+		return
+	if key_event.unicode > 0 and key_event.keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_TAB]:
+		_play_typewriter_sound()
 
 
 func _on_profile_name_submitted(_submitted: String) -> void:
