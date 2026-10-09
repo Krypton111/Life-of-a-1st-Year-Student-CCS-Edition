@@ -193,22 +193,22 @@ func build_menu() -> void:
 func build_character_art() -> void:
 	# Back row: smaller, slightly softened silhouettes establish depth.
 	# These are added first so the foreground cast naturally overlaps them.
-	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(770, 330), Vector2(235, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(1000, 295), Vector2(225, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1370, 330), Vector2(225, 485), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1590, 320), Vector2(230, 495), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(700, 330), Vector2(235, 490), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(920, 295), Vector2(225, 490), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1285, 330), Vector2(225, 485), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1500, 320), Vector2(230, 495), 0, 0.78)
 
 	# Front row: a staggered friend group, with the player character as the
 	# visual anchor. Slight overlaps make the group feel gathered, not lined up.
-	add_character(SCHOOL_ASSETS + "Friends/Nathaly/Nathaly.png", Vector2(765, 440), Vector2(275, 545), 2)
-	add_character(SCHOOL_ASSETS + "Friends/Janssen/Janssen.png", Vector2(905, 465), Vector2(260, 520), 2)
-	add_character(MC_ASSET, Vector2(1055, 365), Vector2(315, 660), 3)
-	add_character(SCHOOL_ASSETS + "Friends/Kairi/Kairi.png", Vector2(1260, 435), Vector2(270, 550), 2)
-	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1480, 445), Vector2(265, 540), 2)
+	add_character(SCHOOL_ASSETS + "Friends/Nathaly/Nathaly.png", Vector2(700, 440), Vector2(275, 545), 2)
+	add_character(SCHOOL_ASSETS + "Friends/Janssen/Janssen.png", Vector2(830, 465), Vector2(260, 520), 2)
+	add_character(MC_ASSET, Vector2(975, 365), Vector2(315, 660), 3)
+	add_character(SCHOOL_ASSETS + "Friends/Kairi/Kairi.png", Vector2(1170, 435), Vector2(270, 550), 2)
+	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1375, 445), Vector2(265, 540), 2)
 
 	var character_caption := Label.new()
 	character_caption.text = "YOUR PEOPLE. YOUR CHOICES. YOUR FIRST YEAR."
-	character_caption.position = Vector2(830, 930)
+	character_caption.position = Vector2(760, 930)
 	character_caption.size = Vector2(930, 32)
 	character_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	character_caption.add_theme_font_size_override("font_size", 15)
