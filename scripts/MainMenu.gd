@@ -157,20 +157,20 @@ func build_menu() -> void:
 func build_character_art() -> void:
 	# Back row: smaller, slightly softened silhouettes establish depth.
 	# These are added first so the foreground cast naturally overlaps them.
-	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(400, 220), Vector2(235, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(590, 140), Vector2(225, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1000, 190), Vector2(225, 485), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1200, 210), Vector2(230, 495), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(350, 220), Vector2(235, 490), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(570, 115), Vector2(225, 490), 0, 0.72)
+	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1030, 190), Vector2(225, 485), 0, 0.83)
+	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1250, 210), Vector2(230, 495), 0, 0.7)
 
-	add_character("res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Character Sprites/32-bit Character Models/Gelo (Ex Lover or smth)/gelo.png", Vector2(820, 120), Vector2(225, 485), 0, 0.95)
+	add_character("res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Character Sprites/32-bit Character Models/Gelo (Ex Lover or smth)/gelo.png", Vector2(820, 120), Vector2(225, 485), 0, 0.9)
 
 	# Front row: a staggered friend group, with the player character as the
 	# visual anchor. Slight overlaps make the group feel gathered, not lined up.
-	add_character(SCHOOL_ASSETS + "Friends/Nathaly/Nathaly.png", Vector2(300, 440), Vector2(275, 545), 2)
-	add_character(SCHOOL_ASSETS + "Friends/Janssen/Janssen.png", Vector2(470, 465), Vector2(260, 520), 2)
+	add_character(SCHOOL_ASSETS + "Friends/Nathaly/Nathaly.png", Vector2(250, 440), Vector2(275, 545), 2)
+	add_character(SCHOOL_ASSETS + "Friends/Janssen/Janssen.png", Vector2(420, 465), Vector2(260, 520), 2)
 	# Keep both main characters side by side in the foreground.
-	add_character(MALE_MC_ASSET, Vector2(920, 395), Vector2(285, 620), 4)
-	add_character(MC_ASSET, Vector2(675, 365), Vector2(315, 660), 3)
+	add_character(MALE_MC_ASSET, Vector2(870, 395), Vector2(285, 620), 4)
+	add_character(MC_ASSET, Vector2(625, 365), Vector2(315, 660), 3)
 	add_character(SCHOOL_ASSETS + "Friends/Kairi/Kairi.png", Vector2(1300, 435), Vector2(270, 550), 2)
 	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1135, 445), Vector2(265, 540), 2)
 
