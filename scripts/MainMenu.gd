@@ -215,7 +215,7 @@ func build_character_art() -> void:
 	add_character(SCHOOL_ASSETS + "Friends/Kerwin/Kerwin.png", Vector2(1125, 445), Vector2(265, 540), 2)
 
 	var character_caption := Label.new()
-	character_caption.text = "YOUR PEOPLE. YOUR CHOICES. YOUR FIRST YEAR."
+	character_caption.text = ""
 	character_caption.position = Vector2(760, 930)
 	character_caption.size = Vector2(930, 32)
 	character_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
