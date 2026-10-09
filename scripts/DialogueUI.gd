@@ -122,19 +122,19 @@ func create_skip_all_button() -> void:
 	skip_all_button.z_index = 20
 
 	var normal_style := StyleBoxFlat.new()
-	normal_style.bg_color = Color("#5A3A28")
-	normal_style.border_color = Color("#B9824A")
+	normal_style.bg_color = Color("#5A3926")
+	normal_style.border_color = Color("#C18A4E")
 	normal_style.set_border_width_all(2)
 	normal_style.set_corner_radius_all(8)
 
 	var hover_style := StyleBoxFlat.new()
-	hover_style.bg_color = Color("#7A5035")
-	hover_style.border_color = Color("#D8A15D")
+	hover_style.bg_color = Color("#815438")
+	hover_style.border_color = Color("#E6AD63")
 	hover_style.set_border_width_all(2)
 	hover_style.set_corner_radius_all(8)
 
 	var pressed_style := StyleBoxFlat.new()
-	pressed_style.bg_color = Color("#3A281E")
+	pressed_style.bg_color = Color("#382419")
 	pressed_style.border_color = Color("#D8A15D")
 	pressed_style.set_border_width_all(2)
 	pressed_style.set_corner_radius_all(8)
@@ -142,7 +142,7 @@ func create_skip_all_button() -> void:
 	skip_all_button.add_theme_stylebox_override("normal", normal_style)
 	skip_all_button.add_theme_stylebox_override("hover", hover_style)
 	skip_all_button.add_theme_stylebox_override("pressed", pressed_style)
-	skip_all_button.add_theme_color_override("font_color", Color("#F6E7D2"))
+	skip_all_button.add_theme_color_override("font_color", Color("#FFF0D8"))
 	skip_all_button.add_theme_color_override("font_hover_color", Color("#FFF1D6"))
 	skip_all_button.add_theme_color_override("font_pressed_color", Color("#FFFFFF"))
 	skip_all_button.add_theme_font_size_override("font_size", 14)
@@ -172,7 +172,7 @@ func create_auto_next_button() -> void:
 	auto_next_button.process_mode = Node.PROCESS_MODE_ALWAYS
 	auto_next_button.z_index = 25
 	auto_next_button.add_theme_font_size_override("font_size", 13)
-	auto_next_button.add_theme_color_override("font_color", Color("#CFAF8C"))
+	auto_next_button.add_theme_color_override("font_color", Color("#D8BEA1"))
 	auto_next_button.add_theme_color_override("font_hover_color", Color("#FFF1D6"))
 	auto_next_button.add_theme_color_override("font_pressed_color", Color("#D8A15D"))
 	auto_next_button.pressed.connect(toggle_auto_next)
