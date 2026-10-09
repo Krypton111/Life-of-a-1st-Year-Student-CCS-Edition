@@ -47,6 +47,7 @@ var brightness_shader_material: ShaderMaterial = null
 
 var master_bus_index: int = -1
 
+var main_menu_mode: bool = false
 var is_paused := false
 var showing_quit_confirmation := false
 var showing_slot_menu := false
@@ -839,6 +840,22 @@ func open_save_slots() -> void:
 		first_button.grab_focus()
 
 
+func open_main_menu_load_slots() -> void:
+	if not main_menu_mode:
+		return
+	overlay.visible = true
+	pause_panel.visible = false
+	open_load_slots()
+
+
+func open_main_menu_settings() -> void:
+	if not main_menu_mode:
+		return
+	overlay.visible = true
+	pause_panel.visible = false
+	open_settings()
+
+
 func open_load_slots() -> void:
 	if not is_instance_valid(SaveManager):
 		show_button_feedback(load_game_button, "Save Manager Missing")
@@ -901,6 +918,9 @@ func load_from_slot(slot: int) -> void:
 
 	if success:
 		force_unlock_player_after_load()
+	elif main_menu_mode:
+		open_main_menu_load_slots()
+		show_button_feedback(load_game_button, "Load Failed")
 	else:
 		pause_game()
 		show_button_feedback(load_game_button, "Load Failed")
@@ -989,21 +1009,31 @@ func make_button_style(background: Color) -> StyleBoxFlat:
 # ============================================================
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed and not event.echo:
+	if not (event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed and not event.echo):
+		return
+
+	if main_menu_mode:
 		if showing_settings_menu:
 			close_settings()
 		elif showing_slot_menu:
 			close_slot_menu()
-		elif showing_achievement_menu:
-			close_achievements()
-		elif showing_quit_confirmation:
-			cancel_quit()
-		elif is_paused:
-			resume_game()
-		else:
-			pause_game()
-
 		get_viewport().set_input_as_handled()
+		return
+
+	if showing_settings_menu:
+		close_settings()
+	elif showing_slot_menu:
+		close_slot_menu()
+	elif showing_achievement_menu:
+		close_achievements()
+	elif showing_quit_confirmation:
+		cancel_quit()
+	elif is_paused:
+		resume_game()
+	else:
+		pause_game()
+
+	get_viewport().set_input_as_handled()
 
 
 # ============================================================
