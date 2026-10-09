@@ -15,6 +15,13 @@ var quit_button: Button
 var cancel_quit_button: Button
 var menu_buttons: Array[Button] = []
 
+var profile_dimmer: ColorRect
+var profile_dialog: PanelContainer
+var profile_name_input: LineEdit
+var profile_name_error: Label
+var profile_name_step: VBoxContainer
+var profile_gender_step: VBoxContainer
+
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -22,6 +29,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	build_menu()
 	build_character_art()
+	build_profile_setup()
 	pause_menu = get_node("PauseMenu") as CanvasLayer
 	if pause_menu != null:
 		pause_menu.set("main_menu_mode", true)
@@ -290,6 +298,198 @@ func make_panel_style() -> StyleBoxFlat:
 
 
 func start_game() -> void:
+	open_profile_setup()
+
+
+func build_profile_setup() -> void:
+	profile_dimmer = ColorRect.new()
+	profile_dimmer.name = "PlayerSetupDimmer"
+	profile_dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	profile_dimmer.color = Color(0.04, 0.025, 0.018, 0.86)
+	profile_dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	profile_dimmer.visible = false
+	profile_dimmer.z_index = 100
+	add_child(profile_dimmer)
+
+	profile_dialog = PanelContainer.new()
+	profile_dialog.name = "PlayerSetupDialog"
+	profile_dialog.set_anchors_preset(Control.PRESET_CENTER)
+	profile_dialog.position = Vector2(-310, -245)
+	profile_dialog.size = Vector2(620, 490)
+	profile_dialog.add_theme_stylebox_override("panel", make_panel_style())
+	profile_dimmer.add_child(profile_dialog)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 38)
+	margin.add_theme_constant_override("margin_right", 38)
+	margin.add_theme_constant_override("margin_top", 32)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	profile_dialog.add_child(margin)
+
+	var steps := VBoxContainer.new()
+	steps.name = "ProfileSteps"
+	steps.add_theme_constant_override("separation", 18)
+	margin.add_child(steps)
+
+	var eyebrow := Label.new()
+	eyebrow.text = "BEFORE YOUR STORY BEGINS"
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	eyebrow.add_theme_font_size_override("font_size", 14)
+	eyebrow.add_theme_color_override("font_color", GOLD)
+	eyebrow.add_theme_constant_override("letter_spacing", 2)
+	steps.add_child(eyebrow)
+
+	profile_name_step = VBoxContainer.new()
+	profile_name_step.name = "NameStep"
+	profile_name_step.add_theme_constant_override("separation", 14)
+	steps.add_child(profile_name_step)
+
+	var name_title := Label.new()
+	name_title.text = "WHAT SHOULD WE CALL YOU?"
+	name_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_title.add_theme_font_size_override("font_size", 27)
+	name_title.add_theme_color_override("font_color", CREAM)
+	profile_name_step.add_child(name_title)
+
+	var name_hint := Label.new()
+	name_hint.text = "Enter the name you'd like to use for your first-year story."
+	name_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_hint.add_theme_font_size_override("font_size", 15)
+	name_hint.add_theme_color_override("font_color", MUTED)
+	profile_name_step.add_child(name_hint)
+
+	profile_name_input = LineEdit.new()
+	profile_name_input.name = "PlayerNameInput"
+	profile_name_input.placeholder_text = "Your name..."
+	profile_name_input.custom_minimum_size = Vector2(0, 52)
+	profile_name_input.max_length = 24
+	profile_name_input.clear_button_enabled = true
+	profile_name_input.add_theme_font_size_override("font_size", 20)
+	profile_name_input.add_theme_color_override("font_color", CREAM)
+	profile_name_input.add_theme_color_override("font_placeholder_color", Color("#B59A7C"))
+	var input_style := StyleBoxFlat.new()
+	input_style.bg_color = Color("#2B1C14")
+	input_style.border_color = Color("#B9824A")
+	input_style.set_border_width_all(2)
+	input_style.set_corner_radius_all(4)
+	input_style.content_margin_left = 14
+	input_style.content_margin_right = 14
+	profile_name_input.add_theme_stylebox_override("normal", input_style)
+	profile_name_input.add_theme_stylebox_override("focus", input_style)
+	profile_name_input.text_submitted.connect(func(_submitted: String) -> void: continue_from_name())
+	profile_name_step.add_child(profile_name_input)
+
+	profile_name_error = Label.new()
+	profile_name_error.text = "Please enter a name to continue."
+	profile_name_error.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	profile_name_error.add_theme_font_size_override("font_size", 14)
+	profile_name_error.add_theme_color_override("font_color", Color("#E6A078"))
+	profile_name_error.visible = false
+	profile_name_step.add_child(profile_name_error)
+
+	var name_buttons := HBoxContainer.new()
+	name_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	name_buttons.add_theme_constant_override("separation", 14)
+	profile_name_step.add_child(name_buttons)
+
+	var cancel_button := make_menu_button("×", "CANCEL")
+	cancel_button.custom_minimum_size = Vector2(190, 50)
+	cancel_button.pressed.connect(close_profile_setup)
+	name_buttons.add_child(cancel_button)
+
+	var continue_button := make_menu_button("→", "CONTINUE", true)
+	continue_button.custom_minimum_size = Vector2(190, 50)
+	continue_button.pressed.connect(continue_from_name)
+	name_buttons.add_child(continue_button)
+
+	profile_gender_step = VBoxContainer.new()
+	profile_gender_step.name = "GenderStep"
+	profile_gender_step.add_theme_constant_override("separation", 16)
+	profile_gender_step.visible = false
+	steps.add_child(profile_gender_step)
+
+	var gender_title := Label.new()
+	gender_title.text = "CHOOSE YOUR PLAYER CHARACTER"
+	gender_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gender_title.add_theme_font_size_override("font_size", 25)
+	gender_title.add_theme_color_override("font_color", CREAM)
+	profile_gender_step.add_child(gender_title)
+
+	var gender_hint := Label.new()
+	gender_hint.text = "Which version of the main character would you like to play?"
+	gender_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gender_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gender_hint.add_theme_font_size_override("font_size", 15)
+	gender_hint.add_theme_color_override("font_color", MUTED)
+	profile_gender_step.add_child(gender_hint)
+
+	var male_button := make_menu_button("M", "MALE MC", true)
+	male_button.custom_minimum_size = Vector2(0, 62)
+	male_button.pressed.connect(func() -> void: choose_player_gender("male"))
+	profile_gender_step.add_child(male_button)
+
+	var female_button := make_menu_button("F", "FEMALE MC")
+	female_button.custom_minimum_size = Vector2(0, 62)
+	female_button.pressed.connect(func() -> void: choose_player_gender("female"))
+	profile_gender_step.add_child(female_button)
+
+	var gender_buttons := HBoxContainer.new()
+	gender_buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	gender_buttons.add_theme_constant_override("separation", 14)
+	profile_gender_step.add_child(gender_buttons)
+
+	var back_button := make_menu_button("←", "BACK")
+	back_button.custom_minimum_size = Vector2(190, 48)
+	back_button.pressed.connect(show_name_step)
+	gender_buttons.add_child(back_button)
+
+	var gender_cancel_button := make_menu_button("×", "CANCEL")
+	gender_cancel_button.custom_minimum_size = Vector2(190, 48)
+	gender_cancel_button.pressed.connect(close_profile_setup)
+	gender_buttons.add_child(gender_cancel_button)
+
+
+func open_profile_setup() -> void:
+	profile_name_input.text = ""
+	profile_name_error.visible = false
+	show_name_step()
+	profile_dimmer.visible = true
+	profile_name_input.grab_focus()
+
+
+func close_profile_setup() -> void:
+	profile_dimmer.visible = false
+	if not menu_buttons.is_empty():
+		menu_buttons[0].grab_focus()
+
+
+func show_name_step() -> void:
+	profile_name_step.visible = true
+	profile_gender_step.visible = false
+	profile_name_error.visible = false
+	profile_name_input.grab_focus()
+
+
+func continue_from_name() -> void:
+	var chosen_name := profile_name_input.text.strip_edges()
+	if chosen_name.is_empty():
+		profile_name_error.visible = true
+		profile_name_input.grab_focus()
+		return
+	PlayerSetup.player_name = chosen_name
+	profile_name_step.visible = false
+	profile_gender_step.visible = true
+	profile_gender_step.get_child(2).grab_focus()
+
+
+func choose_player_gender(chosen_gender: String) -> void:
+	PlayerSetup.player_gender = chosen_gender
+	profile_dimmer.visible = false
+	begin_opening_cutscene()
+
+
+func begin_opening_cutscene() -> void:
 	if is_instance_valid(FadeManager):
 		await FadeManager.change_scene_with_fade(OPENING_SCENE)
 	else:
