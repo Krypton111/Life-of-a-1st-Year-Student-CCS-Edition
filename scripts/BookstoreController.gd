@@ -2941,7 +2941,17 @@ func walk_group_to_exit() -> void:
 
 	await get_tree().physics_frame
 
+	# Never let a navigation/collision issue trap the player in the bookstore.
+	# If the group cannot reach the exit, end the walk sequence and continue to
+	# the School scene after a reasonable timeout.
+	var walk_start_time: int = Time.get_ticks_msec()
+	const MAX_DEPARTURE_WALK_MSEC: int = 12000
+
 	while true:
+
+		if Time.get_ticks_msec() - walk_start_time >= MAX_DEPARTURE_WALK_MSEC:
+			push_warning("Bookstore departure walk timed out; continuing to School.")
+			break
 
 		var someone_reached_exit := false
 		var current_time: float = Time.get_ticks_msec() / 1000.0
