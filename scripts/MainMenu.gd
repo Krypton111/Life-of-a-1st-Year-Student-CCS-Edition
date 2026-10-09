@@ -193,10 +193,10 @@ func build_menu() -> void:
 func build_character_art() -> void:
 	# Back row: smaller, slightly softened silhouettes establish depth.
 	# These are added first so the foreground cast naturally overlaps them.
-	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(450, 330), Vector2(235, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(670, 295), Vector2(225, 490), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1035, 330), Vector2(225, 485), 0, 0.78)
-	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1250, 320), Vector2(230, 495), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(450, 290), Vector2(235, 490), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Profs/Joyz/Joyz.png", Vector2(670, 255), Vector2(225, 490), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Bullies/Joe/Joe.png", Vector2(1035, 290), Vector2(225, 485), 0, 0.78)
+	add_character(SCHOOL_ASSETS + "Tina/tina.png", Vector2(1250, 280), Vector2(230, 495), 0, 0.78)
 
 	# Front row: a staggered friend group, with the player character as the
 	# visual anchor. Slight overlaps make the group feel gathered, not lined up.
