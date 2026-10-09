@@ -668,7 +668,7 @@ func continue_from_name() -> void:
 	PlayerSetup.player_name = chosen_name
 	profile_name_step.visible = false
 	profile_gender_step.visible = true
-	profile_gender_step.get_child(2).grab_focus()
+	profile_gender_step.get_child(2).get_child(0).get_child(2).grab_focus()
 
 
 func choose_player_gender(chosen_gender: String) -> void:
