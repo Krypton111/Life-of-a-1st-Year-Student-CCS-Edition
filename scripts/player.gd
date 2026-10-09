@@ -56,6 +56,9 @@ func _ready() -> void:
 
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
+	# Use the sprite sheet matching the character chosen on the title screen.
+	_apply_selected_character_sprite()
+
 	# Do not forcibly unlock controls here. During save loading, the scene and
 	# SaveManager reconstruct the gameplay state after _ready(). Forcing this
 	# flag to false here can overwrite a restored lock and cause load-state
@@ -108,6 +111,41 @@ func _ready() -> void:
 	# --------------------------------------------------------
 
 	_create_quest_pointer()
+
+
+# ============================================================
+# APPLY SELECTED CHARACTER SPRITE
+# ============================================================
+
+func _apply_selected_character_sprite() -> void:
+	if not is_instance_valid(PlayerSetup):
+		return
+
+	var selected_scene_path := (
+		"res://scenes/player&NPCs/player2.tscn"
+		if PlayerSetup.player_gender.to_lower() == "male"
+		else "res://scenes/player&NPCs/player.tscn"
+	)
+
+	# This instance already has the correct sheet; do not reload it.
+	if scene_file_path == selected_scene_path:
+		return
+
+	var packed_player := load(selected_scene_path) as PackedScene
+	if packed_player == null:
+		push_warning("Could not load selected player scene: " + selected_scene_path)
+		return
+
+	# Instantiating without adding it to the tree lets us copy its SpriteFrames
+	# without running another player's _ready() or creating duplicate nodes.
+	var selected_player := packed_player.instantiate()
+	var selected_sprite := selected_player.get_node_or_null("AnimatedSprite2D") as AnimatedSprite2D
+	if selected_sprite != null and selected_sprite.sprite_frames != null:
+		animated_sprite.sprite_frames = selected_sprite.sprite_frames
+		var idle_animation := "idle_down"
+		if animated_sprite.sprite_frames.has_animation(idle_animation):
+			animated_sprite.play(idle_animation)
+	selected_player.free()
 
 
 # ============================================================
