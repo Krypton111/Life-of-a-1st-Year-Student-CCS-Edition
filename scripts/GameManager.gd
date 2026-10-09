@@ -209,7 +209,7 @@ func reset_day_loop_progress() -> void:
 	lecture_second_professor_talked = false
 
 	has_baon = false
-	house_opening_completed = false
+	# Keep the one-time opening sequence complete; only daily progress loops.
 	lecture_bully_interruption_done = false
 	quiz_completed = false
 	maclab_challenge_completed = false
