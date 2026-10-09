@@ -46,9 +46,17 @@ var panic_route: Array[Marker2D] = []
 var panic_route_running: bool = false
 var panic_footstep_timer: float = 0.0
 var panic_navigation_agent: NavigationAgent2D = null
+var controller_active: bool = false
+var panic_tree: SceneTree = null
 
 
 func _ready() -> void:
+
+	controller_active = true
+
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		controller_active = false
+		return
 
 	if GameManager.house_opening_completed:
 		return
@@ -57,12 +65,22 @@ func _ready() -> void:
 		print("ERROR: HouseOpeningController could not find Player.")
 		return
 
+	panic_tree = get_tree()
+	if panic_tree == null:
+		controller_active = false
+		return
+
 	transparent_texture = create_transparent_texture()
 	load_panic_route()
 	setup_panic_navigation()
 
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await panic_tree.process_frame
+
+	if not is_inside_tree():
+		return
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		controller_active = false
+		return
 
 	await start_house_opening()
 
@@ -72,6 +90,9 @@ func _ready() -> void:
 # =========================================
 
 func is_player_usable() -> bool:
+	if not controller_active or not is_inside_tree():
+		return false
+
 	if player == null:
 		return false
 
@@ -88,6 +109,14 @@ func is_player_usable() -> bool:
 	if not world.space.is_valid():
 		return false
 
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		return false
+
+	# A CharacterBody2D can remain in the scene tree for a brief moment while
+	# its physics body has already been removed from the physics space.
+	if not PhysicsServer2D.body_get_space(player.get_rid()).is_valid():
+		return false
+
 	return true
 
 
@@ -96,6 +125,11 @@ func is_player_usable() -> bool:
 # =========================================
 
 func start_house_opening() -> void:
+
+	if not controller_active or not is_inside_tree():
+		return
+	if is_instance_valid(SaveManager) and bool(SaveManager.get("is_loading")):
+		return
 
 	GameManager.player_controls_locked = false
 	player.velocity = Vector2.ZERO
@@ -290,7 +324,15 @@ func play_automatic_panic_monologue() -> void:
 
 	await wait_for_dialogue_ui_entered(dialogue_ui)
 
+	if not controller_active or not is_inside_tree():
+		panic_route_running = false
+		return
+
 	GameManager.player_controls_locked = true
+
+	if panic_tree == null:
+		panic_route_running = false
+		return
 
 	for line_index in range(dialogue.size()):
 
@@ -305,13 +347,19 @@ func play_automatic_panic_monologue() -> void:
 		dialogue_ui.typing_speed = AUTO_PANIC_SPEEDS[speed_index]
 
 		while DialogueManager.is_active and dialogue_ui.is_typing:
-			await get_tree().process_frame
+			if not controller_active or not is_inside_tree():
+				panic_route_running = false
+				return
+			await panic_tree.process_frame
 
 		if not DialogueManager.is_active:
 			break
 
 		if line_index < AUTO_PANIC_PAUSES.size():
-			await get_tree().create_timer(
+			if not controller_active or not is_inside_tree():
+				panic_route_running = false
+				return
+			await panic_tree.create_timer(
 				AUTO_PANIC_PAUSES[line_index]
 			).timeout
 
@@ -328,10 +376,16 @@ func play_automatic_panic_monologue() -> void:
 			dialogue_ui.advance_to_next_line()
 
 	while DialogueManager.is_active and dialogue_ui.is_typing:
-		await get_tree().process_frame
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
+		await panic_tree.process_frame
 
 	if DialogueManager.is_active:
-		await get_tree().create_timer(0.15).timeout
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
+		await panic_tree.create_timer(0.15).timeout
 
 		if DialogueManager.is_active:
 			dialogue_ui.advance_to_next_line()
@@ -342,7 +396,10 @@ func play_automatic_panic_monologue() -> void:
 	panic_route_running = false
 
 	while panic_route_running:
-		await get_tree().physics_frame
+		if not controller_active or not is_inside_tree():
+			panic_route_running = false
+			return
+		await panic_tree.physics_frame
 
 	if is_player_usable():
 		player.set_physics_process(true)
@@ -425,7 +482,7 @@ func run_panic_route() -> void:
 				return
 
 			update_panic_animation(Vector2.ZERO)
-			await get_tree().physics_frame
+			await panic_tree.physics_frame
 
 		panic_route_running = false
 		return
@@ -474,9 +531,25 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			panic_navigation_agent.target_position = navigation_target
 			use_navigation = true
 
-			await get_tree().physics_frame
+			await panic_tree.physics_frame
 
 	while panic_route_running and DialogueManager.is_active:
+
+		# The panic route moves the Player directly with move_and_slide(),
+		# so it does not automatically stop just because the Player's own
+		# _physics_process() is paused. Explicitly suspend this coroutine
+		# while the global SceneTree is paused.
+		if panic_tree != null and panic_tree.paused:
+			player.velocity = Vector2.ZERO
+			update_panic_animation(Vector2.ZERO)
+
+			if player.get_node_or_null("FootstepSound") != null:
+				var footstep_sound = player.get_node("FootstepSound")
+				if footstep_sound.playing:
+					footstep_sound.stop()
+
+			await panic_tree.process_frame
+			continue
 
 		if not is_player_usable():
 			panic_route_running = false
@@ -555,7 +628,7 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 				)
 				if detour_direction.length() > 0.1:
 					detour_time = 0.45
-				await get_tree().physics_frame
+				await panic_tree.physics_frame
 				continue
 
 			detour_direction = get_collision_escape_direction(
@@ -567,13 +640,13 @@ func move_player_to_panic_point(target_position: Vector2) -> void:
 			if detour_direction.length() > 0.1:
 				detour_time = 0.45
 				stuck_time = 0.0
-				await get_tree().physics_frame
+				await panic_tree.physics_frame
 				continue
 
 			player.velocity = Vector2.ZERO
 			break
 
-		await get_tree().physics_frame
+		await panic_tree.physics_frame
 
 
 func get_collision_escape_direction(
@@ -782,7 +855,7 @@ func play_phone_ring() -> void:
 
 	playback.push_buffer(buffer)
 
-	await get_tree().create_timer(duration + 0.05).timeout
+	await panic_tree.create_timer(duration + 0.05).timeout
 
 	player_audio.queue_free()
 
@@ -898,7 +971,7 @@ func play_parent_phone_call() -> void:
 
 func play_final_calming_monologue() -> void:
 
-	await get_tree().create_timer(0.75).timeout
+	await panic_tree.create_timer(0.75).timeout
 
 	var dialogue = [
 		{
@@ -1002,8 +1075,20 @@ func wait_for_dialogue_ui_entered(dialogue_ui: Control) -> void:
 	if dialogue_ui == null:
 		return
 
+	# The controller can be removed from the scene tree during a scene change
+	# or save/load operation while this coroutine is waiting. Cache the tree
+	# before awaiting so we never call get_tree() after the controller is gone.
+	var tree := get_tree()
+
+	if tree == null:
+		return
+
 	while DialogueManager.is_active and is_instance_valid(dialogue_ui) and dialogue_ui.is_entering:
-		await get_tree().process_frame
+		await tree.process_frame
+
+		# Stop immediately if this controller was removed while we were waiting.
+		if not is_inside_tree():
+			return
 
 
 # =========================================

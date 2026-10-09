@@ -31,22 +31,12 @@ var questions = [
 	},
 	{
 		"question": "Which language is primarily used to \n style web pages?",
-		"answers": [
-			"Python",
-			"CSS",
-			"Java",
-			"C++"
-		],
+		"answers": ["Python", "CSS", "Java", "C++"],
 		"correct": 1
 	},
 	{
 		"question": "Which language is commonly used \n to add interactivity to web pages?",
-		"answers": [
-			"JavaScript",
-			"HTML",
-			"CSS",
-			"SQL"
-		],
+		"answers": ["JavaScript", "HTML", "CSS", "SQL"],
 		"correct": 0
 	},
 	{
@@ -61,22 +51,12 @@ var questions = [
 	},
 	{
 		"question": "Which of these is a programming \n language?",
-		"answers": [
-			"HTML",
-			"Python",
-			"HTTP",
-			"Wi-Fi"
-		],
+		"answers": ["HTML", "Python", "HTTP", "Wi-Fi"],
 		"correct": 1
 	},
 	{
 		"question": "Which symbol is commonly used \n to start a comment in GDScript?",
-		"answers": [
-			"//",
-			"<!--",
-			"#",
-			"**"
-		],
+		"answers": ["//", "<!--", "#", "**"],
 		"correct": 2
 	},
 	{
@@ -91,32 +71,17 @@ var questions = [
 	},
 	{
 		"question": "Which data type stores true \n or false values?",
-		"answers": [
-			"String",
-			"Integer",
-			"Boolean",
-			"Float"
-		],
+		"answers": ["String", "Integer", "Boolean", "Float"],
 		"correct": 2
 	},
 	{
 		"question": "Which keyword is used to \n define a function in GDScript?",
-		"answers": [
-			"function",
-			"func",
-			"define",
-			"method"
-		],
+		"answers": ["function", "func", "define", "method"],
 		"correct": 1
 	},
 	{
 		"question": "Which engine are you currently \n using to develop this game?",
-		"answers": [
-			"Unity",
-			"Unreal Engine",
-			"Godot",
-			"GameMaker"
-		],
+		"answers": ["Unity", "Unreal Engine", "Godot", "GameMaker"],
 		"correct": 2
 	}
 ]
@@ -207,3 +172,33 @@ func finish_challenge():
 	await FadeManager.change_scene_with_fade(
 		"res://scenes/main_level_scenes/comlab202.tscn"
 	)
+
+	# The challenge was entered by locking the player in ComputerInteraction.
+	# The challenge scene creates a NEW Player when comlab202.tscn loads, so
+	# restore the global lock and the new Player's processing state here.
+	GameManager.player_controls_locked = false
+
+	var player := get_tree().get_first_node_in_group("player") as CharacterBody2D
+
+	if player != null:
+		# Make absolutely sure the newly-created Player is allowed to process.
+		player.process_mode = Node.PROCESS_MODE_PAUSABLE
+		player.set_process(true)
+		player.set_physics_process(true)
+		player.velocity = Vector2.ZERO
+
+		if player.has_method("unlock_controls"):
+			player.unlock_controls()
+
+		print(
+			"ComLab return: Player restored. locked=",
+			GameManager.player_controls_locked,
+			" physics=",
+			player.is_physics_processing(),
+			" process_mode=",
+			player.process_mode
+		)
+	else:
+		push_error("ComLab return: Player node was not found.")
+
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN

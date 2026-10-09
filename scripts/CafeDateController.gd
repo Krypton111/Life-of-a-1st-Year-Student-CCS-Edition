@@ -113,63 +113,115 @@ func _process(_delta: float) -> void:
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	# The hallway controller sets cafe_route immediately before changing
-	# scenes. Do not depend on tina_hallway_encounter_done because the
-	# scene transition can happen before the hallway encounter function gets
-	# a chance to set that flag after its awaited call returns.
-	var route := GameManager.cafe_route
+	# Normal entry supplies cafe_route. A loaded save instead restores the
+	# persistent cafe route/phase through SaveManager.
+	var route := str(GameManager.cafe_route)
+	var loading_save := false
+	if is_instance_valid(SaveManager):
+		loading_save = bool(SaveManager.get("is_loading"))
+
+	if route != "tina" and route != "friends" and route != "solo":
+		route = str(GameManager.get_meta("cafe_quest_route", ""))
+
 	if route != "tina" and route != "friends" and route != "solo":
 		return
 
-	GameManager.set_meta("cafe_quest_route", route)
-	GameManager.set_meta("cafe_quest_phase", "enter_cafe")
-
-	GameManager.player_controls_locked = true
-	entry_running = true
-
-	# Wait one frame so every instantiated character in game.tscn is fully
-	# ready before applying route-specific visibility and positions.
 	await get_tree().process_frame
 
 	if route == "tina":
 		setup_cafe_cast_for_tina()
 	elif route == "friends":
 		setup_cafe_cast_for_friends()
-	elif route == "solo":
+	else:
 		setup_cafe_cast_for_solo()
 
-	# Consume the one-time route flag after reading it. This prevents a later
-	# return to game.tscn from incorrectly reusing an older hallway choice.
-	GameManager.cafe_route = ""
+	if not loading_save:
+		GameManager.set_meta("cafe_quest_route", route)
+		GameManager.set_meta("cafe_quest_phase", "enter_cafe")
+		GameManager.cafe_route = ""
 
-	if route == "friends":
+		GameManager.player_controls_locked = true
+		entry_running = true
+
+		if route == "friends":
+			setup_cinematic_ui()
+			set_cursor_hidden()
+			await play_friends_cafe_entry()
+			entry_running = false
+			return
+
+		if route == "solo":
+			# Reset only on a genuinely new solo cafe visit. Never reset these
+			# values during a load because they are part of the saved route state.
+			GameManager.set_meta("cafe_solo_order_ready", false)
+			GameManager.set_meta("cafe_solo_followup_ready", false)
+			GameManager.set_meta("cafe_solo_order_talked_to_gelo", false)
+			GameManager.set_meta("cafe_solo_order_complete", false)
+			GameManager.set_meta("cafe_order_ready", false)
+			GameManager.set_meta("cafe_order_phase", "enter_cafe")
+			setup_cinematic_ui()
+			set_cursor_hidden()
+			await play_solo_cafe_entry()
+			entry_running = false
+			return
+
 		setup_cinematic_ui()
 		set_cursor_hidden()
-		await play_friends_cafe_entry()
+		await play_cafe_entry()
 		entry_running = false
 		return
 
-	if route == "solo":
-		# Reset solo-route state every time the solo cafe scene is entered.
-		# This prevents an earlier playthrough from skipping the Gelo decision
-		# or reusing an old coffee-order state.
-		GameManager.set_meta("cafe_solo_order_ready", false)
-		GameManager.set_meta("cafe_solo_followup_ready", false)
-		GameManager.set_meta("cafe_solo_order_talked_to_gelo", false)
-		GameManager.set_meta("cafe_solo_order_complete", false)
-		GameManager.set_meta("cafe_order_ready", false)
-		GameManager.set_meta("cafe_order_phase", "enter_cafe")
-		setup_cinematic_ui()
-		set_cursor_hidden()
-		await play_solo_cafe_entry()
-		entry_running = false
-		return
-
-	setup_cinematic_ui()
-	set_cursor_hidden()
-	await play_cafe_entry()
+	# Loading a cafe save must resume the stable gameplay state rather than
+	# replaying the entrance cinematic, dialogue, or choice menus.
+	reconstruct_loaded_cafe_state(route)
 	entry_running = false
-	# play_cafe_entry() restores player control after the full dialogue sequence.
+	if player != null:
+		player.set_physics_process(true)
+	GameManager.player_controls_locked = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func reconstruct_loaded_cafe_state(route: String) -> void:
+	GameManager.set_meta("cafe_quest_route", route)
+
+	var phase := str(GameManager.get_meta("cafe_quest_phase", ""))
+	if phase.is_empty():
+		phase = "order_drinks"
+		GameManager.set_meta("cafe_quest_phase", phase)
+
+	# Dynamic dialogue/choice UI is deliberately not serialized. The saved
+	# metadata determines the next stable interaction instead.
+	if route == "tina":
+		if bool(GameManager.get_meta("cafe_tina_followup_ready", false)) 		or bool(GameManager.get_meta("cafe_order_complete", false)):
+			GameManager.set_meta("cafe_order_ready", false)
+		elif phase in ["order_drinks", "marya_dialogue", "choose_drinks", "ask_tina_again"]:
+			GameManager.set_meta("cafe_order_ready", true)
+	elif route == "friends":
+		if bool(GameManager.get_meta("cafe_friends_followup_ready", false)) 		or bool(GameManager.get_meta("cafe_order_complete", false)):
+			GameManager.set_meta("cafe_order_ready", false)
+		elif phase in ["order_drinks", "friends_marya_dialogue", "choose_friends_drinks", "friends_ask_again"]:
+			GameManager.set_meta("cafe_order_ready", true)
+	else:
+		if bool(GameManager.get_meta("cafe_solo_followup_ready", false)) 		or bool(GameManager.get_meta("cafe_solo_order_complete", false)):
+			GameManager.set_meta("cafe_order_ready", false)
+		elif bool(GameManager.get_meta("cafe_solo_order_ready", false)):
+			GameManager.set_meta("cafe_order_ready", true)
+		elif phase in ["order_drinks", "solo_marya_dialogue", "solo_talk_to_marya"]:
+			GameManager.set_meta("cafe_order_ready", true)
+
+	# These are transient runtime/UI variables and must start clean after load.
+	coffee_order_open = false
+	friends_order_open = false
+	solo_order_open = false
+	coffee_order_player_choice = ""
+	coffee_order_tina_choice = ""
+	coffee_order_current_target = "player"
+	friends_order_choices.clear()
+	friends_order_current_target = "player"
+	solo_order_choice = ""
+	solo_gelo_order_choice = ""
+	solo_order_current_target = "player"
+	entry_running = false
 
 
 func setup_cafe_cast_for_tina() -> void:

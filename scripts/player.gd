@@ -46,12 +46,20 @@ var quest_pointer: Node2D = null
 
 func _ready() -> void:
 
+	# The player must obey the global SceneTree pause.
+	# PROCESS_MODE_PAUSABLE means _physics_process() stops while
+	# get_tree().paused is true, but resumes normally afterward.
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+
 	# Player stays at normal world layer.
 	z_index = 0
 
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 
-	GameManager.player_controls_locked = false
+	# Do not forcibly unlock controls here. During save loading, the scene and
+	# SaveManager reconstruct the gameplay state after _ready(). Forcing this
+	# flag to false here can overwrite a restored lock and cause load-state
+	# controllers/dialogue sequences to become inconsistent.
 
 
 	# --------------------------------------------------------

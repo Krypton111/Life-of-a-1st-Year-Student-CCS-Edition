@@ -12,7 +12,7 @@ extends Node
 ## user://life_of_a_1st_year_student_save_10.json
 ## ============================================================
 
-const SAVE_VERSION: int = 2
+const SAVE_VERSION: int = 3
 const MAX_SLOTS: int = 10
 const SAVE_FILE_PREFIX: String = "user://life_of_a_1st_year_student_save_"
 const SAVE_FILE_SUFFIX: String = ".json"
@@ -31,6 +31,8 @@ const META_KEYS := [
 	"cafe_friends_order_result_recorded",
 	"cafe_friends_wrong_count"
 ]
+
+var is_loading: bool = false
 
 const EXCLUDED_GAME_MANAGER_PROPERTIES := [
 	"player_controls_locked",
@@ -224,6 +226,7 @@ func load_game(slot: int) -> bool:
 
 	# Make sure the tree is not paused before swapping scenes, otherwise the
 	# new scene will spawn already frozen.
+	is_loading = true
 	get_tree().paused = false
 
 	# Restore persistent state BEFORE changing scenes so _ready() can see it.
@@ -234,6 +237,7 @@ func load_game(slot: int) -> bool:
 	var change_error: Error = get_tree().change_scene_to_file(scene_path)
 
 	if change_error != OK:
+		is_loading = false
 		push_error(
 			"SaveManager: Could not load scene: "
 			+ scene_path
@@ -243,8 +247,7 @@ func load_game(slot: int) -> bool:
 		return false
 
 	# Wait for the scene swap and the new scene's _ready() to finish.
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await get_tree().scene_changed
 	await get_tree().process_frame
 
 	var new_scene := get_tree().current_scene
@@ -275,9 +278,17 @@ func load_game(slot: int) -> bool:
 			if player is CharacterBody2D:
 				player.velocity = Vector2.ZERO
 
+			# A loaded scene creates a fresh Player node. Explicitly restore
+			# its processing state because an earlier pause/cutscene may have
+			# disabled physics processing on the previous Player instance.
+			player.process_mode = Node.PROCESS_MODE_PAUSABLE
+			player.set_process(true)
+			player.set_physics_process(true)
+
 	# Ensure the tree isn't paused and the mouse is hidden for gameplay.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	is_loading = false
 
 	print("LOAD COMPLETE - SLOT ", slot, ": ", scene_path)
 	return true

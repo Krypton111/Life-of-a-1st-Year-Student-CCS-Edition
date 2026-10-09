@@ -909,3 +909,14 @@ func _on_finish_pressed() -> void:
 	await FadeManager.change_scene_with_fade(
 		"res://scenes/main_level_scenes/mac_lab.tscn"
 	)
+
+	# MacComputerInteraction locks the player before entering the challenge.
+	# Clear that lock only after the return scene has loaded.
+	GameManager.player_controls_locked = false
+
+	var player := get_tree().get_first_node_in_group("player")
+	if player != null:
+		player.velocity = Vector2.ZERO
+		player.set_physics_process(true)
+
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN

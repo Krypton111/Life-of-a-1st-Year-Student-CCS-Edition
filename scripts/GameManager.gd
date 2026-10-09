@@ -72,6 +72,10 @@ var tina_post_hallway_sequence_started := false
 
 
 func _process(_delta: float) -> void:
+	var loader := get_node_or_null("/root/SaveManager")
+	if loader != null and bool(loader.get("is_loading")):
+		return
+
 	if not returning_from_tina_dream or dream_return_sequence_running:
 		return
 
@@ -162,22 +166,15 @@ func _run_tina_post_hallway_sequence() -> void:
 	)
 
 	if choice == 1:
-		# Tell CafeDateController which cafe route to initialize.
-		GameManager.cafe_route = "solo"
-
 		var cafe_dialogue := [
 			{"speaker": "Player", "text": "You know what... I'll go."},
 			{"speaker": "Player", "text": "Maybe going there alone isn't such a bad idea."},
 			{"speaker": "Player", "text": "I'll grab something, sit down, and just clear my head for a while."},
 			{"speaker": "Player", "text": "Yeah. The cafe it is."}
 		]
-
 		DialogueManager.start_dialogue(cafe_dialogue, portrait, portrait)
 		await DialogueManager.dialogue_finished
-
-		await FadeManager.change_scene_with_fade(
-			"res://scenes/main_level_scenes/game.tscn"
-		)
+		await FadeManager.change_scene_with_fade("res://scenes/main_level_scenes/game.tscn")
 	else:
 		await _run_tina_go_home_sequence(portrait)
 
