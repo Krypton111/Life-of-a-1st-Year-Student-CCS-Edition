@@ -174,6 +174,8 @@ func _run_tina_post_hallway_sequence() -> void:
 		]
 		DialogueManager.start_dialogue(cafe_dialogue, portrait, portrait)
 		await DialogueManager.dialogue_finished
+		# Tell CafeDateController to run the solo Gelo introduction on arrival.
+		cafe_route = "solo"
 		await FadeManager.change_scene_with_fade("res://scenes/main_level_scenes/game.tscn")
 	else:
 		await _run_tina_go_home_sequence(portrait)
