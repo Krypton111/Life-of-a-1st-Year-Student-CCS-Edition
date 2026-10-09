@@ -353,7 +353,7 @@ func build_toast_ui() -> void:
 	toast_title.text = "ACHIEVEMENT UNLOCKED"
 	toast_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	toast_title.add_theme_font_size_override("font_size", 17)
-	toast_title.add_theme_color_override("font_color", Color("#F6D889"))
+	toast_title.add_theme_color_override("font_color", Color("#FFE1A8"))
 	toast_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	toast_panel.add_child(toast_title)
 
@@ -364,7 +364,7 @@ func build_toast_ui() -> void:
 	toast_description.size = Vector2(TOAST_WIDTH - 32, TOAST_HEIGHT - 51)
 	toast_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	toast_description.add_theme_font_size_override("font_size", 12)
-	toast_description.add_theme_color_override("font_color", Color("#E8DCC8"))
+	toast_description.add_theme_color_override("font_color", Color("#FFF0D8"))
 	toast_description.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	toast_panel.add_child(toast_description)
 
@@ -446,8 +446,8 @@ func update_toast(delta: float) -> void:
 
 func make_toast_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.12, 0.085, 0.055, 0.97)
-	style.border_color = Color("#CFA85B")
+	style.bg_color = Color(0.15, 0.09, 0.055, 0.98)
+	style.border_color = Color("#C99555")
 	style.set_border_width_all(2)
 	style.corner_radius_top_left = 8
 	style.corner_radius_top_right = 8
