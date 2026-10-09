@@ -680,7 +680,22 @@ func refresh_achievement_list() -> void:
 		child.queue_free()
 
 	var achievements: Array[Dictionary] = AchievementManager.get_all_achievements()
+	var current_category := ""
+
 	for achievement in achievements:
+		var category := str(achievement.get("category", "standard"))
+		if category != current_category:
+			current_category = category
+			var section_title := Label.new()
+			section_title.text = "SUPER SECRET ACHIVEMENTS" if category == "super_secret" else "ACHIEVEMENTS"
+			section_title.add_theme_font_size_override("font_size", 21)
+			section_title.add_theme_color_override(
+				"font_color",
+				Color("#F6D889") if category == "super_secret" else Color("#E8DCC8")
+			)
+			section_title.custom_minimum_size = Vector2(0, 34)
+			achievement_list.add_child(section_title)
+
 		var unlocked: bool = bool(achievement.get("unlocked", false))
 		var row := PanelContainer.new()
 		row.custom_minimum_size = Vector2(0, 70)
@@ -716,7 +731,6 @@ func refresh_achievement_list() -> void:
 	var subtitle := achievement_panel.find_child("AchievementSubtitle", true, false) as Label
 	if subtitle != null:
 		subtitle.text = "%d / %d unlocked" % [AchievementManager.get_unlocked_count(), AchievementManager.get_total_count()]
-
 
 func open_achievements() -> void:
 	if not is_instance_valid(AchievementManager):
