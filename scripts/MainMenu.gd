@@ -9,12 +9,15 @@ const PANEL := Color(0.15, 0.095, 0.065, 0.96)
 const SCHOOL_ASSETS := "res://GAME ASSETS_/School (University of Continuous Help System Prime)/Character Sprites/32-bit Sprite Models/"
 const MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Female-MC.png"
 const MALE_MC_ASSET := "res://GAME ASSETS_/House+MC Room (inside only)/Character Sprites/32-bit Character Models/MC/Male-MC.png"
+const MENU_MUSIC_PATH := "res://GAME ASSETS_/Misc/Music/school hallway.mp3"
 
 var pause_menu: CanvasLayer
 var quit_dialog: PanelContainer
 var quit_button: Button
 var cancel_quit_button: Button
 var menu_buttons: Array[Button] = []
+var menu_music: AudioStreamPlayer
+var button_click_player: AudioStreamPlayer
 
 var profile_dimmer: ColorRect
 var profile_dialog: PanelContainer
@@ -28,6 +31,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	setup_menu_audio()
 	build_menu()
 	build_character_art()
 	build_profile_setup()
@@ -55,6 +59,59 @@ func _draw() -> void:
 		else:
 			color = middle_color.lerp(bottom_color, (t - 0.72) / 0.28)
 		draw_line(Vector2(0, y), Vector2(w, y), color, 1.0)
+
+func setup_menu_audio() -> void:
+	# Play the hallway ambience for as long as the main menu is open.
+	menu_music = AudioStreamPlayer.new()
+	menu_music.name = "MainMenuMusic"
+	menu_music.volume_db = -12.0
+	var music_stream := load(MENU_MUSIC_PATH) as AudioStreamMP3
+	if music_stream != null:
+		music_stream.loop = true
+		menu_music.stream = music_stream
+		add_child(menu_music)
+		menu_music.play()
+	else:
+		push_warning("Main menu music could not be loaded: " + MENU_MUSIC_PATH)
+
+	# A short, soft synthesized click avoids needing an extra sound asset.
+	button_click_player = AudioStreamPlayer.new()
+	button_click_player.name = "MenuButtonClick"
+	button_click_player.volume_db = -8.0
+	button_click_player.stream = make_button_click_sound()
+	add_child(button_click_player)
+
+
+func make_button_click_sound() -> AudioStreamWAV:
+	var sample_rate := 22050
+	var duration := 0.055
+	var sample_count := int(sample_rate * duration)
+	var pcm_data := PackedByteArray()
+	pcm_data.resize(sample_count * 2)
+
+	for i in range(sample_count):
+		var t := float(i) / sample_rate
+		var progress := t / duration
+		var frequency := lerpf(1450.0, 720.0, progress)
+		var envelope := exp(-t * 72.0)
+		var sample := sin(TAU * frequency * t) * envelope * 0.22
+		var pcm := int(clampf(sample, -1.0, 1.0) * 32767.0)
+		pcm_data[i * 2] = pcm & 0xff
+		pcm_data[i * 2 + 1] = (pcm >> 8) & 0xff
+
+	var click := AudioStreamWAV.new()
+	click.format = AudioStreamWAV.FORMAT_16_BITS
+	click.mix_rate = sample_rate
+	click.stereo = false
+	click.data = pcm_data
+	return click
+
+
+func _play_button_click() -> void:
+	if is_instance_valid(button_click_player):
+		button_click_player.stop()
+		button_click_player.play()
+
 
 func build_menu() -> void:
 	var left_panel := PanelContainer.new()
@@ -252,6 +309,7 @@ func make_menu_button(number: String, label_text: String, is_primary: bool = fal
 	button.pivot_offset = Vector2(0, 29.5)
 	button.mouse_entered.connect(_animate_button_hover.bind(button, true))
 	button.mouse_exited.connect(_animate_button_hover.bind(button, false))
+	button.pressed.connect(_play_button_click)
 	return button
 
 
