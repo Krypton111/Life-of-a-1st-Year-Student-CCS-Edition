@@ -107,6 +107,38 @@ func make_button_click_sound() -> AudioStreamWAV:
 	return click
 
 
+func _play_typewriter_sound() -> void:
+	# Generate a tiny, muted mechanical tap so no extra asset is required.
+	var sample_rate := 22050
+	var duration := 0.025
+	var sample_count := int(sample_rate * duration)
+	var pcm_data := PackedByteArray()
+	pcm_data.resize(sample_count * 2)
+
+	for i in range(sample_count):
+		var t := float(i) / sample_rate
+		var envelope := exp(-t * 155.0)
+		var noise := sin(TAU * 1730.0 * t) * 0.45 + sin(TAU * 2310.0 * t) * 0.25
+		var sample := noise * envelope * 0.12
+		var pcm := int(clampf(sample, -1.0, 1.0) * 32767.0)
+		pcm_data[i * 2] = pcm & 0xff
+		pcm_data[i * 2 + 1] = (pcm >> 8) & 0xff
+
+	var type_sound := AudioStreamWAV.new()
+	type_sound.format = AudioStreamWAV.FORMAT_16_BITS
+	type_sound.mix_rate = sample_rate
+	type_sound.stereo = false
+	type_sound.data = pcm_data
+
+	var player := AudioStreamPlayer.new()
+	player.name = "TypewriterKeySound"
+	player.stream = type_sound
+	player.volume_db = -17.0
+	add_child(player)
+	player.finished.connect(player.queue_free)
+	player.play()
+
+
 func _play_button_click() -> void:
 	if is_instance_valid(button_click_player):
 		button_click_player.stop()
@@ -473,6 +505,7 @@ func build_profile_setup() -> void:
 	profile_name_input.add_theme_stylebox_override("normal", input_style)
 	profile_name_input.add_theme_stylebox_override("focus", make_focused_input_style())
 	profile_name_input.text_submitted.connect(_on_profile_name_submitted)
+	profile_name_input.gui_input.connect(_on_player_name_gui_input)
 	profile_name_step.add_child(profile_name_input)
 
 	profile_name_error = Label.new()
@@ -728,6 +761,19 @@ func show_name_step() -> void:
 	profile_gender_step.visible = false
 	profile_name_error.visible = false
 	profile_name_input.grab_focus()
+
+
+func _on_player_name_gui_input(event: InputEvent) -> void:
+	# Play a quiet typewriter tick for each character the player types,
+	# but ignore navigation keys, shortcuts, and deletions.
+	if event is InputEventKey and event.pressed and not event.echo:
+		var key_event := event as InputEventKey
+		if key_event.ctrl_pressed or key_event.alt_pressed or key_event.meta_pressed:
+			return
+		if key_event.keycode == KEY_BACKSPACE or key_event.keycode == KEY_DELETE:
+			return
+		if key_event.unicode > 0 and not key_event.unicode in [KEY_ENTER, KEY_KP_ENTER, KEY_TAB]:
+			_play_typewriter_sound()
 
 
 func _on_profile_name_submitted(_submitted: String) -> void:
