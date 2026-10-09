@@ -198,9 +198,9 @@ func _run_tina_go_home_sequence(portrait: Texture2D) -> void:
 
 
 func reset_day_loop_progress() -> void:
-	# The dream ends the current day and returns the player to the beginning.
-	# Reset school/challenge progression so the player must go through the day
-	# again before Tina's hallway encounter can trigger.
+	# Reset the current day's narrative so waking up after the cafe dream starts
+	# the school day from the beginning. Achievement history is intentionally
+	# NOT reset: it belongs to the active save/session and is restored by SaveManager.
 	comlab_professor_talked = false
 	comlab_second_professor_talked = false
 	maclab_professor_talked = false
@@ -211,7 +211,6 @@ func reset_day_loop_progress() -> void:
 	has_baon = false
 	house_opening_completed = false
 	lecture_bully_interruption_done = false
-
 	quiz_completed = false
 	maclab_challenge_completed = false
 	lecture_challenge_completed = false
@@ -224,7 +223,6 @@ func reset_day_loop_progress() -> void:
 
 	friends_encounter_done = false
 	friends_bookstore_choice = 0
-
 	miss_joyz_first_dialogue_done = false
 	miss_joyz_second_dialogue_done = false
 	sir_mico_dialogue_done = false
@@ -235,18 +233,58 @@ func reset_day_loop_progress() -> void:
 	computer_unlocked = false
 	mac_computer_unlocked = false
 	lecture_computer_unlocked = false
-
 	bullies_encounter_done = false
 
-	# Clear one-time sequence guards so a future loop can run normally.
+	# The bookstore and its conversations are part of the day being replayed.
+	bookstore_started = false
+	bookstore_yellow_pad = false
+	bookstore_ballpens = 0
+	bookstore_correction_tape = false
+	bookstore_discrete_math_book = false
+	bookstore_talked_to_kairi = false
+	bookstore_talked_to_kerwin = false
+	bookstore_talked_to_janssen = false
+	bookstore_talked_to_nathaly = false
+	bookstore_talked_to_ate_libro = false
+	bookstore_talked_to_kuya_libro = false
+	bookstore_talked_to_friends = false
+	bookstore_completed = false
+	bookstore_return_event_pending = false
+	friends_bookstore_choice = 0
+
+	# Prevent stale return positions from affecting the new loop.
+	room_return_position = Vector2.ZERO
+	has_room_return_position = false
+	challenge_return_position = Vector2.ZERO
+	has_challenge_return_position = false
+	return_position = Vector2.ZERO
+	has_return_position = false
+
+	# Clear cafe quest metadata so the previous dream/cafe route cannot
+	# immediately re-trigger achievement checks or influence the next cafe visit.
+	for key in [
+		"cafe_quest_route",
+		"cafe_quest_phase",
+		"cafe_order_ready",
+		"cafe_order_phase",
+		"cafe_solo_order_ready",
+		"cafe_solo_order_talked_to_gelo",
+		"cafe_friends_order_ready",
+		"cafe_tina_order_result_recorded",
+		"cafe_tina_player_correct",
+		"cafe_tina_correct",
+		"cafe_friends_order_result_recorded",
+		"cafe_friends_wrong_count"
+	]:
+		if has_meta(key):
+			remove_meta(key)
+
+	# Clear one-time sequence guards, but preserve achievements_unlocked.
 	tina_post_hallway_sequence_running = false
 	tina_post_hallway_sequence_started = false
 	returning_from_tina_dream = false
 	dream_return_sequence_running = false
 	player_controls_locked = false
-
-	# Do not erase bookstore inventory/choices, saved positions, or achievements;
-	# those are persistent side progress rather than this day's school sequence.
 
 
 func _play_tina_alarm() -> void:
