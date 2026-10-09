@@ -26,6 +26,12 @@ var profile_name_error: Label
 var profile_name_step: VBoxContainer
 var profile_gender_step: VBoxContainer
 
+var character_dialogue_panel: PanelContainer
+var character_dialogue_name: Label
+var character_dialogue_text: Label
+var character_dialogue_tween: Tween
+var character_dialogue_indices: Dictionary = {}
+
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -34,6 +40,7 @@ func _ready() -> void:
 	setup_menu_audio()
 	build_menu()
 	build_character_art()
+	build_character_dialogue_ui()
 	build_profile_setup()
 	animate_menu_intro()
 	pause_menu = get_node("PauseMenu") as CanvasLayer
@@ -301,8 +308,11 @@ func add_character(path: String, at: Vector2, dimensions: Vector2, z_layer: int 
 	character.modulate = Color(1.0, 1.0, 1.0, opacity)
 	character.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	character.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	character.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	character.mouse_filter = Control.MOUSE_FILTER_STOP
+	character.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	character.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	character.set_meta("dialogue_key", path.get_file().get_basename().to_lower())
+	character.gui_input.connect(_on_character_gui_input.bind(character))
 	add_child(character)
 	# Characters softly fade in and float by a few pixels for a calm, living menu.
 	var final_position := character.position
@@ -317,6 +327,186 @@ func add_character(path: String, at: Vector2, dimensions: Vector2, z_layer: int 
 	float_tween.set_loops()
 	float_tween.tween_property(character, "position:y", final_position.y - 4.0, 2.4 + float(z_layer) * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	float_tween.tween_property(character, "position:y", final_position.y + 3.0, 2.4 + float(z_layer) * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func build_character_dialogue_ui() -> void:
+	# A compact dialogue card appears over the artwork without covering the menu buttons.
+	character_dialogue_panel = PanelContainer.new()
+	character_dialogue_panel.name = "CharacterDialogue"
+	character_dialogue_panel.position = Vector2(790, 850)
+	character_dialogue_panel.size = Vector2(900, 132)
+	character_dialogue_panel.z_index = 80
+	character_dialogue_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	character_dialogue_panel.modulate.a = 0.0
+	character_dialogue_panel.visible = false
+	character_dialogue_panel.add_theme_stylebox_override("panel", make_dialogue_panel_style())
+	add_child(character_dialogue_panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_top", 14)
+	margin.add_theme_constant_override("margin_bottom", 14)
+	character_dialogue_panel.add_child(margin)
+
+	var dialogue_box := VBoxContainer.new()
+	dialogue_box.add_theme_constant_override("separation", 6)
+	margin.add_child(dialogue_box)
+
+	character_dialogue_name = Label.new()
+	character_dialogue_name.add_theme_font_size_override("font_size", 16)
+	character_dialogue_name.add_theme_color_override("font_color", PALE_GOLD)
+	character_dialogue_name.add_theme_constant_override("letter_spacing", 2)
+	dialogue_box.add_child(character_dialogue_name)
+
+	character_dialogue_text = Label.new()
+	character_dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	character_dialogue_text.add_theme_font_size_override("font_size", 18)
+	character_dialogue_text.add_theme_color_override("font_color", CREAM)
+	character_dialogue_text.custom_minimum_size = Vector2(0, 54)
+	dialogue_box.add_child(character_dialogue_text)
+
+
+func make_dialogue_panel_style() -> StyleBoxFlat:
+	var style := make_panel_style()
+	style.bg_color = Color(0.13, 0.075, 0.045, 0.97)
+	style.border_color = GOLD
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(6)
+	style.shadow_size = 12
+	style.shadow_offset = Vector2(0, 5)
+	return style
+
+
+func _on_character_gui_input(event: InputEvent, character: TextureRect) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
+		return
+
+	var dialogue_key: String = str(character.get_meta("dialogue_key", ""))
+	var dialogue := get_character_dialogue(dialogue_key)
+	if dialogue.is_empty():
+		return
+
+	var next_index := int(character_dialogue_indices.get(dialogue_key, 0))
+	var lines: Array = dialogue.get("lines", [])
+	if lines.is_empty():
+		return
+	character_dialogue_indices[dialogue_key] = (next_index + 1) % lines.size()
+
+	show_character_dialogue(str(dialogue.get("name", "Classmate")), str(lines[next_index]))
+	character.accept_event()
+
+
+func get_character_dialogue(dialogue_key: String) -> Dictionary:
+	# Each character has their own voice; clicking them again cycles through their lines.
+	var dialogue: Dictionary = {
+		"charles": {
+			"name": "SIR CHARLES",
+			"lines": [
+				"Discrete Mathematics rewards careful thinking. Guessing is not a strategy.",
+				"Show your work, check your logic, and do not fear a difficult problem."
+			]
+		},
+		"joyz": {
+			"name": "MISS JOYZ",
+			"lines": [
+				"Hello, future developer! Remember: every bug is a chance to learn.",
+				"Don't just make the code run. Understand why it works!"
+			]
+		},
+		"tina": {
+			"name": "TINA",
+			"lines": [
+				"Oh—hi. I hope this school year gives us a chance to start fresh.",
+				"I'm still getting used to everything here... but I think I'll be okay."
+			]
+		},
+		"joe": {
+			"name": "JOE",
+			"lines": [
+				"Heh. Think you can keep up with me? We'll see about that.",
+				"Relax, I'm only teasing. ...Mostly."
+			]
+		},
+		"gelo": {
+			"name": "GELO",
+			"lines": [
+				"Funny how one campus can make the past feel close again, huh?",
+				"Some things are easier to leave unsaid. For now, anyway."
+			]
+		},
+		"nathaly": {
+			"name": "NATHALY",
+			"lines": [
+				"If first year gets overwhelming, remember you don't have to do it alone!",
+				"New friends, new memories, and probably a few all-nighters. We've got this!"
+			]
+		},
+		"janssen": {
+			"name": "JANSSEN",
+			"lines": [
+				"Group project tip: bring snacks. Suddenly everybody becomes cooperative.",
+				"I came for the degree. I stayed because the group chat is unhinged."
+			]
+		},
+		"kairi": {
+			"name": "KAIRI",
+			"lines": [
+				"Hi! Have you explored the campus yet? There's always something happening.",
+				"Come on, let's make this school year one worth remembering!"
+			]
+		},
+		"kerwin": {
+			"name": "KERWIN",
+			"lines": [
+				"One more feature, one more bug. That's the developer life!",
+				"If it works on my machine, that means we're halfway there... right?"
+			]
+		},
+		"male-mc": {
+			"name": "PLAYER",
+			"lines": [
+				"New semester. New faces. Let's see what this year has in store.",
+				"Okay, deep breath. First year starts now."
+			]
+		},
+		"female-mc": {
+			"name": "PLAYER",
+			"lines": [
+				"New semester. New faces. Let's see what this year has in store.",
+				"Okay, deep breath. First year starts now."
+			]
+		}
+	}
+	return dialogue.get(dialogue_key, {})
+
+
+func show_character_dialogue(speaker: String, line: String) -> void:
+	if not is_instance_valid(character_dialogue_panel):
+		return
+
+	if character_dialogue_tween and character_dialogue_tween.is_running():
+		character_dialogue_tween.kill()
+
+	character_dialogue_name.text = speaker
+	character_dialogue_text.text = line
+	character_dialogue_panel.visible = true
+	character_dialogue_panel.modulate.a = 0.0
+	character_dialogue_panel.scale = Vector2(0.97, 0.97)
+	character_dialogue_panel.pivot_offset = character_dialogue_panel.size / 2.0
+
+	character_dialogue_tween = create_tween()
+	character_dialogue_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	character_dialogue_tween.set_parallel(true)
+	character_dialogue_tween.tween_property(character_dialogue_panel, "modulate:a", 1.0, 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	character_dialogue_tween.tween_property(character_dialogue_panel, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	character_dialogue_tween.set_parallel(false)
+	character_dialogue_tween.tween_interval(3.0)
+	character_dialogue_tween.tween_property(character_dialogue_panel, "modulate:a", 0.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	character_dialogue_tween.tween_callback(func(): character_dialogue_panel.visible = false)
 
 
 func make_menu_button(number: String, label_text: String, is_primary: bool = false) -> Button:
