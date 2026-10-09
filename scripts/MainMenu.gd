@@ -55,13 +55,6 @@ func build_menu() -> void:
 	content.add_theme_constant_override("separation", 13)
 	add_child(content)
 
-	var eyebrow := Label.new()
-	eyebrow.text = "A STORY OF CAMPUS LIFE"
-	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	eyebrow.add_theme_font_size_override("font_size", 16)
-	eyebrow.add_theme_color_override("font_color", Color(0.70, 0.56, 0.39))
-	content.add_child(eyebrow)
-
 	var title := Label.new()
 	title.text = "LIFE OF A\n1ST YEAR STUDENT"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -110,7 +103,7 @@ func build_menu() -> void:
 	content.add_child(quit_button)
 
 	var footer := Label.new()
-	footer.text = "A STUDENT GAME PROJECT"
+	footer.text = "Advance Game Design (50054)"
 	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	footer.add_theme_font_size_override("font_size", 12)
 	footer.add_theme_color_override("font_color", Color(0.54, 0.46, 0.38))
