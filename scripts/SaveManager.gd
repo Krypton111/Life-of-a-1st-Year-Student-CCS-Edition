@@ -16,6 +16,7 @@ const SAVE_VERSION: int = 3
 const MAX_SLOTS: int = 10
 const SAVE_FILE_PREFIX: String = "user://life_of_a_1st_year_student_save_"
 const SAVE_FILE_SUFFIX: String = ".json"
+const SAVED_CONTROL_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
 
 const META_KEYS := [
 	"cafe_quest_route",
@@ -155,7 +156,9 @@ func save_game(slot: int) -> bool:
 		"saved_at": Time.get_datetime_string_from_system(),
 		"scene_path": current_scene.scene_file_path,
 		"game_manager": collect_game_manager_state(),
-		"metadata": collect_metadata()
+		"metadata": collect_metadata(),
+		"player_profile": collect_player_profile(),
+		"controls": collect_controls()
 	}
 
 	var player := find_player(current_scene)
@@ -230,6 +233,8 @@ func load_game(slot: int) -> bool:
 	get_tree().paused = false
 
 	# Restore persistent state BEFORE changing scenes so _ready() can see it.
+	restore_player_profile(save_data.get("player_profile", {}))
+	restore_controls(save_data.get("controls", {}))
 	restore_game_manager_state(save_data.get("game_manager", {}))
 	restore_metadata(save_data.get("metadata", {}))
 	reset_runtime_flags()
@@ -330,6 +335,55 @@ func force_clear_player_locks() -> void:
 	for property_name in EXCLUDED_GAME_MANAGER_PROPERTIES:
 		if property_exists(GameManager, property_name):
 			GameManager.set(property_name, false)
+
+
+func collect_player_profile() -> Dictionary:
+	return {
+		"player_name": str(PlayerSetup.player_name),
+		"player_gender": str(PlayerSetup.player_gender)
+	}
+
+
+func restore_player_profile(profile: Variant) -> void:
+	if not is_instance_valid(PlayerSetup):
+		return
+	if profile is Dictionary:
+		PlayerSetup.player_name = str(profile.get("player_name", ""))
+		PlayerSetup.player_gender = str(profile.get("player_gender", ""))
+	else:
+		PlayerSetup.clear_profile()
+
+
+func collect_controls() -> Dictionary:
+	var result: Dictionary = {}
+	for action in SAVED_CONTROL_ACTIONS:
+		var saved_key := 0
+		if InputMap.has_action(action):
+			for event in InputMap.action_get_events(action):
+				if event is InputEventKey:
+					var key_event := event as InputEventKey
+					saved_key = int(key_event.physical_keycode if key_event.physical_keycode != 0 else key_event.keycode)
+					break
+		result[action] = saved_key
+	return result
+
+
+func restore_controls(controls: Variant) -> void:
+	if not controls is Dictionary:
+		return
+	for action in SAVED_CONTROL_ACTIONS:
+		if not controls.has(action):
+			continue
+		var key_code := int(controls.get(action, 0))
+		if key_code == 0:
+			continue
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		InputMap.action_erase_events(action)
+		var key_event := InputEventKey.new()
+		key_event.physical_keycode = key_code
+		key_event.keycode = key_code
+		InputMap.action_add_event(action, key_event)
 
 
 func collect_game_manager_state() -> Dictionary:
