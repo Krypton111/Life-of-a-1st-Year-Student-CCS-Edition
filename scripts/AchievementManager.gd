@@ -74,6 +74,8 @@ var toast_description: Label = null
 var toast_tween: Tween = null
 var toast_state: int = 0
 var toast_timer: float = 0.0
+var achievement_sound_player: AudioStreamPlayer = null
+const ACHIEVEMENT_NOTIFY_SOUND: AudioStream = preload("res://GAME ASSETS_/Misc/SFX/right answer 2.mp3")
 const TOAST_WIDTH := 380.0
 const TOAST_HEIGHT := 112.0
 const TOAST_MARGIN := 20.0
@@ -86,6 +88,7 @@ func _ready() -> void:
 	ensure_storage()
 	last_scene_path = get_current_scene_path()
 	build_toast_ui()
+	build_achievement_sound()
 
 
 func _process(delta: float) -> void:
@@ -164,6 +167,8 @@ func unlock(id: String) -> void:
 	GameManager.set("achievements_unlocked", stored)
 
 	var definition := get_achievement(id)
+	play_achievement_notify_sound()
+
 	if not definition.is_empty():
 		show_unlock_toast(
 			str(definition.get("title", "Achievement")),
@@ -528,3 +533,22 @@ func make_toast_style() -> StyleBoxFlat:
 	style.shadow_color = Color(0, 0, 0, 0.55)
 	style.shadow_size = 12
 	return style
+
+
+
+func build_achievement_sound() -> void:
+	achievement_sound_player = AudioStreamPlayer.new()
+	achievement_sound_player.name = "AchievementNotifySound"
+	achievement_sound_player.stream = ACHIEVEMENT_NOTIFY_SOUND
+	achievement_sound_player.volume_db = -3.0
+	achievement_sound_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(achievement_sound_player)
+
+
+func play_achievement_notify_sound() -> void:
+	if not is_instance_valid(achievement_sound_player):
+		return
+
+	# Restart the sound cleanly if several achievements unlock in quick succession.
+	achievement_sound_player.stop()
+	achievement_sound_player.play()
