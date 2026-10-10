@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://be8qbmt0fe144" path="res://scenes/player&NPCs/player.tscn" id="6_x5sip"]
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="7_wndwf"]
 [ext_resource type="AudioStream" uid="uid://b3w1q01iuvavd" path="res://GAME ASSETS_/Misc/Music/comlab202.mp3" id="8_pbua3"]
+[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bfu4x"]
 texture = ExtResource("1_xu3j8")
@@ -6373,8 +6374,8 @@ scale = Vector2(0.7, 0.7)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1046495864]
 stream = ExtResource("8_pbua3")
+script = ExtResource("looping_music_script")
 volume_db = -13.293
-autoplay = true
 
 [node name="QuestMarker_Challenge1" type="Marker2D" parent="." unique_id=1900022883]
 position = Vector2(591.3333, 298.6667)
