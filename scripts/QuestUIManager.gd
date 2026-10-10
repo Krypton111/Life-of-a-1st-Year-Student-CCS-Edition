@@ -227,6 +227,8 @@ func refresh_ui() -> void:
 			panel_tween.kill()
 		panel_hidden = scene_path.contains("opening_cutscene")
 		panel.visible = false
+		if toggle_button != null:
+			toggle_button.visible = false
 		return
 	position_panel()
 	hide_legacy_quest_ui()
@@ -499,14 +501,15 @@ func position_panel() -> void:
 	var hidden_position := normal_position + Vector2(panel_width + PANEL_RIGHT_MARGIN + PANEL_SLIDE_EXTRA, 0.0)
 	if panel_tween == null or not panel_tween.is_running():
 		panel.position = hidden_position if (panel_hidden or manually_collapsed) else normal_position
-	panel.position.y = top_position
+		panel.position.y = top_position
 
 	if toggle_button != null:
-		toggle_button.visible = panel.visible
+		toggle_button.visible = not auto_hidden
 		toggle_button.text = "›" if manually_collapsed else "‹"
 		toggle_button.tooltip_text = "Expand quest tracker" if manually_collapsed else "Minimize quest tracker"
-		var nub_x := viewport_size.x - toggle_button.size.x - 4.0 if manually_collapsed else normal_position.x - toggle_button.size.x + 2.0
-		toggle_button.position = Vector2(nub_x, top_position + (panel_height - toggle_button.size.y) * 0.5)
+		if panel_tween == null or not panel_tween.is_running():
+			var nub_x := viewport_size.x - toggle_button.size.x - 4.0 if manually_collapsed else normal_position.x - toggle_button.size.x + 2.0
+			toggle_button.position = Vector2(nub_x, top_position + (panel_height - toggle_button.size.y) * 0.5)
 	var usable_width: float = panel_width - 36.0
 	eyebrow_label.size.x = usable_width
 	title_label.size.x = usable_width
