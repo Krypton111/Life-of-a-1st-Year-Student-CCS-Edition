@@ -636,6 +636,9 @@ func show_credits() -> void:
 	prompt.add_theme_color_override("font_color", Color("#FFF0D9"))
 	credits_container.add_child(prompt)
 
+	# Keep the transparent full-screen button above the credits UI so any click advances.
+	next_button.move_to_front()
+
 
 func _credits_panel_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
