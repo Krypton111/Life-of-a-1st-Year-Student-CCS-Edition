@@ -1,7 +1,7 @@
 extends Node
 
 const CLICK_VOLUME_DB := -10.0
-const CLICK_COOLDOWN_USEC := 35000
+const CLICK_COOLDOWN_USEC := 70000
 
 var click_player: AudioStreamPlayer
 var click_stream: AudioStreamWAV
@@ -21,6 +21,12 @@ func _ready() -> void:
 
 	get_tree().node_added.connect(_on_node_added)
 	call_deferred("_connect_existing_controls")
+
+
+func _input(event: InputEvent) -> void:
+	# The game's interact key also gets a small confirmation sound.
+	if event.is_action_pressed("interact") and not event.is_echo():
+		_play_confirmation_sound()
 
 
 func _connect_existing_controls() -> void:
