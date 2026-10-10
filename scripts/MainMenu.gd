@@ -523,6 +523,7 @@ func show_character_dialogue(speaker: String, line: String) -> void:
 
 func make_menu_button(number: String, label_text: String, is_primary: bool = false) -> Button:
 	var button := Button.new()
+	button.add_to_group("global_ui_sound_exempt")
 	button.text = number + "     " + label_text
 	button.custom_minimum_size = Vector2(0, 59)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
