@@ -4921,7 +4921,7 @@ script = ExtResource("19_clt8j")
 
 [node name="SchoolHallwayAmbience" type="AudioStreamPlayer" parent="." unique_id=1917776212]
 stream = ExtResource("22_ingay")
-volume_db = 1.042
+volume_db = -8.0
 autoplay = true
 
 [node name="SchoolBackgroundMusic" type="AudioStreamPlayer" parent="."]
