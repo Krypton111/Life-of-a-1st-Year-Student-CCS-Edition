@@ -1022,6 +1022,8 @@ func build_quit_dialog() -> void:
 	var dimmer := ColorRect.new()
 	dimmer.name = "QuitDimmer"
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	# Keep the quit confirmation and its dimmer above the character artwork.
+	dimmer.z_index = 200
 	dimmer.color = Color(0.0, 0.0, 0.0, 0.78)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.visible = false
