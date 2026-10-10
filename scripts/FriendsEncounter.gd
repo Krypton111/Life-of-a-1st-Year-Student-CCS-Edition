@@ -599,6 +599,9 @@ func setup_friends_music() -> void:
 	friends_music = AudioStreamPlayer.new()
 	friends_music.name = "FriendsEntranceMusic"
 	friends_music.add_to_group("school_special_music")
+	var friends_stream := FRIENDS_MUSIC as AudioStreamMP3
+	if friends_stream != null:
+		friends_stream.loop = true
 	friends_music.stream = FRIENDS_MUSIC
 	friends_music.volume_db = -80.0
 	friends_music.bus = "Master"
