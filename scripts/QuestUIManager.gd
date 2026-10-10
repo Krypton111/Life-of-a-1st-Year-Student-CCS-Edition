@@ -59,6 +59,17 @@ func _ready() -> void:
 		get_tree().scene_changed.connect(_on_scene_changed)
 	call_deferred("refresh_ui")
 
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventKey):
+		return
+	var key_event := event as InputEventKey
+	if not key_event.pressed or key_event.echo or key_event.keycode != KEY_C:
+		return
+	if panel == null or not panel.visible or auto_hidden:
+		return
+	_on_toggle_button_pressed()
+
+
 func _process(delta: float) -> void:
 	refresh_accumulator += delta
 	if refresh_accumulator < 0.15:
