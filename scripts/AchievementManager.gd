@@ -176,6 +176,12 @@ func unlock(id: String) -> void:
 func set_all_achievements_enabled(enabled: bool, snapshot_override: Dictionary = {}, use_snapshot_override: bool = false) -> Dictionary:
 	if enabled:
 		if all_achievements_override_active:
+			# Save-slot loading can replace GameManager's dictionary. Re-apply
+			# the temporary all-unlocked view without changing the real snapshot.
+			var refreshed_unlocked: Dictionary = {}
+			for achievement in ACHIEVEMENTS:
+				refreshed_unlocked[str(achievement.get("id", ""))] = true
+			GameManager.set(STATE_KEY, refreshed_unlocked)
 			return achievements_before_override.duplicate(true)
 
 		if use_snapshot_override or not snapshot_override.is_empty():
