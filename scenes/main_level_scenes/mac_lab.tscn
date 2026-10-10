@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="5_57oa7"]
 [ext_resource type="PackedScene" uid="uid://bnvj0dtkv2g5j" path="res://scenes/player&NPCs/sirmico.tscn" id="7_e2hnc"]
 [ext_resource type="PackedScene" uid="uid://dhhko64jds3eo" path="res://scenes/ui/DialogueUI.tscn" id="8_je51l"]
+[ext_resource type="AudioStream" uid="uid://b3w1q01iuvavd" path="res://GAME ASSETS_/Misc/Music/comlab202.mp3" id="9_comlab_music"]
+[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="10_looping_music"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nlpn4"]
 texture = ExtResource("1_bkbhi")
@@ -6373,3 +6375,8 @@ scale = Vector2(0.54054046, 0.54054046)
 [node name="QuestMarker_Talk2" type="Marker2D" parent="." unique_id=972253597]
 position = Vector2(511.35126, 213.51352)
 scale = Vector2(0.10529152, 0.10529152)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_comlab_music")
+script = ExtResource("10_looping_music")
+volume_db = -13.293
