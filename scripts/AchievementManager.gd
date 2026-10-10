@@ -62,6 +62,11 @@ const HOUSE_SECRET_SECONDS := 180.0
 var house_timer: float = 0.0
 var room_timer: float = 0.0
 var last_scene_path: String = ""
+
+# Temporary settings override. The snapshot is restored when the toggle is
+# turned off, so test-unlocking achievements never erases earlier progress.
+var all_achievements_override_active: bool = false
+var achievements_before_override: Dictionary = {}
 var toast_layer: CanvasLayer = null
 var toast_panel: Panel = null
 var toast_title: Label = null
@@ -168,6 +173,38 @@ func unlock(id: String) -> void:
 	print("ACHIEVEMENT UNLOCKED: ", id)
 
 
+func set_all_achievements_enabled(enabled: bool, snapshot_override: Dictionary = {}) -> Dictionary:
+	if enabled:
+		if all_achievements_override_active:
+			return achievements_before_override.duplicate(true)
+
+		if not snapshot_override.is_empty():
+			achievements_before_override = snapshot_override.duplicate(true)
+		else:
+			achievements_before_override = get_unlocked().duplicate(true)
+
+		all_achievements_override_active = true
+		var all_unlocked: Dictionary = {}
+		for achievement in ACHIEVEMENTS:
+			all_unlocked[str(achievement.get("id", ""))] = true
+		GameManager.set(STATE_KEY, all_unlocked)
+		return achievements_before_override.duplicate(true)
+
+	if all_achievements_override_active:
+		GameManager.set(STATE_KEY, achievements_before_override.duplicate(true))
+	elif not snapshot_override.is_empty():
+		# Handles settings reloads that explicitly turn the feature off.
+		GameManager.set(STATE_KEY, snapshot_override.duplicate(true))
+
+	all_achievements_override_active = false
+	achievements_before_override.clear()
+	return {}
+
+
+func are_all_achievements_enabled() -> bool:
+	return all_achievements_override_active
+
+
 func get_achievement(id: String) -> Dictionary:
 	for achievement in ACHIEVEMENTS:
 		if str(achievement.get("id", "")) == id:
@@ -200,6 +237,11 @@ func get_total_count() -> int:
 
 func check_achievements() -> void:
 	if not is_instance_valid(GameManager):
+		return
+
+	# While the testing toggle is active, don't convert temporary state into
+	# real achievement progress. The original snapshot is restored on disable.
+	if all_achievements_override_active:
 		return
 
 	# 1. House / baon.
