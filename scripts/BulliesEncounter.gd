@@ -114,7 +114,7 @@ func start_bully_entrance_music() -> void:
 	if bully_entrance_music == null:
 		bully_entrance_music = AudioStreamPlayer.new()
 		bully_entrance_music.name = "BullyEntranceMusic"
-	bully_entrance_music.add_to_group("school_special_music")
+		bully_entrance_music.add_to_group("school_special_music")
 		bully_entrance_music.stream = BULLY_ENTRANCE_MUSIC
 		bully_entrance_music.bus = "Master"
 		add_child(bully_entrance_music)
