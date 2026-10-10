@@ -1023,14 +1023,19 @@ func build_quit_dialog() -> void:
 	dimmer.name = "QuitDimmer"
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	# Keep the quit confirmation and its dimmer above the character artwork.
+	dimmer.z_as_relative = false
 	dimmer.z_index = 200
 	dimmer.color = Color(0.0, 0.0, 0.0, 0.78)
+	# The full-screen modal overlay must consume clicks outside the dialog too.
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.visible = false
 	add_child(dimmer)
 
 	quit_dialog = PanelContainer.new()
 	quit_dialog.name = "QuitConfirmation"
+	quit_dialog.z_as_relative = false
+	quit_dialog.z_index = 201
+	quit_dialog.mouse_filter = Control.MOUSE_FILTER_STOP
 	quit_dialog.set_anchors_preset(Control.PRESET_CENTER)
 	quit_dialog.position = Vector2(-230, -135)
 	quit_dialog.size = Vector2(460, 270)
