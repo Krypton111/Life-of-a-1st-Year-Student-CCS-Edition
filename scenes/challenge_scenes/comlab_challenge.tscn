@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dfyri053ptjip" path="res://GAME ASSETS_/Misc/Menus/computer rules.png" id="3_rqv5r"]
 [ext_resource type="Texture2D" uid="uid://cnw02oo16ivi8" path="res://GAME ASSETS_/Misc/Menus/comlab quiz browser.png" id="4_u5e83"]
 [ext_resource type="AudioStream" uid="uid://puwr2c30ucqx" path="res://GAME ASSETS_/Misc/Music/comlab_music.mp3" id="5_vjdjf"]
+[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
 [ext_resource type="AudioStream" uid="uid://b6pgc8uarkpgy" path="res://GAME ASSETS_/Misc/SFX/right answer 2.mp3" id="6_3g2ec"]
 [ext_resource type="AudioStream" uid="uid://b6hb8l2cqyrku" path="res://GAME ASSETS_/Misc/SFX/wrong_answer.mp3" id="7_41qak"]
 [ext_resource type="Script" uid="uid://dni602w2rjxk0" path="res://scripts/DragBar.gd" id="7_bu4fx"]
@@ -184,8 +185,8 @@ script = ExtResource("7_bu4fx")
 
 [node name="ChallengeMusic" type="AudioStreamPlayer" parent="." unique_id=1241392073]
 stream = ExtResource("5_vjdjf")
+script = ExtResource("looping_music_script")
 volume_db = -8.602
-autoplay = true
 
 [node name="CorrectSound" type="AudioStreamPlayer" parent="." unique_id=1982667111]
 stream = ExtResource("6_3g2ec")
