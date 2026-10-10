@@ -5,7 +5,7 @@ const BUTTON_SIZE := Vector2(280.0, 46.0)
 const SLOT_PANEL_SIZE := Vector2(620.0, 500.0)
 const SLOT_BUTTON_SIZE := Vector2(270.0, 64.0)
 const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
-const SETTINGS_PANEL_SIZE := Vector2(560.0, 520.0)
+const SETTINGS_PANEL_SIZE := Vector2(560.0, 620.0)
 const CONTROLS_PANEL_SIZE := Vector2(560.0, 520.0)
 const REBIND_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
 const REBIND_LABELS := {"move_up": "Move Up", "move_left": "Move Left", "move_down": "Move Down", "move_right": "Move Right", "interact": "Interact", "toggle_quest_tracker": "Toggle Quest Tracker"}
@@ -49,6 +49,7 @@ var brightness_slider: HSlider
 var volume_value_label: Label
 var brightness_value_label: Label
 var quest_pointer_toggle: CheckButton
+var all_achievements_toggle: CheckButton
 var settings_close_button: Button
 var brightness_overlay: ColorRect
 var brightness_shader_material: ShaderMaterial = null
@@ -213,14 +214,14 @@ func build_confirmation_ui() -> void:
 	margin.add_child(box)
 
 	var title := Label.new()
-	title.text = "Quit Game?"
+	title.text = "Return to Main Menu?"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 25)
 	title.add_theme_color_override("font_color", Color("#F4C982"))
 	box.add_child(title)
 
 	var message := Label.new()
-	message.text = "Are you sure you want to quit?\nYour current progress may be lost."
+	message.text = "Return to the main menu?\nUnsaved progress may be lost."
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	message.add_theme_font_size_override("font_size", 16)
@@ -353,7 +354,7 @@ func build_settings_ui() -> void:
 	settings_panel = PanelContainer.new()
 	settings_panel.name = "SettingsPanel"
 	settings_panel.set_anchors_preset(Control.PRESET_CENTER)
-	settings_panel.position = Vector2(-280, -230)
+	settings_panel.position = Vector2(-280, -310)
 	settings_panel.size = SETTINGS_PANEL_SIZE
 	settings_panel.add_theme_stylebox_override("panel", make_panel_style())
 	overlay.add_child(settings_panel)
@@ -472,6 +473,36 @@ func build_settings_ui() -> void:
 	)
 	quest_pointer_toggle.toggled.connect(on_quest_pointer_toggled)
 	quest_pointer_row.add_child(quest_pointer_toggle)
+
+	# ---------- ALL ACHIEVEMENTS (TESTING) ----------
+	var all_achievements_row := HBoxContainer.new()
+	all_achievements_row.add_theme_constant_override("separation", 12)
+	all_achievements_row.custom_minimum_size = Vector2(0.0, 42.0)
+	box.add_child(all_achievements_row)
+
+	var all_achievements_label := Label.new()
+	all_achievements_label.text = "Enable All Achievements"
+	all_achievements_label.add_theme_font_size_override("font_size", 16)
+	all_achievements_label.add_theme_color_override("font_color", Color(0.91, 0.82, 0.67))
+	all_achievements_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	all_achievements_row.add_child(all_achievements_label)
+
+	all_achievements_toggle = CheckButton.new()
+	all_achievements_toggle.text = "ON" if is_instance_valid(AchievementManager) and AchievementManager.are_all_achievements_enabled() else "OFF"
+	all_achievements_toggle.button_pressed = is_instance_valid(AchievementManager) and AchievementManager.are_all_achievements_enabled()
+	all_achievements_toggle.focus_mode = Control.FOCUS_ALL
+	all_achievements_toggle.add_theme_font_size_override("font_size", 16)
+	all_achievements_toggle.add_theme_color_override("font_color", Color(0.96, 0.87, 0.68))
+	all_achievements_toggle.add_theme_color_override("font_hover_color", Color("#FFE1A8"))
+	all_achievements_toggle.toggled.connect(on_all_achievements_toggled)
+	all_achievements_row.add_child(all_achievements_toggle)
+
+	var all_achievements_hint := Label.new()
+	all_achievements_hint.text = "Testing option. Turning it off restores your previous achievements."
+	all_achievements_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	all_achievements_hint.add_theme_font_size_override("font_size", 12)
+	all_achievements_hint.add_theme_color_override("font_color", Color("#D8BEA1"))
+	box.add_child(all_achievements_hint)
 
 	controls_button = make_button("Controls")
 	controls_button.custom_minimum_size = Vector2(240, 44)
@@ -738,6 +769,17 @@ func on_quest_pointer_toggled(enabled: bool) -> void:
 	save_settings()
 
 
+func on_all_achievements_toggled(enabled: bool) -> void:
+	if is_instance_valid(AchievementManager):
+		AchievementManager.set_all_achievements_enabled(enabled)
+
+	if all_achievements_toggle != null:
+		all_achievements_toggle.text = "ON" if enabled else "OFF"
+
+	save_settings()
+	refresh_achievement_list()
+
+
 func update_quest_pointer_toggle() -> void:
 	if quest_pointer_toggle == null:
 		return
@@ -773,6 +815,20 @@ func save_settings() -> void:
 			quest_pointer_toggle.button_pressed
 		)
 
+	if all_achievements_toggle != null:
+		config.set_value(
+			"gameplay",
+			"all_achievements_enabled",
+			all_achievements_toggle.button_pressed
+		)
+		config.set_value(
+			"gameplay",
+			"achievement_snapshot",
+			AchievementManager.achievements_before_override.duplicate(true)
+			if is_instance_valid(AchievementManager)
+			else {}
+		)
+
 	for action in REBIND_ACTIONS:
 		var key_code := 0
 		for event in InputMap.action_get_events(action):
@@ -792,6 +848,9 @@ func load_settings() -> void:
 	var volume_value: float = 100.0
 	var brightness_value: float = 100.0
 	var quest_pointer_enabled: bool = true
+	var all_achievements_enabled: bool = false
+	var achievement_snapshot: Dictionary = {}
+	var has_achievement_snapshot: bool = false
 	var saved_controls: Dictionary = {}
 
 	if error == OK:
@@ -808,6 +867,13 @@ func load_settings() -> void:
 				true
 			)
 		)
+		all_achievements_enabled = bool(
+			config.get_value("gameplay", "all_achievements_enabled", false)
+		)
+		has_achievement_snapshot = config.has_section_key("gameplay", "achievement_snapshot")
+		var stored_snapshot: Variant = config.get_value("gameplay", "achievement_snapshot", {})
+		if stored_snapshot is Dictionary:
+			achievement_snapshot = stored_snapshot.duplicate(true)
 		for action in REBIND_ACTIONS:
 			saved_controls[action] = int(config.get_value("controls", action, 0))
 
@@ -835,6 +901,13 @@ func load_settings() -> void:
 			quest_pointer_enabled
 		)
 
+	if is_instance_valid(AchievementManager):
+		AchievementManager.set_all_achievements_enabled(
+			all_achievements_enabled,
+			achievement_snapshot,
+			has_achievement_snapshot
+		)
+
 	if volume_slider != null:
 		volume_slider.set_value_no_signal(volume_value)
 		on_volume_changed(volume_value)
@@ -850,6 +923,10 @@ func load_settings() -> void:
 		quest_pointer_toggle.text = (
 			"ON" if quest_pointer_enabled else "OFF"
 		)
+
+	if all_achievements_toggle != null:
+		all_achievements_toggle.set_pressed_no_signal(all_achievements_enabled)
+		all_achievements_toggle.text = "ON" if all_achievements_enabled else "OFF"
 
 	refresh_control_key_labels()
 
@@ -1421,8 +1498,15 @@ func cancel_quit() -> void:
 
 
 func confirm_quit() -> void:
+	# This button returns to the main menu; it must not terminate the game.
 	get_tree().paused = false
-	get_tree().quit()
+	GameManager.player_controls_locked = false
+	resume_game_audio()
+
+	if is_instance_valid(FadeManager):
+		await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/ui/MainMenu.tscn")
 
 
 func hide_menu() -> void:
