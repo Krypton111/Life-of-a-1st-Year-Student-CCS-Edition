@@ -1,7 +1,7 @@
 extends AudioStreamPlayer
 
 const SCHOOL_MUSIC_PATH := "res://GAME ASSETS_/Misc/Music/school hallway.mp3"
-const NORMAL_VOLUME_DB := -8.0
+const NORMAL_VOLUME_DB := 1.042
 const FADE_DURATION := 0.6
 
 var music_tween: Tween
@@ -11,6 +11,14 @@ var special_music_active := false
 func _ready() -> void:
 	add_to_group("school_background_music")
 	volume_db = NORMAL_VOLUME_DB
+
+	# Swap the two school audio levels and make the ambience loop as well.
+	var ambience_player := get_parent().get_node_or_null("SchoolHallwayAmbience") as AudioStreamPlayer
+	if ambience_player != null:
+		ambience_player.volume_db = -8.0
+		var ambience_stream := ambience_player.stream as AudioStreamMP3
+		if ambience_stream != null:
+			ambience_stream.loop = true
 
 	var music := load(SCHOOL_MUSIC_PATH) as AudioStreamMP3
 	if music == null:
