@@ -45,6 +45,52 @@ var coffee_menu_panel: Panel = null
 var coffee_menu_status: Label = null
 
 
+
+var cafe_background_music: AudioStreamPlayer
+var cafe_music_tween: Tween
+
+const CAFE_MUSIC_PATH := "res://GAME ASSETS_/Misc/Music/cutscene music.mp3"
+const CAFE_MUSIC_NORMAL_DB := -8.0
+const CAFE_MUSIC_DIALOGUE_DB := -24.0
+
+
+func _start_cafe_background_music() -> void:
+	cafe_background_music = AudioStreamPlayer.new()
+	cafe_background_music.name = "CafeBackgroundMusic"
+	cafe_background_music.add_to_group("cafe_background_music")
+	cafe_background_music.volume_db = CAFE_MUSIC_NORMAL_DB
+
+	var music := load(CAFE_MUSIC_PATH) as AudioStreamMP3
+	if music == null:
+		push_warning("Cafe background music could not be loaded: " + CAFE_MUSIC_PATH)
+		cafe_background_music.queue_free()
+		return
+
+	music.loop = true
+	cafe_background_music.stream = music
+	add_child(cafe_background_music)
+	cafe_background_music.play()
+
+
+func set_cafe_music_ducked(ducked: bool) -> void:
+	if not is_instance_valid(cafe_background_music):
+		return
+
+	_tween_cafe_music_to(CAFE_MUSIC_DIALOGUE_DB if ducked else CAFE_MUSIC_NORMAL_DB, 0.25)
+
+
+func _fade_cafe_music_to_silence() -> void:
+	if is_instance_valid(cafe_background_music):
+		_tween_cafe_music_to(-80.0, 1.0)
+
+
+func _tween_cafe_music_to(target_db: float, duration: float) -> void:
+	if cafe_music_tween != null and cafe_music_tween.is_running():
+		cafe_music_tween.kill()
+
+	cafe_music_tween = create_tween()
+	cafe_music_tween.tween_property(cafe_background_music, "volume_db", target_db, duration)
+
 func _process(_delta: float) -> void:
 	# Once Tina's conversation is finished, the player must approach Marya
 	# and interact with her to open the coffee menu.
@@ -112,6 +158,7 @@ func _process(_delta: float) -> void:
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_start_cafe_background_music()
 
 	# Normal entry supplies cafe_route. A loaded save instead restores the
 	# persistent cafe route/phase through SaveManager.
@@ -1703,6 +1750,9 @@ func start_tina_post_order_dialogue() -> void:
 
 
 func play_tina_alarm() -> void:
+	# The alarm takes over the soundscape; fade the cafe music completely out.
+	_fade_cafe_music_to_silence()
+
 	var alarm_player := AudioStreamPlayer.new()
 	var generator := AudioStreamGenerator.new()
 	generator.mix_rate = 44100.0
