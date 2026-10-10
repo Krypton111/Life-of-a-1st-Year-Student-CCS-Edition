@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://bdgp4vdwbckpp" path="res://GAME ASSETS_/Misc/Menus/paint interface.png" id="4_p0ycq"]
 [ext_resource type="Script" uid="uid://dni602w2rjxk0" path="res://scripts/DragBar.gd" id="6_ecft8"]
 [ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="9_pause"]
+[ext_resource type="AudioStream" uid="uid://puwr2c30ucqx" path="res://GAME ASSETS_/Misc/Music/comlab_music.mp3" id="challenge_music"]
+[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
 
 [node name="MacLabChallenge" type="Control" unique_id=831506140]
 layout_mode = 3
@@ -145,3 +147,8 @@ offset_top = -0.34999466
 offset_right = 0.51989746
 offset_bottom = -0.18003845
 script = ExtResource("6_ecft8")
+
+[node name="ChallengeMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("challenge_music")
+script = ExtResource("looping_music_script")
+volume_db = -8.602
