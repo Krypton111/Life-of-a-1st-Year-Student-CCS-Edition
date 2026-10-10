@@ -542,6 +542,19 @@ func update_panel_visibility() -> void:
 	if panel == null:
 		return
 
+	# The opening comic cutscene must never show the quest tracker or its arrow nub.
+	# Keep this guard here as well as in refresh_ui(), so the visibility update
+	# cannot accidentally make the toggle visible again during the same frame.
+	if get_current_scene_path().contains("opening_cutscene"):
+		if panel_tween != null and panel_tween.is_valid():
+			panel_tween.kill()
+		panel.visible = false
+		panel_hidden = true
+		auto_hidden = true
+		if toggle_button != null:
+			toggle_button.visible = false
+		return
+
 	var player_locked := false
 	var game_manager := get_node_or_null("/root/GameManager")
 	if game_manager != null:
