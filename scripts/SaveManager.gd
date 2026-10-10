@@ -453,6 +453,18 @@ func restore_game_manager_state(state: Variant) -> void:
 		if value != null:
 			GameManager.set(property_name_string, value)
 
+	# Save loading replaces GameManager state, so restore the temporary testing
+	# view afterward while keeping AchievementManager's real snapshot intact.
+	if (
+		is_instance_valid(AchievementManager)
+		and AchievementManager.are_all_achievements_enabled()
+	):
+		AchievementManager.set_all_achievements_enabled(
+			true,
+			AchievementManager.achievements_before_override,
+			true
+		)
+
 
 func collect_metadata() -> Dictionary:
 	var result: Dictionary = {}
