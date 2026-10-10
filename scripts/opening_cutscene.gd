@@ -22,6 +22,8 @@ var typing_id := 0
 
 var changing_page := false
 var panel_animating := false
+var credits_visible: bool = false
+var credits_container: Control = null
 
 
 # =========================================
@@ -371,6 +373,12 @@ func type_text(label: Label, full_text: String):
 
 func _on_next_pressed():
 
+	# Credits screen: clicking continues to the main menu.
+	if credits_visible:
+		credits_visible = false
+		await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
+		return
+
 	# Ignore clicks while changing pages
 	if changing_page:
 		return
@@ -504,14 +512,158 @@ func change_page():
 func finish_opening():
 
 	continue_text.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+	var scene_path := ""
+	if get_tree().current_scene != null:
+		scene_path = str(get_tree().current_scene.scene_file_path).to_lower()
+
+	# The closing cutscene ends with a dedicated credits screen.
+	if scene_path.contains("closing_cutscene"):
+		show_credits()
+		return
 
 	next_button.disabled = true
-
-	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-
-	# Fade to black
-	# Change to Cafe
-	# Fade the Cafe in
 	await FadeManager.change_scene_with_fade(
 		"res://scenes/main_level_scenes/house_game_level.tscn"
 	)
+
+
+func show_credits() -> void:
+	credits_visible = true
+	current_panel = panels.size()
+	next_button.disabled = false
+	next_button.visible = true
+	continue_text.visible = false
+
+	# Hide every comic panel and dialogue label behind the credits.
+	for i in range(1, 25):
+		var panel_node := get_node_or_null("op%d_p%d" % [int((i - 1) / 6) + 1, int((i - 1) % 6) + 1])
+		var dialogue_node := get_node_or_null("DialogueText%d" % i)
+		if panel_node != null:
+			panel_node.visible = false
+		if dialogue_node != null:
+			dialogue_node.visible = false
+
+	credits_container = Control.new()
+	credits_container.name = "CreditsScreen"
+	credits_container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	credits_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(credits_container)
+
+	var backdrop := ColorRect.new()
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	backdrop.color = Color("#17131D")
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	credits_container.add_child(backdrop)
+
+	var glow := ColorRect.new()
+	glow.anchor_left = 0.12
+	glow.anchor_top = 0.10
+	glow.anchor_right = 0.88
+	glow.anchor_bottom = 0.90
+	glow.color = Color("#282035")
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	credits_container.add_child(glow)
+
+	var card := PanelContainer.new()
+	card.anchor_left = 0.18
+	card.anchor_top = 0.09
+	card.anchor_right = 0.82
+	card.anchor_bottom = 0.91
+	card.add_theme_stylebox_override("panel", _credits_panel_style())
+	credits_container.add_child(card)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 54)
+	margin.add_theme_constant_override("margin_right", 54)
+	margin.add_theme_constant_override("margin_top", 38)
+	margin.add_theme_constant_override("margin_bottom", 30)
+	card.add_child(margin)
+
+	var layout := VBoxContainer.new()
+	layout.alignment = BoxContainer.ALIGNMENT_CENTER
+	layout.add_theme_constant_override("separation", 12)
+	margin.add_child(layout)
+
+	var eyebrow := Label.new()
+	eyebrow.text = "LIFE OF A 1ST YEAR STUDENT"
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	eyebrow.add_theme_font_size_override("font_size", 19)
+	eyebrow.add_theme_color_override("font_color", Color("#D9A86C"))
+	layout.add_child(eyebrow)
+
+	var heading := Label.new()
+	heading.text = "THE PEOPLE BEHIND THE GAME"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 42)
+	heading.add_theme_color_override("font_color", Color("#FFF0D9"))
+	layout.add_child(heading)
+
+	var subtitle := Label.new()
+	subtitle.text = "Made with creativity, code, and care."
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.add_theme_font_size_override("font_size", 20)
+	subtitle.add_theme_color_override("font_color", Color("#C8B9CE"))
+	layout.add_child(subtitle)
+
+	var rule := HSeparator.new()
+	rule.add_theme_color_override("color", Color("#B9824A"))
+	layout.add_child(rule)
+
+	_add_credit_entry(layout, "NATHALY S. CHAN", "Game Level Designer  •  UI/UX Designer")
+	_add_credit_entry(layout, "ROSE JANSSEN M. RAFAEL", "Game Level Designer  •  UI/UX Designer")
+	_add_credit_entry(layout, "KERWIN L. CONCEPCION", "Game Programmer  •  UI/UX Designer")
+	_add_credit_entry(layout, "KAIRI BAUTISTA", "Sprite Model Designer  •  Cover Artist")
+
+	var footer := Label.new()
+	footer.text = "THANK YOU FOR PLAYING"
+	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	footer.add_theme_font_size_override("font_size", 18)
+	footer.add_theme_color_override("font_color", Color("#D9A86C"))
+	footer.add_theme_constant_override("outline_size", 1)
+	layout.add_child(footer)
+
+	var prompt := Label.new()
+	prompt.text = "CLICK ANYWHERE TO RETURN TO THE MAIN MENU"
+	prompt.anchor_left = 0.0
+	prompt.anchor_top = 0.94
+	prompt.anchor_right = 1.0
+	prompt.anchor_bottom = 0.99
+	prompt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	prompt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	prompt.add_theme_font_size_override("font_size", 17)
+	prompt.add_theme_color_override("font_color", Color("#FFF0D9"))
+	credits_container.add_child(prompt)
+
+
+func _credits_panel_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#211A29")
+	style.border_color = Color("#B9824A")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(20)
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.5)
+	style.shadow_size = 18
+	style.shadow_offset = Vector2(0.0, 8.0)
+	return style
+
+
+func _add_credit_entry(parent: VBoxContainer, person_name: String, role_text: String) -> void:
+	var entry := VBoxContainer.new()
+	entry.add_theme_constant_override("separation", 3)
+	parent.add_child(entry)
+
+	var name_label := Label.new()
+	name_label.text = person_name
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.add_theme_font_size_override("font_size", 25)
+	name_label.add_theme_color_override("font_color", Color("#FFF0D9"))
+	entry.add_child(name_label)
+
+	var role_label := Label.new()
+	role_label.text = role_text
+	role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	role_label.add_theme_font_size_override("font_size", 18)
+	role_label.add_theme_color_override("font_color", Color("#C8B9CE"))
+	entry.add_child(role_label)
