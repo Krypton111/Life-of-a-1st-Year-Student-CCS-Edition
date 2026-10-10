@@ -125,6 +125,9 @@ func setup_tina_music() -> void:
 	tina_music = AudioStreamPlayer.new()
 	tina_music.name = "TinaHallwayMusic"
 	tina_music.add_to_group("school_special_music")
+	var tina_stream := TINA_MUSIC as AudioStreamMP3
+	if tina_stream != null:
+		tina_stream.loop = true
 	tina_music.stream = TINA_MUSIC
 	tina_music.volume_db = -80.0
 	tina_music.bus = "Master"
