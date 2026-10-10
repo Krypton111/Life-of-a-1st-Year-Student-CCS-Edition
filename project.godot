@@ -27,6 +27,7 @@ PlayerSetup="*res://scripts/PlayerSetup.gd"
 GoldenHourManager="*res://scripts/GoldenHourManager.gd"
 SaveManager="*uid://k1v1dydg13o5"
 AchievementManager="*uid://ddwawo8stbiib"
+AudioFeedback="*res://scripts/AudioFeedback.gd"
 
 [display]
 
