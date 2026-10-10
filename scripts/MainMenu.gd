@@ -15,6 +15,7 @@ var pause_menu: CanvasLayer
 var quit_dialog: PanelContainer
 var quit_button: Button
 var cancel_quit_button: Button
+var quit_modal_layer: CanvasLayer
 var menu_buttons: Array[Button] = []
 var menu_music: AudioStreamPlayer
 var button_click_player: AudioStreamPlayer
@@ -1019,22 +1020,23 @@ func credits_dud() -> void:
 
 
 func build_quit_dialog() -> void:
+	# A dedicated CanvasLayer puts the modal above all menu art and routes GUI
+	# input independently of the character TextureButtons behind the menu.
+	quit_modal_layer = CanvasLayer.new()
+	quit_modal_layer.name = "QuitModalLayer"
+	quit_modal_layer.layer = 100
+	add_child(quit_modal_layer)
+
 	var dimmer := ColorRect.new()
 	dimmer.name = "QuitDimmer"
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	# Keep the quit confirmation and its dimmer above the character artwork.
-	dimmer.z_as_relative = false
-	dimmer.z_index = 200
 	dimmer.color = Color(0.0, 0.0, 0.0, 0.78)
-	# The full-screen modal overlay must consume clicks outside the dialog too.
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.visible = false
-	add_child(dimmer)
+	quit_modal_layer.add_child(dimmer)
 
 	quit_dialog = PanelContainer.new()
 	quit_dialog.name = "QuitConfirmation"
-	quit_dialog.z_as_relative = false
-	quit_dialog.z_index = 201
 	quit_dialog.mouse_filter = Control.MOUSE_FILTER_STOP
 	quit_dialog.set_anchors_preset(Control.PRESET_CENTER)
 	quit_dialog.position = Vector2(-230, -135)
@@ -1097,7 +1099,11 @@ func make_quit_panel_style() -> StyleBoxFlat:
 
 func show_quit_confirmation() -> void:
 	var dimmer := quit_dialog.get_meta("dimmer") as ColorRect
+	# Reassert modal visibility and focus before animating the confirmation.
+	quit_modal_layer.layer = 100
 	dimmer.visible = true
+	dimmer.move_to_front()
+	quit_dialog.grab_focus()
 	dimmer.modulate.a = 0.0
 	quit_dialog.scale = Vector2(0.94, 0.94)
 	quit_dialog.pivot_offset = quit_dialog.size / 2.0
