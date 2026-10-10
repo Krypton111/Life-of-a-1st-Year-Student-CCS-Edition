@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bf2prs6ig7sa1" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/game dev assets/Floors/texture.png" id="1_5oysd"]
 [ext_resource type="Script" uid="uid://bwe73vv3bvll6" path="res://scripts/BookstoreController.gd" id="1_7x6lr"]
+[ext_resource type="Script" path="res://scripts/BookstoreBackgroundMusic.gd" id="bookstore_music_script"]
 [ext_resource type="Texture2D" uid="uid://dp08juwck4pn7" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/game dev assets/Walls/texture.png" id="2_hfruh"]
 [ext_resource type="Texture2D" uid="uid://dwdqsa1eu4igh" path="res://GAME ASSETS_/Bookstore (Local Bookstore)/Bookstore Assets/game dev assets/Bookshelves/FurnitureChocolate.png" id="3_hfruh"]
 [ext_resource type="Texture2D" uid="uid://dl08ydq2ftcr3" path="res://GAME ASSETS_/Cafe (Sus! Marya & Hosep Cafe)/Cafe Assets/z_RFTv3_rctidark.png" id="3_hx25m"]
@@ -55648,3 +55649,6 @@ position = Vector2(273.5, 81)
 position = Vector2(95.6667, 162.33333)
 scale = Vector2(0.3, 0.3)
 script = ExtResource("16_r3tnc")
+
+[node name="BookstoreBackgroundMusic" type="AudioStreamPlayer" parent="."]
+script = ExtResource("bookstore_music_script")
