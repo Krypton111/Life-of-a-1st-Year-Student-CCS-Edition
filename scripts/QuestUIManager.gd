@@ -23,6 +23,7 @@ const PANEL_RIGHT_MARGIN: float = 28.0
 const PANEL_TOP_MARGIN: float = 18.0
 
 var panel: Panel = null
+var toggle_button: Button = null
 var title_label: Label = null
 var eyebrow_label: Label = null
 var progress_label: Label = null
@@ -43,6 +44,8 @@ var refresh_accumulator: float = 0.0
 # Quest tracker animation state.
 var panel_tween: Tween = null
 var panel_hidden: bool = false
+var manually_collapsed: bool = false
+var auto_hidden: bool = false
 var cutscene_active: bool = false
 
 const PANEL_SLIDE_DURATION: float = 0.40
@@ -89,6 +92,33 @@ func build_ui() -> void:
 	panel_style.shadow_offset = Vector2(0.0, 6.0)
 	panel_style.anti_aliasing = true
 	panel.add_theme_stylebox_override("panel", panel_style)
+
+	# A persistent nub remains visible at the right edge when the tracker is collapsed.
+	toggle_button = Button.new()
+	toggle_button.name = "QuestTrackerToggle"
+	toggle_button.text = "‹"
+	toggle_button.tooltip_text = "Minimize quest tracker"
+	toggle_button.custom_minimum_size = Vector2(34.0, 58.0)
+	toggle_button.size = Vector2(34.0, 58.0)
+	toggle_button.focus_mode = Control.FOCUS_NONE
+	toggle_button.process_mode = Node.PROCESS_MODE_ALWAYS
+	toggle_button.add_theme_font_size_override("font_size", 26)
+	toggle_button.add_theme_color_override("font_color", CREAM)
+	toggle_button.add_theme_color_override("font_hover_color", HONEY)
+	var toggle_style := StyleBoxFlat.new()
+	toggle_style.bg_color = ESPRESSO
+	toggle_style.border_color = CARAMEL
+	toggle_style.set_border_width_all(2)
+	toggle_style.set_corner_radius_all(10)
+	toggle_style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
+	toggle_style.shadow_size = 6
+	toggle_button.add_theme_stylebox_override("normal", toggle_style)
+	var toggle_hover := toggle_style.duplicate() as StyleBoxFlat
+	toggle_hover.bg_color = WALNUT
+	toggle_button.add_theme_stylebox_override("hover", toggle_hover)
+	toggle_button.add_theme_stylebox_override("pressed", toggle_hover)
+	toggle_button.pressed.connect(_on_toggle_button_pressed)
+	root_control.add_child(toggle_button)
 
 	var accent := ColorRect.new()
 	accent.name = "QuestAccent"
@@ -158,6 +188,8 @@ func _on_scene_changed() -> void:
 	if panel_tween != null and panel_tween.is_valid():
 		panel_tween.kill()
 	panel_hidden = false
+	manually_collapsed = false
+	auto_hidden = false
 	last_scene_path = ""
 	last_state_signature = ""
 	hide_legacy_quest_ui()
@@ -463,32 +495,29 @@ func position_panel() -> void:
 			top_position = maxf(top_position, top_bar.position.y + top_bar.size.y + 18.0)
 	panel.size = Vector2(panel_width, panel_height)
 
-	var normal_position := Vector2(
-		viewport_size.x - panel_width - PANEL_RIGHT_MARGIN,
-		top_position
-	)
-	var hidden_position := normal_position + Vector2(
-		panel_width + PANEL_RIGHT_MARGIN + PANEL_SLIDE_EXTRA,
-		0.0
-	)
-
-	# Keep the current X position while the slide tween is running.
-	# This prevents the periodic UI refresh from snapping the panel instantly.
-	if not panel_hidden:
-		panel.position.x = normal_position.x
-	elif panel_tween == null or not panel_tween.is_valid():
-		panel.position.x = hidden_position.x
-
+	var normal_position := Vector2(viewport_size.x - panel_width - PANEL_RIGHT_MARGIN, top_position)
+	var hidden_position := normal_position + Vector2(panel_width + PANEL_RIGHT_MARGIN + PANEL_SLIDE_EXTRA, 0.0)
+	if panel_tween == null or not panel_tween.is_running():
+		panel.position = hidden_position if (panel_hidden or manually_collapsed) else normal_position
 	panel.position.y = top_position
+
+	if toggle_button != null:
+		toggle_button.visible = panel.visible
+		toggle_button.text = "›" if manually_collapsed else "‹"
+		toggle_button.tooltip_text = "Expand quest tracker" if manually_collapsed else "Minimize quest tracker"
+		var nub_x := viewport_size.x - toggle_button.size.x - 4.0 if manually_collapsed else normal_position.x - toggle_button.size.x + 2.0
+		toggle_button.position = Vector2(nub_x, top_position + (panel_height - toggle_button.size.y) * 0.5)
 	var usable_width: float = panel_width - 36.0
 	eyebrow_label.size.x = usable_width
 	title_label.size.x = usable_width
 	progress_label.size.x = usable_width
 	scroll.size = Vector2(usable_width, maxf(180.0, panel_height - 132.0))
 	var accent := panel.get_node_or_null("QuestAccent") as ColorRect
-	if accent != null: accent.size.x = panel_width
+	if accent != null:
+		accent.size.x = panel_width
 	var divider := panel.get_node_or_null("HeaderDivider") as ColorRect
-	if divider != null: divider.size.x = usable_width
+	if divider != null:
+		divider.size.x = usable_width
 
 func is_dialogue_active() -> bool:
 	var dialogue_manager := get_node_or_null("/root/DialogueManager")
@@ -497,24 +526,47 @@ func is_dialogue_active() -> bool:
 	return bool(dialogue_manager.get("is_active"))
 
 func update_panel_visibility() -> void:
-	if panel == null or not panel.visible:
+	if panel == null:
 		return
 
-	# Any moment when player controls are locked is treated as a cinematic/event
-	# moment. This covers dialogue, challenges, bully encounters, scripted NPC
-	# movement, choices, and other interactions without requiring every script
-	# to manually animate the quest tracker.
 	var player_locked := false
 	var game_manager := get_node_or_null("/root/GameManager")
 	if game_manager != null:
 		player_locked = bool(game_manager.get("player_controls_locked"))
 
-	var should_hide := player_locked or is_dialogue_active() or cutscene_active
+	auto_hidden = player_locked or is_dialogue_active() or cutscene_active
+	var should_hide := auto_hidden or manually_collapsed
 	if should_hide == panel_hidden:
 		return
 
 	panel_hidden = should_hide
+	if panel_tween != null and panel_tween.is_valid():
+		panel_tween.kill()
 
+	var viewport_size := get_viewport().get_visible_rect().size
+	var panel_width := panel.size.x
+	var normal_x := viewport_size.x - panel_width - PANEL_RIGHT_MARGIN
+	var panel_target_x := normal_x
+	var nub_target_x := normal_x - toggle_button.size.x + 2.0
+	if should_hide:
+		panel_target_x = normal_x + panel_width + PANEL_RIGHT_MARGIN + PANEL_SLIDE_EXTRA
+		# Keep the nub reachable when manually minimized, unless a dialogue/cutscene is active.
+		if manually_collapsed and not auto_hidden:
+			nub_target_x = viewport_size.x - toggle_button.size.x - 4.0
+		else:
+			nub_target_x = viewport_size.x + 8.0
+
+	panel_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	panel_tween.set_parallel(true)
+	panel_tween.tween_property(panel, "position:x", panel_target_x, PANEL_SLIDE_DURATION)
+	panel_tween.tween_property(toggle_button, "position:x", nub_target_x, PANEL_SLIDE_DURATION)
+	toggle_button.visible = not auto_hidden or manually_collapsed
+
+func _on_toggle_button_pressed() -> void:
+	if auto_hidden and not manually_collapsed:
+		return
+	manually_collapsed = not manually_collapsed
+	panel_hidden = not (auto_hidden or manually_collapsed)
 	if panel_tween != null and panel_tween.is_valid():
 		panel_tween.kill()
 
@@ -522,12 +574,17 @@ func update_panel_visibility() -> void:
 	var panel_width := panel.size.x
 	var normal_x := viewport_size.x - panel_width - PANEL_RIGHT_MARGIN
 	var target_x := normal_x
-
-	if panel_hidden:
+	var nub_target_x := normal_x - toggle_button.size.x + 2.0
+	if manually_collapsed:
 		target_x = normal_x + panel_width + PANEL_RIGHT_MARGIN + PANEL_SLIDE_EXTRA
+		nub_target_x = viewport_size.x - toggle_button.size.x - 4.0
+	toggle_button.text = "›" if manually_collapsed else "‹"
+	toggle_button.tooltip_text = "Expand quest tracker" if manually_collapsed else "Minimize quest tracker"
 
 	panel_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	panel_tween.set_parallel(true)
 	panel_tween.tween_property(panel, "position:x", target_x, PANEL_SLIDE_DURATION)
+	panel_tween.tween_property(toggle_button, "position:x", nub_target_x, PANEL_SLIDE_DURATION)
 
 func start_cutscene() -> void:
 	cutscene_active = true
