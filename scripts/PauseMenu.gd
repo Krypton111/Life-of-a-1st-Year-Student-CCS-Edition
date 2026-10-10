@@ -851,6 +851,8 @@ func load_settings() -> void:
 			"ON" if quest_pointer_enabled else "OFF"
 		)
 
+	refresh_control_key_labels()
+
 
 # ============================================================
 # SETTINGS — OPEN / CLOSE
