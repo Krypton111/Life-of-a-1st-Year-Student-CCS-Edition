@@ -22,6 +22,9 @@ var achievement_scroll: ScrollContainer
 var achievement_list: VBoxContainer
 var achievement_close_button: Button
 var settings_panel: PanelContainer
+var credits_screen: Control
+var credits_close_button: Button
+var showing_credits_menu: bool = false
 var controls_panel: PanelContainer
 var controls_button: Button
 var controls_close_button: Button
@@ -191,6 +194,7 @@ func build_ui() -> void:
 	build_achievement_ui()
 	build_settings_ui()
 	build_controls_ui()
+	build_credits_ui()
 
 
 func build_confirmation_ui() -> void:
@@ -1307,6 +1311,10 @@ func make_button_style(background: Color) -> StyleBoxFlat:
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed and not event.echo):
 		return
+	if showing_credits_menu:
+		close_credits()
+		get_viewport().set_input_as_handled()
+		return
 	if awaiting_rebind_action != "":
 		awaiting_rebind_action = ""
 		refresh_control_key_labels()
@@ -1470,7 +1478,171 @@ func settings_dud() -> void:
 
 
 func credits_dud() -> void:
-	pass
+	open_credits()
+
+
+func open_main_menu_credits() -> void:
+	if not main_menu_mode:
+		return
+	open_credits()
+
+
+func build_credits_ui() -> void:
+	credits_screen = Control.new()
+	credits_screen.name = "CreditsScreen"
+	credits_screen.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	credits_screen.z_index = 200
+	credits_screen.visible = false
+	credits_screen.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(credits_screen)
+
+	var dimmer := ColorRect.new()
+	dimmer.name = "CreditsBackdrop"
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.035, 0.022, 0.018, 0.94)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	credits_screen.add_child(dimmer)
+
+	var card := PanelContainer.new()
+	card.name = "CreditsCard"
+	card.set_anchors_preset(Control.PRESET_CENTER)
+	card.position = Vector2(-390, -330)
+	card.size = Vector2(780, 660)
+	card.add_theme_stylebox_override("panel", make_credits_card_style())
+	credits_screen.add_child(card)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 46)
+	margin.add_theme_constant_override("margin_right", 46)
+	margin.add_theme_constant_override("margin_top", 32)
+	margin.add_theme_constant_override("margin_bottom", 28)
+	card.add_child(margin)
+
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 10)
+	margin.add_child(content)
+
+	var eyebrow := Label.new()
+	eyebrow.text = "LIFE OF A 1ST YEAR STUDENT  •  CCS EDITION"
+	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	eyebrow.add_theme_font_size_override("font_size", 13)
+	eyebrow.add_theme_color_override("font_color", Color("#E6AD63"))
+	eyebrow.add_theme_constant_override("letter_spacing", 3)
+	content.add_child(eyebrow)
+
+	var heading := Label.new()
+	heading.text = "THE PEOPLE BEHIND THE GAME"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 30)
+	heading.add_theme_color_override("font_color", Color("#FFF0D8"))
+	heading.add_theme_constant_override("letter_spacing", 1)
+	content.add_child(heading)
+
+	var subtitle := Label.new()
+	subtitle.text = "A little story made with creativity, code, and care."
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.add_theme_font_size_override("font_size", 15)
+	subtitle.add_theme_color_override("font_color", Color("#D8BEA1"))
+	content.add_child(subtitle)
+
+	var divider := HSeparator.new()
+	divider.add_theme_color_override("color", Color("#C99555"))
+	content.add_child(divider)
+
+	_add_credit_member(content, "NATHALY S. CHAN", "GAME LEVEL DESIGNER  •  UI/UX DESIGNER")
+	_add_credit_member(content, "ROSE JANSSEN M. RAFAEL", "GAME LEVEL DESIGNER  •  UI/UX DESIGNER")
+	_add_credit_member(content, "KERWIN L. CONCEPCION", "GAME PROGRAMMER  •  UI/UX DESIGNER")
+	_add_credit_member(content, "KAIRI BAUTISTA", "SPRITE MODEL DESIGNER  •  COVER ARTIST")
+
+	var spacer := Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_child(spacer)
+
+	var thanks := Label.new()
+	thanks.text = "✦  THANK YOU FOR PLAYING  ✦"
+	thanks.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	thanks.add_theme_font_size_override("font_size", 17)
+	thanks.add_theme_color_override("font_color", Color("#FFE1A8"))
+	thanks.add_theme_constant_override("letter_spacing", 2)
+	content.add_child(thanks)
+
+	credits_close_button = make_button("BACK")
+	credits_close_button.custom_minimum_size = Vector2(180, 42)
+	credits_close_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	credits_close_button.pressed.connect(close_credits)
+	content.add_child(credits_close_button)
+
+
+func _add_credit_member(parent: VBoxContainer, member_name: String, role: String) -> void:
+	var entry := VBoxContainer.new()
+	entry.add_theme_constant_override("separation", 2)
+	parent.add_child(entry)
+
+	var name_label := Label.new()
+	name_label.text = member_name
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.add_theme_font_size_override("font_size", 19)
+	name_label.add_theme_color_override("font_color", Color("#FFE1A8"))
+	entry.add_child(name_label)
+
+	var role_label := Label.new()
+	role_label.text = role
+	role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	role_label.add_theme_font_size_override("font_size", 12)
+	role_label.add_theme_color_override("font_color", Color("#D8BEA1"))
+	role_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	entry.add_child(role_label)
+
+
+func make_credits_card_style() -> StyleBoxFlat:
+	var style := make_panel_style()
+	style.bg_color = Color(0.105, 0.062, 0.042, 0.99)
+	style.border_color = Color("#E6AD63")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(10)
+	style.shadow_color = Color(0, 0, 0, 0.7)
+	style.shadow_size = 24
+	style.shadow_offset = Vector2(0, 8)
+	return style
+
+
+func open_credits() -> void:
+	if credits_screen == null:
+		return
+
+	showing_credits_menu = true
+	showing_settings_menu = false
+	showing_slot_menu = false
+	showing_achievement_menu = false
+	showing_quit_confirmation = false
+
+	pause_panel.visible = false
+	confirm_panel.visible = false
+	slot_panel.visible = false
+	achievement_panel.visible = false
+	settings_panel.visible = false
+	if controls_panel != null:
+		controls_panel.visible = false
+
+	overlay.visible = true
+	credits_screen.visible = true
+	credits_close_button.grab_focus()
+
+
+func close_credits() -> void:
+	if not showing_credits_menu:
+		return
+
+	showing_credits_menu = false
+	credits_screen.visible = false
+
+	if main_menu_mode:
+		overlay.visible = false
+		pause_panel.visible = false
+	else:
+		overlay.visible = true
+		pause_panel.visible = true
+		credits_button.grab_focus()
 
 
 func show_quit_confirmation() -> void:
