@@ -384,6 +384,13 @@ func make_dialogue_panel_style() -> StyleBoxFlat:
 
 
 func _on_character_gui_input(event: InputEvent, character: TextureButton) -> void:
+	# Never let character interactions trigger while the quit modal is open.
+	if is_instance_valid(quit_dialog):
+		var quit_dimmer := quit_dialog.get_meta("dimmer") as ColorRect
+		if is_instance_valid(quit_dimmer) and quit_dimmer.visible:
+			character.accept_event()
+			return
+
 	if not (event is InputEventMouseButton):
 		return
 	var mouse_event := event as InputEventMouseButton
