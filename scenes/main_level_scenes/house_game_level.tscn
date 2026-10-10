@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="4_ultbk"]
 [ext_resource type="Script" uid="uid://crb1ykf0vguwx" path="res://scripts/HouseOpeningController.gd" id="7_reueo"]
 [ext_resource type="PackedScene" uid="uid://dhhko64jds3eo" path="res://scenes/ui/DialogueUI.tscn" id="8_reueo"]
+[ext_resource type="Script" path="res://scripts/HouseBackgroundMusic.gd" id="9_house_music"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m8543"]
 radius = 19.026299
@@ -105,6 +106,9 @@ layer = 10
 
 [node name="DialogueUI" parent="UI" unique_id=1438493306 instance=ExtResource("8_reueo")]
 metadata/_edit_use_anchors_ = true
+
+[node name="HouseBackgroundMusic" type="AudioStreamPlayer" parent="." groups=["house_background_music"]]
+script = ExtResource("9_house_music")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=510617187]
 navigation_polygon = SubResource("NavigationPolygon_reueo")
