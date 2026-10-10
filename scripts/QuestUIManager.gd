@@ -60,10 +60,9 @@ func _ready() -> void:
 	call_deferred("refresh_ui")
 
 func _input(event: InputEvent) -> void:
-	if not (event is InputEventKey):
+	if not event.is_action_pressed("toggle_quest_tracker"):
 		return
-	var key_event := event as InputEventKey
-	if not key_event.pressed or key_event.echo or key_event.keycode != KEY_C:
+	if event is InputEventKey and (event as InputEventKey).echo:
 		return
 	if panel == null or not panel.visible or auto_hidden:
 		return
