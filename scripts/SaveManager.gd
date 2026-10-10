@@ -407,6 +407,17 @@ func collect_game_manager_state() -> Dictionary:
 			continue
 
 		var value: Variant = GameManager.get(property_name)
+
+		# Never write the temporary "all achievements" testing state into a save.
+		# Save the real pre-toggle snapshot so loading this slot later cannot
+		# permanently grant achievements that were only enabled for testing.
+		if (
+			property_name == "achievements_unlocked"
+			and is_instance_valid(AchievementManager)
+			and AchievementManager.are_all_achievements_enabled()
+		):
+			value = AchievementManager.achievements_before_override.duplicate(true)
+
 		var encoded: Variant = encode_value(value)
 
 		if encoded != null:
