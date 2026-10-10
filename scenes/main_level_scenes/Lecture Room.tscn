@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://b7g3xuvxyvfis" path="res://scenes/player&NPCs/sircharles.tscn" id="6_oxlj3"]
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="6_rn8hb"]
 [ext_resource type="Script" uid="uid://c6k42sb7vao46" path="res://scripts/SirCharles.gd" id="9_oxlj3"]
+[ext_resource type="AudioStream" uid="uid://b3w1q01iuvavd" path="res://GAME ASSETS_/Misc/Music/comlab202.mp3" id="lecture_music"]
+[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ulqil"]
 texture = ExtResource("1_el8cr")
@@ -6928,3 +6930,8 @@ scale = Vector2(0.23783778, 0.23783779)
 [node name="QuestMarker_Talk3" type="Marker2D" parent="." unique_id=1651138890]
 position = Vector2(159, 62.666668)
 scale = Vector2(0.04632827, 0.04632827)
+
+[node name="LectureRoomMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("lecture_music")
+script = ExtResource("looping_music_script")
+volume_db = -13.293
