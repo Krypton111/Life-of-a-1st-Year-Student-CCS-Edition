@@ -173,12 +173,12 @@ func unlock(id: String) -> void:
 	print("ACHIEVEMENT UNLOCKED: ", id)
 
 
-func set_all_achievements_enabled(enabled: bool, snapshot_override: Dictionary = {}) -> Dictionary:
+func set_all_achievements_enabled(enabled: bool, snapshot_override: Dictionary = {}, use_snapshot_override: bool = false) -> Dictionary:
 	if enabled:
 		if all_achievements_override_active:
 			return achievements_before_override.duplicate(true)
 
-		if not snapshot_override.is_empty():
+		if use_snapshot_override or not snapshot_override.is_empty():
 			achievements_before_override = snapshot_override.duplicate(true)
 		else:
 			achievements_before_override = get_unlocked().duplicate(true)
