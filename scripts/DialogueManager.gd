@@ -26,6 +26,15 @@ func _set_house_music_ducked(ducked: bool) -> void:
 		tween.tween_property(music, "volume_db", target_volume_db, 0.25)
 
 
+func _set_cafe_music_ducked(ducked: bool) -> void:
+	# The cafe controller owns this music and exposes a small volume-control method.
+	for node in get_tree().get_nodes_in_group("cafe_background_music"):
+		if node != null and node.has_method("get_parent"):
+			var controller := node.get_parent()
+			if controller != null and controller.has_method("set_cafe_music_ducked"):
+				controller.set_cafe_music_ducked(ducked)
+
+
 func set_quest_professor(professor_id: String) -> void:
 	current_quest_professor = professor_id
 
@@ -44,6 +53,7 @@ func start_dialogue(dialogue_data: Array, left_texture: Texture2D, right_texture
 		return
 	is_active = true
 	_set_house_music_ducked(true)
+	_set_cafe_music_ducked(true)
 	GameManager.player_controls_locked = true
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
@@ -195,6 +205,7 @@ func end_dialogue() -> void:
 
 	GameManager.player_controls_locked = false
 	_set_house_music_ducked(false)
+	_set_cafe_music_ducked(false)
 
 	# Returning from dialogue restores normal gameplay cursor behavior.
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
