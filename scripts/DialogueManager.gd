@@ -7,6 +7,24 @@ var dialogue_layer = null
 var is_active := false
 var skip_dialogue_confirmation_disabled := false
 var current_quest_professor := ""
+var house_music_tweens: Dictionary = {}
+
+func _set_house_music_ducked(ducked: bool) -> void:
+	# Only the house level registers this group, so other scenes are unaffected.
+	for node in get_tree().get_nodes_in_group("house_background_music"):
+		var music := node as AudioStreamPlayer
+		if music == null:
+			continue
+		var key := music.get_instance_id()
+		if house_music_tweens.has(key):
+			var previous_tween: Tween = house_music_tweens[key]
+			if previous_tween and previous_tween.is_running():
+				previous_tween.kill()
+		var target_volume_db := -24.0 if ducked else -8.0
+		var tween := create_tween()
+		house_music_tweens[key] = tween
+		tween.tween_property(music, "volume_db", target_volume_db, 0.25)
+
 
 func set_quest_professor(professor_id: String) -> void:
 	current_quest_professor = professor_id
@@ -25,6 +43,7 @@ func start_dialogue(dialogue_data: Array, left_texture: Texture2D, right_texture
 
 		return
 	is_active = true
+	_set_house_music_ducked(true)
 	GameManager.player_controls_locked = true
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
@@ -62,6 +81,7 @@ func start_multi_dialogue(dialogue_data: Array, speaker_portraits: Dictionary, p
 	# Dialogue is an interactive UI state, so the cursor must be visible.
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	is_active = true
+	_set_house_music_ducked(true)
 	GameManager.player_controls_locked = true
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
@@ -174,6 +194,7 @@ func end_dialogue() -> void:
 			skip_dialogue_confirmation_disabled = true
 
 	GameManager.player_controls_locked = false
+	_set_house_music_ducked(false)
 
 	# Returning from dialogue restores normal gameplay cursor behavior.
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
