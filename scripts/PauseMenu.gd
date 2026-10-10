@@ -6,6 +6,9 @@ const SLOT_PANEL_SIZE := Vector2(620.0, 500.0)
 const SLOT_BUTTON_SIZE := Vector2(270.0, 64.0)
 const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
 const SETTINGS_PANEL_SIZE := Vector2(560.0, 520.0)
+const CONTROLS_PANEL_SIZE := Vector2(560.0, 520.0)
+const REBIND_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
+const REBIND_LABELS := {"move_up": "Move Up", "move_left": "Move Left", "move_down": "Move Down", "move_right": "Move Right", "interact": "Interact", "toggle_quest_tracker": "Toggle Quest Tracker"}
 
 const SETTINGS_CONFIG_PATH := "user://settings.cfg"
 const BRIGHTNESS_SHADER_PATH := "res://GAME ASSETS_/Misc/Menus/brightness.gdshader"
@@ -19,6 +22,11 @@ var achievement_scroll: ScrollContainer
 var achievement_list: VBoxContainer
 var achievement_close_button: Button
 var settings_panel: PanelContainer
+var controls_panel: PanelContainer
+var controls_button: Button
+var controls_close_button: Button
+var rebind_buttons: Dictionary = {}
+var awaiting_rebind_action: String = ""
 
 var resume_button: Button
 var save_game_button: Button
@@ -181,6 +189,7 @@ func build_ui() -> void:
 	build_slot_ui()
 	build_achievement_ui()
 	build_settings_ui()
+	build_controls_ui()
 
 
 func build_confirmation_ui() -> void:
@@ -464,6 +473,11 @@ func build_settings_ui() -> void:
 	quest_pointer_toggle.toggled.connect(on_quest_pointer_toggled)
 	quest_pointer_row.add_child(quest_pointer_toggle)
 
+	controls_button = make_button("Controls")
+	controls_button.custom_minimum_size = Vector2(240, 44)
+	controls_button.pressed.connect(open_controls)
+	box.add_child(controls_button)
+
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0.0, 6.0)
 	box.add_child(spacer)
@@ -474,6 +488,175 @@ func build_settings_ui() -> void:
 	box.add_child(settings_close_button)
 
 	settings_panel.visible = false
+
+
+func build_controls_ui() -> void:
+	controls_panel = PanelContainer.new()
+	controls_panel.name = "ControlsPanel"
+	controls_panel.set_anchors_preset(Control.PRESET_CENTER)
+	controls_panel.position = Vector2(-280, -260)
+	controls_panel.size = CONTROLS_PANEL_SIZE
+	controls_panel.add_theme_stylebox_override("panel", make_panel_style())
+	overlay.add_child(controls_panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 28)
+	margin.add_theme_constant_override("margin_right", 28)
+	margin.add_theme_constant_override("margin_top", 22)
+	margin.add_theme_constant_override("margin_bottom", 22)
+	controls_panel.add_child(margin)
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 10)
+	margin.add_child(box)
+
+	var title := Label.new()
+	title.text = "CUSTOMIZE CONTROLS"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 25)
+	title.add_theme_color_override("font_color", Color(0.96, 0.87, 0.68))
+	title.custom_minimum_size.y = 38
+	box.add_child(title)
+
+	var hint := Label.new()
+	hint.text = "Select a key, then press the key you want to assign."
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.add_theme_font_size_override("font_size", 14)
+	hint.add_theme_color_override("font_color", Color("#F6E7D2"))
+	box.add_child(hint)
+
+	for action in REBIND_ACTIONS:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 12)
+		row.custom_minimum_size.y = 42
+		box.add_child(row)
+
+		var label := Label.new()
+		label.text = REBIND_LABELS[action]
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_color_override("font_color", Color("#F6E7D2"))
+		label.add_theme_font_size_override("font_size", 16)
+		row.add_child(label)
+
+		var key_button := make_button(get_action_key_label(action))
+		key_button.custom_minimum_size = Vector2(150, 38)
+		key_button.pressed.connect(_begin_rebind.bind(action))
+		row.add_child(key_button)
+		rebind_buttons[action] = key_button
+
+	var button_row := HBoxContainer.new()
+	button_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	button_row.add_theme_constant_override("separation", 12)
+	box.add_child(button_row)
+
+	var reset_button := make_button("Reset Defaults")
+	reset_button.custom_minimum_size = Vector2(180, 42)
+	reset_button.pressed.connect(reset_controls)
+	button_row.add_child(reset_button)
+
+	controls_close_button = make_button("Back to Settings")
+	controls_close_button.custom_minimum_size = Vector2(220, 42)
+	controls_close_button.pressed.connect(close_controls)
+	box.add_child(controls_close_button)
+	controls_panel.visible = false
+
+
+func get_action_key_label(action: String) -> String:
+	var events := InputMap.action_get_events(action)
+	for event in events:
+		if event is InputEventKey:
+			var key_event := event as InputEventKey
+			var keycode := key_event.physical_keycode if key_event.physical_keycode != 0 else key_event.keycode
+			return OS.get_keycode_string(keycode)
+	return "Unassigned"
+
+
+func refresh_control_key_labels() -> void:
+	for action in REBIND_ACTIONS:
+		if rebind_buttons.has(action) and is_instance_valid(rebind_buttons[action]):
+			(rebind_buttons[action] as Button).text = get_action_key_label(action)
+
+
+func _begin_rebind(action: String) -> void:
+	awaiting_rebind_action = action
+	for key in rebind_buttons:
+		var button := rebind_buttons[key] as Button
+		button.text = "Press a key..." if key == action else get_action_key_label(key)
+
+
+func _input(event: InputEvent) -> void:
+	if awaiting_rebind_action.is_empty() or not controls_panel.visible:
+		return
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if not key_event.pressed or key_event.echo:
+			return
+		if key_event.keycode == KEY_ESCAPE:
+			awaiting_rebind_action = ""
+			refresh_control_key_labels()
+			get_viewport().set_input_as_handled()
+			return
+		if key_event.keycode == KEY_BACKSPACE or key_event.keycode == KEY_DELETE:
+			awaiting_rebind_action = ""
+			refresh_control_key_labels()
+			get_viewport().set_input_as_handled()
+			return
+		var physical_key := key_event.physical_keycode
+		if physical_key == 0:
+			physical_key = key_event.keycode
+		if physical_key == 0:
+			return
+		var action := awaiting_rebind_action
+		var new_event := InputEventKey.new()
+		new_event.physical_keycode = physical_key
+		new_event.keycode = key_event.keycode
+		new_event.unicode = key_event.unicode
+		InputMap.action_erase_events(action)
+		InputMap.action_add_event(action, new_event)
+		awaiting_rebind_action = ""
+		refresh_control_key_labels()
+		save_settings()
+		get_viewport().set_input_as_handled()
+
+
+func reset_controls() -> void:
+	var defaults := {
+		"move_up": KEY_W,
+		"move_left": KEY_A,
+		"move_down": KEY_S,
+		"move_right": KEY_D,
+		"interact": KEY_F,
+		"toggle_quest_tracker": KEY_C
+	}
+	for action in REBIND_ACTIONS:
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		InputMap.action_erase_events(action)
+		var key_event := InputEventKey.new()
+		key_event.physical_keycode = defaults[action]
+		key_event.keycode = defaults[action]
+		InputMap.action_add_event(action, key_event)
+	awaiting_rebind_action = ""
+	refresh_control_key_labels()
+	save_settings()
+
+
+func open_controls() -> void:
+	showing_settings_menu = true
+	awaiting_rebind_action = ""
+	settings_panel.visible = false
+	controls_panel.visible = true
+	refresh_control_key_labels()
+	controls_close_button.grab_focus()
+
+
+func close_controls() -> void:
+	awaiting_rebind_action = ""
+	controls_panel.visible = false
+	settings_panel.visible = true
+	settings_close_button.grab_focus()
 
 
 # ============================================================
@@ -590,6 +773,15 @@ func save_settings() -> void:
 			quest_pointer_toggle.button_pressed
 		)
 
+	for action in REBIND_ACTIONS:
+		var key_code := 0
+		for event in InputMap.action_get_events(action):
+			if event is InputEventKey:
+				var key_event := event as InputEventKey
+				key_code = key_event.physical_keycode if key_event.physical_keycode != 0 else key_event.keycode
+				break
+		config.set_value("controls", action, key_code)
+
 	config.save(SETTINGS_CONFIG_PATH)
 
 
@@ -600,6 +792,7 @@ func load_settings() -> void:
 	var volume_value: float = 100.0
 	var brightness_value: float = 100.0
 	var quest_pointer_enabled: bool = true
+	var saved_controls: Dictionary = {}
 
 	if error == OK:
 		volume_value = float(
@@ -615,6 +808,26 @@ func load_settings() -> void:
 				true
 			)
 		)
+		for action in REBIND_ACTIONS:
+			saved_controls[action] = int(config.get_value("controls", action, 0))
+
+	if not InputMap.has_action("toggle_quest_tracker"):
+		InputMap.add_action("toggle_quest_tracker")
+	if InputMap.action_get_events("toggle_quest_tracker").is_empty():
+		var default_tracker_key := InputEventKey.new()
+		default_tracker_key.physical_keycode = KEY_C
+		default_tracker_key.keycode = KEY_C
+		InputMap.action_add_event("toggle_quest_tracker", default_tracker_key)
+	for action in REBIND_ACTIONS:
+		var saved_key := int(saved_controls.get(action, 0))
+		if saved_key != 0:
+			if not InputMap.has_action(action):
+				InputMap.add_action(action)
+			InputMap.action_erase_events(action)
+			var key_event := InputEventKey.new()
+			key_event.physical_keycode = saved_key
+			key_event.keycode = saved_key
+			InputMap.action_add_event(action, key_event)
 
 	if is_instance_valid(GameManager):
 		GameManager.set(
@@ -652,6 +865,7 @@ func open_settings() -> void:
 	slot_panel.visible = false
 	achievement_panel.visible = false
 	settings_panel.visible = true
+	controls_panel.visible = false
 
 	update_quest_pointer_toggle()
 
@@ -661,6 +875,9 @@ func open_settings() -> void:
 func close_settings() -> void:
 	showing_settings_menu = false
 	settings_panel.visible = false
+	if controls_panel != null:
+		controls_panel.visible = false
+	awaiting_rebind_action = ""
 
 	if is_paused:
 		pause_panel.visible = true
@@ -1011,6 +1228,15 @@ func make_button_style(background: Color) -> StyleBoxFlat:
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed and not event.echo):
 		return
+	if awaiting_rebind_action != "":
+		awaiting_rebind_action = ""
+		refresh_control_key_labels()
+		get_viewport().set_input_as_handled()
+		return
+	if controls_panel != null and controls_panel.visible:
+		close_controls()
+		get_viewport().set_input_as_handled()
+		return
 
 	if main_menu_mode:
 		if showing_settings_menu:
@@ -1204,6 +1430,9 @@ func hide_menu() -> void:
 	slot_panel.visible = false
 	achievement_panel.visible = false
 	settings_panel.visible = false
+	if controls_panel != null:
+		controls_panel.visible = false
+	awaiting_rebind_action = ""
 
 	if save_game_button != null:
 		save_game_button.disabled = false
