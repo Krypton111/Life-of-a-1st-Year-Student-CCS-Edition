@@ -43,9 +43,9 @@ const ACHIEVEMENTS: Array[Dictionary] = [
 	{"id":"cafe_friends_all_wrong", "title":"Lotsa orders part 2.", "description":"Get every group order wrong."},
 	{"id":"cafe_no_gelo", "title":"Past is past.", "description":"Choose not to talk to Gelo."},
 
-	{"id":"life_of_a_1st_year", "title":"Life of a 1st Year.", "description":"Unlock all 26 other achievements."},
+	{"id":"life_of_a_1st_year", "title":"Life of a 1st Year.", "description":"Unlock all 25 other non-secret achievements."},
 
-	{"id":"secret_no_school", "title":"I DON'T WANT TO GO TO SCHOOL D:", "description":"Stay in house_game_level for 3 minutes.", "category":"super_secret", "counts_toward_completion":true},
+	{"id":"secret_no_school", "title":"I DON'T WANT TO GO TO SCHOOL D:", "description":"Stay in house_game_level for 3 minutes.", "category":"super_secret", "counts_toward_completion":false},
 
 	{"id":"secret_school_hallway", "title":"Please do not loiter!", "description":"Stay in the school hallway for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
 	{"id":"secret_comlab_chill", "title":"Wat'cha doin'? Just Chillin' part 1", "description":"Stay in COMLAB 202 for 3 minutes straight without entering another room.", "category":"super_secret", "counts_toward_completion":false},
@@ -283,8 +283,12 @@ func check_achievements() -> void:
 			unlock("cafe_friends_some_wrong")
 
 
-	# 27th achievement: all 26 original achievements must be unlocked.
-	if not is_unlocked("life_of_a_1st_year") and get_original_achievement_count_unlocked() == 26:
+	# The completion achievement requires every non-secret achievement
+	# except itself. Super-secret achievements never gate the main ending.
+	if (
+		not is_unlocked("life_of_a_1st_year")
+		and get_original_achievement_count_unlocked() == get_non_secret_original_achievement_total()
+	):
 		unlock("life_of_a_1st_year")
 
 
@@ -294,11 +298,31 @@ func get_original_achievement_count_unlocked() -> int:
 		var achievement_id := str(achievement.get("id", ""))
 		if achievement_id == "life_of_a_1st_year":
 			continue
-		if not bool(achievement.get("counts_toward_completion", true)):
+		if str(achievement.get("category", "standard")) == "super_secret":
 			continue
 		if is_unlocked(achievement_id):
 			count += 1
 	return count
+
+
+func get_non_secret_original_achievement_total() -> int:
+	var count := 0
+	for achievement in ACHIEVEMENTS:
+		if str(achievement.get("id", "")) == "life_of_a_1st_year":
+			continue
+		if str(achievement.get("category", "standard")) == "super_secret":
+			continue
+		count += 1
+	return count
+
+
+func has_completed_all_non_secret_achievements() -> bool:
+	for achievement in ACHIEVEMENTS:
+		if str(achievement.get("category", "standard")) == "super_secret":
+			continue
+		if not is_unlocked(str(achievement.get("id", ""))):
+			return false
+	return true
 
 
 func unlock_score_achievement(prefix: String, score: float) -> void:
