@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="20_tina"]
 [ext_resource type="Script" uid="uid://cbkwqp147lok1" path="res://scripts/TinaHallwayEncounter.gd" id="21_tina"]
 [ext_resource type="AudioStream" uid="uid://cao1vm8obr0ap" path="res://GAME ASSETS_/Misc/Music/ingay.mp3" id="22_ingay"]
+[ext_resource type="Script" path="res://scripts/SchoolBackgroundMusic.gd" id="23_school_music"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_b6cbq"]
 vertices = PackedVector2Array(1194.3906, 123.61719, -31.03125, 120.9375, -26.546875, 108.96875, -80.4375, 78.13281, -94.47656, 75.97656, -92.78906, -161.75781, -91.453125, -161.89063, -39.75, 76.00781, -42.421875, -170.0625, 1210.9063, 87.14844, 1210.9063, 120.09375, 1229.0313, -174.03125, 1276.4219, -162.17188, 1278.1328, 76.21875, 1262.9688, 82.890625, -30.15625, -194.59375, 1211.6563, -202.6875)
@@ -4922,6 +4923,9 @@ script = ExtResource("19_clt8j")
 stream = ExtResource("22_ingay")
 volume_db = 1.042
 autoplay = true
+
+[node name="SchoolBackgroundMusic" type="AudioStreamPlayer" parent="."]
+script = ExtResource("23_school_music")
 
 [node name="QuestMarker_Comlab202" type="Marker2D" parent="." unique_id=994744761]
 position = Vector2(635, 329)
