@@ -398,6 +398,7 @@ func _setup_bully_music() -> void:
 
 	bully_music = AudioStreamPlayer.new()
 	bully_music.name = "BullyEntranceMusic"
+	bully_music.add_to_group("school_special_music")
 	bully_music.stream = BULLY_ENTRANCE_MUSIC
 	bully_music.volume_db = BULLY_MUSIC_VOLUME_DB
 	bully_music.process_mode = Node.PROCESS_MODE_ALWAYS
