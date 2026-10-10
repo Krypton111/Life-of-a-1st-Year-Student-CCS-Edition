@@ -1024,7 +1024,8 @@ func open_settings_menu() -> void:
 
 
 func credits_dud() -> void:
-	pass
+	if pause_menu != null and pause_menu.has_method("open_main_menu_credits"):
+		pause_menu.call("open_main_menu_credits")
 
 
 func build_quit_dialog() -> void:
