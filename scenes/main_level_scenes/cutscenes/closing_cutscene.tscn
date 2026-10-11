@@ -364,6 +364,7 @@ theme_override_font_sizes/font_size = 28
 text = "DIALOGUETEXT5"
 
 [node name="DialogueText6" type="Label" parent="." unique_id=1718069824]
+visible = false
 layout_mode = 0
 offset_left = 1338.0
 offset_top = 643.0
