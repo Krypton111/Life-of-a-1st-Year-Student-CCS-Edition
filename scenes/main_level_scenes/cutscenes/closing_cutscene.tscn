@@ -1,31 +1,31 @@
 [gd_scene format=3 uid="uid://cili6eo8hlfmm"]
 
-[ext_resource type="Texture2D" uid="uid://cnvgcqc7e2w18" path="res://GAME ASSETS_/Misc/comic-panels/op1_p1.png" id="1_5nq3g"]
 [ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="1_wxwp8"]
 [ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="2_csnvj"]
-[ext_resource type="Texture2D" uid="uid://drkh18h53mhg0" path="res://GAME ASSETS_/Misc/comic-panels/op1_p2.png" id="2_wxwp8"]
-[ext_resource type="Texture2D" uid="uid://cno5i4yl2ayw0" path="res://GAME ASSETS_/Misc/comic-panels/op1_p3.png" id="3_5c1c8"]
-[ext_resource type="Texture2D" uid="uid://h3y0n53o0lfu" path="res://GAME ASSETS_/Misc/comic-panels/op1_p4.png" id="4_alq2l"]
-[ext_resource type="Texture2D" uid="uid://dccvavy6s0t4v" path="res://GAME ASSETS_/Misc/comic-panels/op1_p5.png" id="5_totlj"]
-[ext_resource type="Texture2D" uid="uid://cdgp7djv455n" path="res://GAME ASSETS_/Misc/comic-panels/op1_p6.png" id="6_evw2q"]
-[ext_resource type="Texture2D" uid="uid://bmoukx6n48qih" path="res://GAME ASSETS_/Misc/comic-panels/op2_p1.png" id="8_4g3a2"]
-[ext_resource type="Texture2D" uid="uid://dkcb7kv2rtrkl" path="res://GAME ASSETS_/Misc/comic-panels/op2_p2.png" id="9_0otps"]
-[ext_resource type="Texture2D" uid="uid://bsujmk2ptu8vw" path="res://GAME ASSETS_/Misc/comic-panels/op2_p3.png" id="10_1unov"]
-[ext_resource type="Texture2D" uid="uid://i0u7wb4hcweb" path="res://GAME ASSETS_/Misc/comic-panels/op2_p4.png" id="11_28vgt"]
-[ext_resource type="Texture2D" uid="uid://b8sayf55fg3nj" path="res://GAME ASSETS_/Misc/comic-panels/op2_p5.png" id="12_c4kn8"]
-[ext_resource type="Texture2D" uid="uid://bq8emwkw1i2a3" path="res://GAME ASSETS_/Misc/comic-panels/op2_p6.png" id="13_pc7eu"]
-[ext_resource type="Texture2D" uid="uid://dbsrxs1d4ofu" path="res://GAME ASSETS_/Misc/comic-panels/op3_p1.png" id="14_eruo5"]
-[ext_resource type="Texture2D" uid="uid://ccl62dwth8lsi" path="res://GAME ASSETS_/Misc/comic-panels/op3_p2.png" id="15_3a2lx"]
-[ext_resource type="Texture2D" uid="uid://dtb3vaabqvpwh" path="res://GAME ASSETS_/Misc/comic-panels/op3_p3.png" id="16_n2hq4"]
-[ext_resource type="Texture2D" uid="uid://cokaqgg7lbxj" path="res://GAME ASSETS_/Misc/comic-panels/op3_p4.png" id="17_qmjnb"]
-[ext_resource type="Texture2D" uid="uid://d4hqqjvpjj2p8" path="res://GAME ASSETS_/Misc/comic-panels/op3_p5.png" id="18_cuoud"]
-[ext_resource type="Texture2D" uid="uid://m6gn4xvx7wfl" path="res://GAME ASSETS_/Misc/comic-panels/op3_p6.png" id="19_mnpv1"]
-[ext_resource type="Texture2D" uid="uid://cxd7moaeynm8d" path="res://GAME ASSETS_/Misc/comic-panels/op4_p1.png" id="20_iejhw"]
-[ext_resource type="Texture2D" uid="uid://dqq7itkgyaici" path="res://GAME ASSETS_/Misc/comic-panels/op4_p2.png" id="21_lao1s"]
-[ext_resource type="Texture2D" uid="uid://cg03rysd8gydp" path="res://GAME ASSETS_/Misc/comic-panels/op4_p3.png" id="22_udp3s"]
-[ext_resource type="Texture2D" uid="uid://77ryq8mdmgs3" path="res://GAME ASSETS_/Misc/comic-panels/op4_p4.png" id="23_0bhj3"]
-[ext_resource type="Texture2D" uid="uid://b3s5376twsv3c" path="res://GAME ASSETS_/Misc/comic-panels/op4_p5.png" id="24_bon8d"]
-[ext_resource type="Texture2D" uid="uid://uhfwvyyttwsj" path="res://GAME ASSETS_/Misc/comic-panels/op4_p6.png" id="25_v4t0g"]
+[ext_resource type="Texture2D" uid="uid://c0uwatfraw5yk" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/29.png" id="2_eqq4f"]
+[ext_resource type="Texture2D" uid="uid://dvv6xq52i1wwt" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/30.png" id="3_mhomk"]
+[ext_resource type="Texture2D" uid="uid://j8oypx48syby" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/31.png" id="4_xq7ui"]
+[ext_resource type="Texture2D" uid="uid://cmfenxtp3g0nl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/32.png" id="5_7otek"]
+[ext_resource type="Texture2D" uid="uid://db8quxcv7l4h3" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/33.png" id="6_glpwd"]
+[ext_resource type="Texture2D" uid="uid://c4ir3m725sj8b" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/34.png" id="7_iicpn"]
+[ext_resource type="Texture2D" uid="uid://dlg8tmxei7dwc" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/35.png" id="8_v5ls3"]
+[ext_resource type="Texture2D" uid="uid://cpbvy17hol5v6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/36.png" id="9_cerhc"]
+[ext_resource type="Texture2D" uid="uid://be575y2bj8xbx" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/37.png" id="10_gait8"]
+[ext_resource type="Texture2D" uid="uid://77c8apf0xyib" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/38.png" id="11_1asyx"]
+[ext_resource type="Texture2D" uid="uid://bri314q3pdnu4" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/39.png" id="12_0debn"]
+[ext_resource type="Texture2D" uid="uid://6xp86u4t0ucl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/40.png" id="13_ijhfk"]
+[ext_resource type="Texture2D" uid="uid://b658shnsj624d" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/41.png" id="14_6q5a1"]
+[ext_resource type="Texture2D" uid="uid://cr3hv27dcaayl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/42.png" id="15_chumx"]
+[ext_resource type="Texture2D" uid="uid://hdpqja7wjrkn" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/43.png" id="16_1idrr"]
+[ext_resource type="Texture2D" uid="uid://cvasgofswoiqs" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/44.png" id="17_sq1np"]
+[ext_resource type="Texture2D" uid="uid://ccnmfp773f3df" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/45.png" id="18_vnmlh"]
+[ext_resource type="Texture2D" uid="uid://cr8h4611dk01e" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/46.png" id="19_hu722"]
+[ext_resource type="Texture2D" uid="uid://cums6oolkfw5b" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/47.png" id="20_ycgi8"]
+[ext_resource type="Texture2D" uid="uid://b2uockfg37gpo" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/48.png" id="21_rcik6"]
+[ext_resource type="Texture2D" uid="uid://dswsc48m5h7lx" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/49.png" id="22_w75xd"]
+[ext_resource type="Texture2D" uid="uid://dn5fl766wqxrf" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/50.png" id="23_fisoc"]
+[ext_resource type="Texture2D" uid="uid://cim15am1nyrxy" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/51.png" id="24_fx34p"]
+[ext_resource type="Texture2D" uid="uid://dor6mf4u24ocr" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/52.png" id="25_ff1up"]
 [ext_resource type="AudioStream" uid="uid://wsjtmwe22bo" path="res://GAME ASSETS_/Misc/Music/cutscene music.mp3" id="27_0otps"]
 
 [node name="OpeningCutscene" type="Control" unique_id=1457254742]
@@ -54,7 +54,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_5nq3g")
+texture = ExtResource("2_eqq4f")
 
 [node name="op1_p2" type="TextureRect" parent="." unique_id=1258893758]
 visible = false
@@ -64,7 +64,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_wxwp8")
+texture = ExtResource("3_mhomk")
 
 [node name="op1_p3" type="TextureRect" parent="." unique_id=438041591]
 visible = false
@@ -74,7 +74,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_5c1c8")
+texture = ExtResource("4_xq7ui")
 
 [node name="op1_p4" type="TextureRect" parent="." unique_id=312516945]
 visible = false
@@ -84,7 +84,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_alq2l")
+texture = ExtResource("5_7otek")
 
 [node name="op1_p5" type="TextureRect" parent="." unique_id=1213283442]
 visible = false
@@ -94,7 +94,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("5_totlj")
+texture = ExtResource("6_glpwd")
 
 [node name="op1_p6" type="TextureRect" parent="." unique_id=2009927828]
 visible = false
@@ -104,7 +104,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("6_evw2q")
+texture = ExtResource("7_iicpn")
 
 [node name="op2_p1" type="TextureRect" parent="." unique_id=1715248168]
 visible = false
@@ -114,7 +114,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("8_4g3a2")
+texture = ExtResource("8_v5ls3")
 
 [node name="op2_p2" type="TextureRect" parent="." unique_id=998855776]
 visible = false
@@ -124,7 +124,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("9_0otps")
+texture = ExtResource("9_cerhc")
 
 [node name="op2_p3" type="TextureRect" parent="." unique_id=831766456]
 visible = false
@@ -134,7 +134,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("10_1unov")
+texture = ExtResource("10_gait8")
 
 [node name="op2_p4" type="TextureRect" parent="." unique_id=849140625]
 visible = false
@@ -144,7 +144,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("11_28vgt")
+texture = ExtResource("11_1asyx")
 
 [node name="op2_p5" type="TextureRect" parent="." unique_id=994132066]
 visible = false
@@ -154,7 +154,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("12_c4kn8")
+texture = ExtResource("12_0debn")
 
 [node name="op2_p6" type="TextureRect" parent="." unique_id=285567325]
 visible = false
@@ -164,7 +164,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("13_pc7eu")
+texture = ExtResource("13_ijhfk")
 
 [node name="op3_p1" type="TextureRect" parent="." unique_id=1500132922]
 visible = false
@@ -174,7 +174,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("14_eruo5")
+texture = ExtResource("14_6q5a1")
 
 [node name="op3_p2" type="TextureRect" parent="." unique_id=627837619]
 visible = false
@@ -184,7 +184,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("15_3a2lx")
+texture = ExtResource("15_chumx")
 
 [node name="op3_p3" type="TextureRect" parent="." unique_id=1823468913]
 visible = false
@@ -194,7 +194,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("16_n2hq4")
+texture = ExtResource("16_1idrr")
 
 [node name="op3_p4" type="TextureRect" parent="." unique_id=21620779]
 visible = false
@@ -204,7 +204,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("17_qmjnb")
+texture = ExtResource("17_sq1np")
 
 [node name="op3_p5" type="TextureRect" parent="." unique_id=1535638834]
 visible = false
@@ -214,7 +214,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("18_cuoud")
+texture = ExtResource("18_vnmlh")
 
 [node name="op3_p6" type="TextureRect" parent="." unique_id=1017811372]
 visible = false
@@ -224,7 +224,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("19_mnpv1")
+texture = ExtResource("19_hu722")
 
 [node name="op4_p1" type="TextureRect" parent="." unique_id=1467312159]
 visible = false
@@ -234,7 +234,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("20_iejhw")
+texture = ExtResource("20_ycgi8")
 
 [node name="op4_p2" type="TextureRect" parent="." unique_id=599104737]
 visible = false
@@ -244,7 +244,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("21_lao1s")
+texture = ExtResource("21_rcik6")
 
 [node name="op4_p3" type="TextureRect" parent="." unique_id=871483605]
 visible = false
@@ -254,7 +254,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("22_udp3s")
+texture = ExtResource("22_w75xd")
 
 [node name="op4_p4" type="TextureRect" parent="." unique_id=1128523176]
 visible = false
@@ -264,7 +264,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("23_0bhj3")
+texture = ExtResource("23_fisoc")
 
 [node name="op4_p5" type="TextureRect" parent="." unique_id=1270050478]
 visible = false
@@ -274,7 +274,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("24_bon8d")
+texture = ExtResource("24_fx34p")
 
 [node name="op4_p6" type="TextureRect" parent="." unique_id=2070549699]
 visible = false
@@ -284,7 +284,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("25_v4t0g")
+texture = ExtResource("25_ff1up")
 
 [node name="ContinueText" type="Label" parent="." unique_id=717441613]
 layout_mode = 0
