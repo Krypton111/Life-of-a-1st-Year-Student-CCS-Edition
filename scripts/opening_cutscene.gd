@@ -373,10 +373,10 @@ func type_text(label: Label, full_text: String):
 
 func _on_next_pressed():
 
-	# Credits screen: clicking continues to the main menu.
+	# The credits screen can be skipped; it also returns automatically
+	# after its short end-screen display.
 	if credits_visible:
-		credits_visible = false
-		await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
+		return_to_main_menu()
 		return
 
 	# Ignore clicks while changing pages
@@ -636,8 +636,22 @@ func show_credits() -> void:
 	prompt.add_theme_color_override("font_color", Color("#FFF0D9"))
 	credits_container.add_child(prompt)
 
-	# Keep the transparent full-screen button above the credits UI so any click advances.
+	# Keep the transparent full-screen button above the credits UI so any click can skip.
 	next_button.move_to_front()
+
+	# Let the ending credits be seen, then automatically return to the main menu.
+	await get_tree().create_timer(10.0).timeout
+	if credits_visible and is_inside_tree():
+		return_to_main_menu()
+
+
+func return_to_main_menu() -> void:
+	if not credits_visible:
+		return
+
+	credits_visible = false
+	next_button.disabled = true
+	await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
 
 
 func _credits_panel_style() -> StyleBoxFlat:
