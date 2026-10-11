@@ -224,6 +224,25 @@ func _ready():
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
+	# The same script drives both cutscenes. Give the closing cutscene its
+	# own brief reflections about the character's first college experiences,
+	# without changing the opening narration.
+	var active_scene_path := ""
+	if get_tree().current_scene != null:
+		active_scene_path = str(get_tree().current_scene.scene_file_path).to_lower()
+
+	if active_scene_path.contains("closing_cutscene"):
+		var closing_remarks := [
+			"College felt bigger than I expected.",
+			"New faces, new rooms, and a lot to learn.",
+			"Some classes were confusing at first.",
+			"But little by little, I found my rhythm.",
+			"There were laughs between the stressful days.",
+			"I was still figuring things out—and that was okay."
+		]
+		for i in range(mini(6, panels.size())):
+			panels[i]["text"] = closing_remarks[i]
+
 	next_button.pressed.connect(_on_next_pressed)
 
 	# Hide all panels and dialogue
