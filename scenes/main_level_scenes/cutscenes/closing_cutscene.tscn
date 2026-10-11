@@ -26,7 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://dn5fl766wqxrf" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/50.png" id="23_fisoc"]
 [ext_resource type="Texture2D" uid="uid://cim15am1nyrxy" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/51.png" id="24_fx34p"]
 [ext_resource type="Texture2D" uid="uid://dor6mf4u24ocr" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/52.png" id="25_ff1up"]
-[ext_resource type="AudioStream" path="res://GAME ASSETS_/Misc/Music/closing cutscene music.mp3" id="27_0otps"]
+[ext_resource type="AudioStream" uid="uid://dw3pdijqsjein" path="res://GAME ASSETS_/Misc/Music/closing cutscene music.mp3" id="27_0otps"]
 
 [node name="OpeningCutscene" type="Control" unique_id=1457254742]
 layout_mode = 3
@@ -314,9 +314,9 @@ text = "DIALOGUETEXT1"
 [node name="DialogueText2" type="Label" parent="." unique_id=1518113462]
 visible = false
 layout_mode = 0
-offset_left = 688.0
+offset_left = 670.0
 offset_top = 36.0
-offset_right = 1020.0
+offset_right = 1002.0
 offset_bottom = 136.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
@@ -327,9 +327,9 @@ text = "DIALOGUETEXT2"
 [node name="DialogueText3" type="Label" parent="." unique_id=652283129]
 visible = false
 layout_mode = 0
-offset_left = 1327.0
+offset_left = 1340.0
 offset_top = 39.0
-offset_right = 1671.0
+offset_right = 1684.0
 offset_bottom = 115.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
@@ -349,37 +349,36 @@ theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687
 theme_override_fonts/font = ExtResource("2_csnvj")
 theme_override_font_sizes/font_size = 28
 text = "DIALOGUETEXT4"
-horizontal_alignment = 1
 
 [node name="DialogueText5" type="Label" parent="." unique_id=1181421648]
 visible = false
 layout_mode = 0
-offset_left = 682.0
-offset_top = 637.0
-offset_right = 1055.0
-offset_bottom = 727.0
+offset_left = 669.0
+offset_top = 639.0
+offset_right = 1042.0
+offset_bottom = 729.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 28
 text = "DIALOGUETEXT5"
 
 [node name="DialogueText6" type="Label" parent="." unique_id=1718069824]
-visible = false
 layout_mode = 0
-offset_left = 1323.0
-offset_top = 650.0
-offset_right = 1736.0
-offset_bottom = 732.0
+offset_left = 1338.0
+offset_top = 643.0
+offset_right = 1751.0
+offset_bottom = 725.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 27
 text = "DIALOGUETEXT6"
 
 [node name="NextButton" type="Button" parent="." unique_id=918166453]
 layout_mode = 0
-offset_right = 1920.0
+offset_left = -1.0
+offset_right = 1919.0
 offset_bottom = 1080.0
 flat = true
 

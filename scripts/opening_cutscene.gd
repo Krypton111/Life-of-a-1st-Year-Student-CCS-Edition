@@ -230,12 +230,18 @@ func _ready():
 
 	if active_scene_path.contains("closing_cutscene"):
 		var closing_remarks := [
-			"College felt bigger than I expected.",
-			"New faces, new rooms, and a lot to learn.",
-			"Some classes were confusing at first.",
-			"But little by little, I found my rhythm.",
-			"There were laughs between the stressful days.",
-			"I was still figuring things out—and that was okay."
+			"College felt bigger
+			than I expected.",
+			"New faces, new rooms, and
+			a lot to learn.",
+			"Some classes were
+			confusing at first.",
+			"But little by little,
+			I found my rhythm.",
+			"There were laughs between
+			the stressful days.",
+			"I was still figuring things
+			out—and that was okay."
 		]
 		for i in range(mini(6, panels.size())):
 			panels[i]["text"] = closing_remarks[i]
