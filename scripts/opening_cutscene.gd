@@ -292,18 +292,23 @@ func show_panel():
 
 	var panel_node = get_panel_node(current_panel)
 
-	var dialogue_node = get_node(
-		"DialogueText" + str(current_panel + 1)
-	)
+	# Some cutscene scenes intentionally keep only the first six dialogue
+	# labels. Missing labels should not stop the remaining panels from playing.
+	var dialogue_node := get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
 
 	# Show current panel
+	if panel_node == null:
+		panel_animating = false
+		push_warning("Cutscene panel is missing for index %d." % current_panel)
+		return
 	panel_node.visible = true
 	panel_node.modulate.a = 0.0
 
-	# Show dialogue
-	dialogue_node.visible = true
-	dialogue_node.modulate.a = 1.0
-	dialogue_node.text = ""
+	# Show dialogue only when this panel has a dialogue label.
+	if dialogue_node != null:
+		dialogue_node.visible = true
+		dialogue_node.modulate.a = 1.0
+		dialogue_node.text = ""
 
 	continue_text.visible = true
 
@@ -323,11 +328,12 @@ func show_panel():
 	# Panel is now ready
 	panel_animating = false
 
-	# Start typing
-	type_text(
-		dialogue_node,
-		panel_data["text"]
-	)
+	# Panels without a dialogue label simply display the artwork.
+	if dialogue_node != null:
+		type_text(dialogue_node, str(panel_data["text"]))
+	else:
+		is_typing = false
+		continue_text.visible = true
 
 
 # =========================================
@@ -414,13 +420,12 @@ func _on_next_pressed():
 		# Invalidate the current typing coroutine
 		typing_id += 1
 
-		var dialogue_node = get_node(
-			"DialogueText" + str(current_panel + 1)
-		)
+		var dialogue_node := get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
 
-		# IMPORTANT:
-		# Set the FULL text immediately.
-		dialogue_node.text = panels[current_panel]["text"]
+		# Finish the current line immediately when its label exists.
+		# If the panel has no dialogue label, continue to the next panel.
+		if dialogue_node != null:
+			dialogue_node.text = str(panels[current_panel]["text"])
 
 		is_typing = false
 
@@ -487,16 +492,14 @@ func change_page():
 		previous_page_end + 1
 	):
 
-		var dialogue_node = get_node(
-			"DialogueText" + str(i + 1)
-		)
-
-		fade_tween.parallel().tween_property(
-			dialogue_node,
-			"modulate:a",
-			0.0,
-			page_fade_duration
-		)
+		var dialogue_node := get_node_or_null("DialogueText" + str(i + 1)) as Label
+		if dialogue_node != null:
+			fade_tween.parallel().tween_property(
+				dialogue_node,
+				"modulate:a",
+				0.0,
+				page_fade_duration
+			)
 
 	await fade_tween.finished
 
@@ -508,15 +511,14 @@ func change_page():
 
 		var panel_node = get_panel_node(i)
 
-		var dialogue_node = get_node(
-			"DialogueText" + str(i + 1)
-		)
+		var dialogue_node := get_node_or_null("DialogueText" + str(i + 1)) as Label
 
 		panel_node.visible = false
 		panel_node.modulate.a = 1.0
 
-		dialogue_node.visible = false
-		dialogue_node.modulate.a = 1.0
+		if dialogue_node != null:
+			dialogue_node.visible = false
+			dialogue_node.modulate.a = 1.0
 
 	# Allow new panel to start
 	changing_page = false
