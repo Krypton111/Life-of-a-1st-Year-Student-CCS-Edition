@@ -1,6 +1,7 @@
 extends Control
 
 const OPENING_SCENE := "res://scenes/main_level_scenes/cutscenes/opening_cutscene.tscn"
+const FEMALE_OPENING_SCENE := "res://scenes/main_level_scenes/cutscenes/opening_cutscene_female.tscn"
 const GOLD := Color("#E6AD63")
 const PALE_GOLD := Color("#FFE1A8")
 const CREAM := Color("#FFF0D8")
@@ -1007,10 +1008,13 @@ func choose_player_gender(chosen_gender: String) -> void:
 
 
 func begin_opening_cutscene() -> void:
+	# Route the player to the opening cutscene that matches their selected character.
+	var opening_scene := FEMALE_OPENING_SCENE if PlayerSetup.player_gender.to_lower() == "female" else OPENING_SCENE
+
 	if is_instance_valid(FadeManager):
-		await FadeManager.change_scene_with_fade(OPENING_SCENE)
+		await FadeManager.change_scene_with_fade(opening_scene)
 	else:
-		get_tree().change_scene_to_file(OPENING_SCENE)
+		get_tree().change_scene_to_file(opening_scene)
 
 
 func open_load_menu() -> void:
