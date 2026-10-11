@@ -1,0 +1,624 @@
+[gd_scene format=3 uid="uid://bkb47kn77htr3"]
+
+[ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="1_7el8l"]
+[ext_resource type="Texture2D" uid="uid://b0yincu3l2d56" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/5.png" id="1_tqprj"]
+[ext_resource type="Texture2D" uid="uid://djy1eq4mnhf1f" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/6.png" id="2_7el8l"]
+[ext_resource type="Texture2D" uid="uid://pwrrbi4ncewl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/7.png" id="3_y7tqj"]
+[ext_resource type="Texture2D" uid="uid://diitc3vc26ttq" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/8.png" id="4_qoogm"]
+[ext_resource type="Texture2D" uid="uid://rx136ya1nd4s" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/9.png" id="5_d1qi0"]
+[ext_resource type="Texture2D" uid="uid://cfe3isij3vvfa" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/10.png" id="6_4q0k5"]
+[ext_resource type="Texture2D" uid="uid://cdnuijlxmtkyx" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/11.png" id="7_bsfp5"]
+[ext_resource type="Texture2D" uid="uid://c5sqoat8mlgyp" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/12.png" id="8_gbudm"]
+[ext_resource type="Texture2D" uid="uid://cinm2644bymon" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/13.png" id="9_0nwel"]
+[ext_resource type="Texture2D" uid="uid://c2vwtvhsqwplc" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/14.png" id="10_tv8px"]
+[ext_resource type="Texture2D" uid="uid://bmqnqs0fpqi4a" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/15.png" id="11_4ud6c"]
+[ext_resource type="Texture2D" uid="uid://jskjesku22k8" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/16.png" id="12_30mbv"]
+[ext_resource type="Texture2D" uid="uid://c5tsdgs86icr" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/17.png" id="13_ivw4s"]
+[ext_resource type="Texture2D" uid="uid://bqayklxlfhji7" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/18.png" id="14_uvs8j"]
+[ext_resource type="Texture2D" uid="uid://0e51i3qyfwmg" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/19.png" id="15_evb2g"]
+[ext_resource type="Texture2D" uid="uid://b5amewxoi7m2y" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/20.png" id="16_tfdki"]
+[ext_resource type="Texture2D" uid="uid://ckuephm8ktxn8" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/21.png" id="17_jyolk"]
+[ext_resource type="Texture2D" uid="uid://d1os8ccx6384m" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/22.png" id="18_6edjj"]
+[ext_resource type="Texture2D" uid="uid://34d67b6lg3lc" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/23.png" id="19_md7u4"]
+[ext_resource type="Texture2D" uid="uid://cjm6k03k7314e" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/24.png" id="20_ydvuh"]
+[ext_resource type="Texture2D" uid="uid://dlndkog17mofe" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/25.png" id="21_efpdo"]
+[ext_resource type="Texture2D" uid="uid://dg4i5klfovbek" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/26.png" id="22_ih4mj"]
+[ext_resource type="Texture2D" uid="uid://bu37t7ngwmr7" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/27.png" id="23_068sm"]
+[ext_resource type="Texture2D" uid="uid://hvdeyk53ahel" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/28.png" id="24_l34qt"]
+[ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="25_w40ir"]
+[ext_resource type="AudioStream" uid="uid://wsjtmwe22bo" path="res://GAME ASSETS_/Misc/Music/cutscene music.mp3" id="26_4b4br"]
+
+[node name="opening_cutscene_female" type="Control" unique_id=1430792650]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7el8l")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=64901448]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8901961, 0.74509805, 0.5411765, 1)
+
+[node name="op1_p1" type="TextureRect" parent="." unique_id=1072114173]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_tqprj")
+
+[node name="op1_p2" type="TextureRect" parent="." unique_id=1937511573]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_7el8l")
+
+[node name="op1_p3" type="TextureRect" parent="." unique_id=2067610048]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_y7tqj")
+
+[node name="op1_p4" type="TextureRect" parent="." unique_id=2020062927]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_qoogm")
+
+[node name="op1_p5" type="TextureRect" parent="." unique_id=616889101]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_d1qi0")
+
+[node name="op1_p6" type="TextureRect" parent="." unique_id=574462014]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_4q0k5")
+
+[node name="op2_p1" type="TextureRect" parent="." unique_id=2014006942]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_bsfp5")
+
+[node name="op2_p2" type="TextureRect" parent="." unique_id=1706121192]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_gbudm")
+
+[node name="op2_p3" type="TextureRect" parent="." unique_id=1141603522]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_0nwel")
+
+[node name="op2_p4" type="TextureRect" parent="." unique_id=922956801]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_tv8px")
+
+[node name="op2_p5" type="TextureRect" parent="." unique_id=2115444638]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_4ud6c")
+
+[node name="op2_p6" type="TextureRect" parent="." unique_id=57930507]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_30mbv")
+
+[node name="op3_p1" type="TextureRect" parent="." unique_id=2053636956]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_ivw4s")
+
+[node name="op3_p2" type="TextureRect" parent="." unique_id=1293395446]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_uvs8j")
+
+[node name="op3_p3" type="TextureRect" parent="." unique_id=1363027248]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_evb2g")
+
+[node name="op3_p4" type="TextureRect" parent="." unique_id=22993365]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_tfdki")
+
+[node name="op3_p5" type="TextureRect" parent="." unique_id=1332068296]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_jyolk")
+
+[node name="op3_p6" type="TextureRect" parent="." unique_id=1163618095]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_6edjj")
+
+[node name="op4_p1" type="TextureRect" parent="." unique_id=603642176]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("19_md7u4")
+
+[node name="op4_p2" type="TextureRect" parent="." unique_id=1263944636]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_ydvuh")
+
+[node name="op4_p3" type="TextureRect" parent="." unique_id=248144048]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_efpdo")
+
+[node name="op4_p4" type="TextureRect" parent="." unique_id=1267804081]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_ih4mj")
+
+[node name="op4_p5" type="TextureRect" parent="." unique_id=2097450777]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_068sm")
+
+[node name="op4_p6" type="TextureRect" parent="." unique_id=433021281]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_l34qt")
+
+[node name="ContinueText" type="Label" parent="." unique_id=1195783568]
+layout_mode = 0
+offset_left = 1749.0
+offset_top = 1177.0
+offset_right = 1907.0
+offset_bottom = 1201.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 17
+text = "▶ Click to continue..."
+
+[node name="DialogueText1" type="Label" parent="." unique_id=2005848789]
+visible = false
+layout_mode = 0
+offset_left = 49.0
+offset_top = 36.0
+offset_right = 257.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText2" type="Label" parent="." unique_id=1981621498]
+visible = false
+layout_mode = 0
+offset_left = 688.0
+offset_top = 36.0
+offset_right = 1020.0
+offset_bottom = 136.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText3" type="Label" parent="." unique_id=1027211468]
+visible = false
+layout_mode = 0
+offset_left = 1327.0
+offset_top = 39.0
+offset_right = 1671.0
+offset_bottom = 115.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText4" type="Label" parent="." unique_id=2142924617]
+visible = false
+layout_mode = 0
+offset_left = 48.0
+offset_top = 645.0
+offset_right = 219.0
+offset_bottom = 685.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT4"
+horizontal_alignment = 1
+
+[node name="DialogueText5" type="Label" parent="." unique_id=768196849]
+visible = false
+layout_mode = 0
+offset_left = 682.0
+offset_top = 637.0
+offset_right = 1055.0
+offset_bottom = 727.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText6" type="Label" parent="." unique_id=849988438]
+visible = false
+layout_mode = 0
+offset_left = 1323.0
+offset_top = 650.0
+offset_right = 1736.0
+offset_bottom = 732.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="DialogueText7" type="Label" parent="." unique_id=112537294]
+visible = false
+layout_mode = 0
+offset_left = 49.0
+offset_top = 27.0
+offset_right = 257.0
+offset_bottom = 101.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 28
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText8" type="Label" parent="." unique_id=1845314517]
+visible = false
+layout_mode = 0
+offset_left = 678.0
+offset_top = 38.0
+offset_right = 1010.0
+offset_bottom = 138.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText9" type="Label" parent="." unique_id=1439565226]
+visible = false
+layout_mode = 0
+offset_left = 1317.0
+offset_top = 34.0
+offset_right = 1661.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText10" type="Label" parent="." unique_id=1684097923]
+visible = false
+layout_mode = 0
+offset_left = 58.0
+offset_top = 638.0
+offset_right = 229.0
+offset_bottom = 678.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText11" type="Label" parent="." unique_id=1972831046]
+visible = false
+layout_mode = 0
+offset_left = 690.0
+offset_top = 636.0
+offset_right = 1063.0
+offset_bottom = 726.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText12" type="Label" parent="." unique_id=1731299369]
+visible = false
+layout_mode = 0
+offset_left = 1537.0
+offset_top = 636.0
+offset_right = 1869.0
+offset_bottom = 727.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+
+[node name="DialogueText13" type="Label" parent="." unique_id=1759119]
+visible = false
+layout_mode = 0
+offset_left = 46.0
+offset_top = 28.0
+offset_right = 254.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText14" type="Label" parent="." unique_id=1584033318]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 44.0
+offset_right = 1012.0
+offset_bottom = 144.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText15" type="Label" parent="." unique_id=1245882542]
+visible = false
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 31.0
+offset_right = 1663.0
+offset_bottom = 107.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText16" type="Label" parent="." unique_id=1523919860]
+visible = false
+layout_mode = 0
+offset_left = 43.0
+offset_top = 632.0
+offset_right = 214.0
+offset_bottom = 672.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText17" type="Label" parent="." unique_id=747473617]
+visible = false
+layout_mode = 0
+offset_left = 682.0
+offset_top = 636.0
+offset_right = 1055.0
+offset_bottom = 726.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 22
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText18" type="Label" parent="." unique_id=206643084]
+visible = false
+layout_mode = 0
+offset_left = 1323.0
+offset_top = 639.0
+offset_right = 1736.0
+offset_bottom = 721.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="DialogueText19" type="Label" parent="." unique_id=1776439316]
+visible = false
+layout_mode = 0
+offset_left = 44.0
+offset_top = 32.0
+offset_right = 252.0
+offset_bottom = 106.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT1"
+
+[node name="DialogueText20" type="Label" parent="." unique_id=255244853]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 33.0
+offset_right = 1012.0
+offset_bottom = 133.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 26
+text = "DIALOGUETEXT2"
+
+[node name="DialogueText21" type="Label" parent="." unique_id=2041551812]
+visible = false
+layout_mode = 0
+offset_left = 1319.0
+offset_top = 37.0
+offset_right = 1663.0
+offset_bottom = 113.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT3"
+
+[node name="DialogueText22" type="Label" parent="." unique_id=1661654648]
+visible = false
+layout_mode = 0
+offset_left = 50.0
+offset_top = 639.0
+offset_right = 221.0
+offset_bottom = 679.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT4"
+
+[node name="DialogueText23" type="Label" parent="." unique_id=251774164]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 642.0
+offset_right = 1053.0
+offset_bottom = 732.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 23
+text = "DIALOGUETEXT5"
+
+[node name="DialogueText24" type="Label" parent="." unique_id=370716982]
+visible = false
+layout_mode = 0
+offset_left = 1318.0
+offset_top = 641.0
+offset_right = 1731.0
+offset_bottom = 723.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_w40ir")
+theme_override_font_sizes/font_size = 24
+text = "DIALOGUETEXT6"
+
+[node name="NextButton" type="Button" parent="." unique_id=639707728]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -2.0
+offset_right = 1924.0
+offset_bottom = 1078.0
+flat = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=533798589]
+stream = ExtResource("26_4b4br")
+volume_db = -12.18
+autoplay = true
