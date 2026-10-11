@@ -74,17 +74,13 @@ func enter_room() -> void:
 		print("ERROR: No destination scene assigned!")
 		return
 
-	# Main-game completion: after the player has earned every non-secret
-	# achievement, let the final return home happen normally. The next time
-	# they leave house_game_level, end the loop with the closing cutscene.
-	var current_scene := get_tree().current_scene
-	if (
-		current_scene != null
-		and current_scene.scene_file_path.ends_with("house_game_level.tscn")
-		and is_instance_valid(AchievementManager)
-		and AchievementManager.has_completed_all_non_secret_achievements()
-	):
+	# End-game routing: once every non-secret achievement is earned,
+	# the house exit must lead to the CLOSING cutscene, never the opening one.
+	# Keep this check before destination_scene so the assigned normal door
+	# destination cannot override the ending.
+	if should_play_ending_cutscene():
 		transitioning = true
+		print("All required achievements completed. Starting closing cutscene.")
 		await FadeManager.change_scene_with_fade(
 			"res://scenes/main_level_scenes/cutscenes/closing_cutscene.tscn"
 		)
@@ -115,3 +111,15 @@ func can_enter() -> bool:
 
 		_:
 			return true
+
+
+func should_play_ending_cutscene() -> bool:
+	var current_scene := get_tree().current_scene
+	if current_scene == null:
+		return false
+
+	var current_scene_path := current_scene.scene_file_path.to_lower()
+	if not current_scene_path.ends_with("house_game_level.tscn"):
+		return false
+
+	return AchievementManager.has_completed_all_non_secret_achievements()
