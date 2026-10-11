@@ -26,7 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://dn5fl766wqxrf" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/50.png" id="23_fisoc"]
 [ext_resource type="Texture2D" uid="uid://cim15am1nyrxy" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/51.png" id="24_fx34p"]
 [ext_resource type="Texture2D" uid="uid://dor6mf4u24ocr" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/52.png" id="25_ff1up"]
-[ext_resource type="AudioStream" uid="uid://wsjtmwe22bo" path="res://GAME ASSETS_/Misc/Music/cutscene music.mp3" id="27_0otps"]
+[ext_resource type="AudioStream" path="res://GAME ASSETS_/Misc/Music/closing cutscene music.mp3" id="27_0otps"]
 
 [node name="OpeningCutscene" type="Control" unique_id=1457254742]
 layout_mode = 3
