@@ -540,5 +540,3 @@ func finish_opening():
 	await FadeManager.change_scene_with_fade(
 		"res://scenes/main_level_scenes/house_game_level.tscn"
 	)
-
-

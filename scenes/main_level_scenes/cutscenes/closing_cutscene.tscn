@@ -385,5 +385,5 @@ flat = true
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1640260729]
 stream = ExtResource("27_0otps")
-volume_db = -12.18
+volume_db = 2.102
 autoplay = true
