@@ -60,6 +60,9 @@ func _ready() -> void:
 	call_deferred("refresh_ui")
 
 func _input(event: InputEvent) -> void:
+	# Guard against a missing Input Map entry so the tracker never emits errors.
+	if not InputMap.has_action("toggle_quest_tracker"):
+		return
 	if not event.is_action_pressed("toggle_quest_tracker"):
 		return
 	if event is InputEventKey and (event as InputEventKey).echo:
