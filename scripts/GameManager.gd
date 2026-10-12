@@ -211,6 +211,23 @@ func reset_day_loop_progress() -> void:
 	lecture_second_professor_talked = false
 
 	has_baon = false
+	# The house scene may have initialized Baon while has_baon was still true,
+	# causing it to hide itself before this new day reset ran. Refresh the live
+	# scene instance as well as the persistent flag so the baon returns every loop.
+	var current_scene := get_tree().current_scene
+	if current_scene != null:
+		var baon := current_scene.find_child("Baon", true, false) as Area2D
+		if baon != null:
+			if baon.has_method("reset_for_new_day"):
+				baon.reset_for_new_day()
+			else:
+				baon.visible = true
+				var baon_sprite := baon.get_node_or_null("Sprite2D") as Sprite2D
+				if baon_sprite != null:
+					baon_sprite.visible = true
+				var baon_collision := baon.get_node_or_null("CollisionShape2D") as CollisionShape2D
+				if baon_collision != null:
+					baon_collision.set_deferred("disabled", false)
 	# Keep the one-time opening sequence complete; only daily progress loops.
 	lecture_bully_interruption_done = false
 	quiz_completed = false
