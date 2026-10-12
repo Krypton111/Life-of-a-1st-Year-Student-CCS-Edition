@@ -232,6 +232,11 @@ func load_game(slot: int) -> bool:
 	is_loading = true
 	get_tree().paused = false
 
+	# DialogueManager is an autoload and can retain stale dialogue state even
+	# after the previous scene is replaced. Clear it before loading another slot.
+	if is_instance_valid(DialogueManager) and DialogueManager.has_method("reset_for_save_load"):
+		DialogueManager.reset_for_save_load()
+
 	# Restore persistent state BEFORE changing scenes so _ready() can see it.
 	restore_player_profile(save_data.get("player_profile", {}))
 	restore_controls(save_data.get("controls", {}))
@@ -258,6 +263,7 @@ func load_game(slot: int) -> bool:
 	var new_scene := get_tree().current_scene
 
 	if new_scene == null:
+		is_loading = false
 		push_error("SaveManager: Loaded scene is null.")
 		return false
 
@@ -289,6 +295,13 @@ func load_game(slot: int) -> bool:
 			player.process_mode = Node.PROCESS_MODE_PAUSABLE
 			player.set_process(true)
 			player.set_physics_process(true)
+
+			# Moving the player after _ready() can leave the interaction zone's
+			# nearby-NPC list out of sync until physics signals fire. Rebuild it
+			# after physics has updated the overlaps at the restored position.
+			await get_tree().physics_frame
+			if is_instance_valid(player) and player.has_method("refresh_interaction_targets"):
+				player.refresh_interaction_targets()
 
 	# Ensure the tree isn't paused and the mouse is hidden for gameplay.
 	get_tree().paused = false
