@@ -374,7 +374,11 @@ func tina_route() -> void:
 		PLAYER_PORTRAIT
 	)
 
-	await tina_move_tween.finished
+	# Tina may finish walking while the apology dialogue is still open.
+	# Only await the tween if it is still running; awaiting its already-emitted
+	# finished signal would stall the encounter and prevent the closing dialogue.
+	if is_instance_valid(tina_move_tween) and tina_move_tween.is_running():
+		await tina_move_tween.finished
 
 	face_character_toward_player(tina)
 
