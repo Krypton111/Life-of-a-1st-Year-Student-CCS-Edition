@@ -86,6 +86,11 @@ func enter_room() -> void:
 		)
 		return
 
+	# Dismiss any achievement notification from the room being exited.
+	# AchievementManager is an autoload, so its toast otherwise survives doors.
+	if is_instance_valid(AchievementManager) and AchievementManager.has_method("hide_unlock_toast"):
+		AchievementManager.hide_unlock_toast()
+
 	var player = get_tree().get_first_node_in_group("player")
 
 	if player and destination_scene != "res://scenes/School.tscn":
