@@ -14,7 +14,10 @@ func interact() -> void:
 	if GameManager.player_controls_locked:
 		return
 
-	if not GameManager.sir_mico_dialogue_done:
+	# The computer unlock is the authoritative check for whether the
+	# introductory conversation successfully completed. This also recovers
+	# saves where the dialogue flag and unlock flag became out of sync.
+	if not GameManager.mac_computer_unlocked:
 		start_first_dialogue()
 
 	elif (
