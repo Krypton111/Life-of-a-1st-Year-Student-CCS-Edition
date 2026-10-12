@@ -227,6 +227,13 @@ func load_game(slot: int) -> bool:
 		push_error("SaveManager: Save slot has no scene path.")
 		return false
 
+	# Fade to black before replacing the current scene. Since every load
+	# request (main menu or pause menu) passes through this function, the
+	# transition is handled consistently in both places.
+	get_tree().paused = false
+	if is_instance_valid(FadeManager) and FadeManager.has_method("fade_out"):
+		await FadeManager.fade_out(0.8)
+
 	# Make sure the tree is not paused before swapping scenes, otherwise the
 	# new scene will spawn already frozen.
 	is_loading = true
@@ -248,6 +255,8 @@ func load_game(slot: int) -> bool:
 
 	if change_error != OK:
 		is_loading = false
+		if is_instance_valid(FadeManager) and FadeManager.has_method("fade_in"):
+			await FadeManager.fade_in(0.8)
 		push_error(
 			"SaveManager: Could not load scene: "
 			+ scene_path
@@ -264,6 +273,8 @@ func load_game(slot: int) -> bool:
 
 	if new_scene == null:
 		is_loading = false
+		if is_instance_valid(FadeManager) and FadeManager.has_method("fade_in"):
+			await FadeManager.fade_in(0.8)
 		push_error("SaveManager: Loaded scene is null.")
 		return false
 
@@ -303,9 +314,12 @@ func load_game(slot: int) -> bool:
 			if is_instance_valid(player) and player.has_method("refresh_interaction_targets"):
 				player.refresh_interaction_targets()
 
-	# Ensure the tree isn't paused and the mouse is hidden for gameplay.
+	# Reveal the fully restored save only after its scene, player position,
+	# controls, and interaction targets are ready.
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	if is_instance_valid(FadeManager) and FadeManager.has_method("fade_in"):
+		await FadeManager.fade_in(0.8)
 	is_loading = false
 
 	print("LOAD COMPLETE - SLOT ", slot, ": ", scene_path)
