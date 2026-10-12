@@ -44,8 +44,9 @@ var selected_button: Button = null
 
 func _ready() -> void:
 
+	# Choice screens should freeze with gameplay when the SceneTree is paused.
 	layer = 1000
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 
 func show_choice(
@@ -174,7 +175,7 @@ func build_ui(
 	root.name = "CozyChoiceRoot"
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_STOP
-	root.process_mode = Node.PROCESS_MODE_ALWAYS
+	root.process_mode = Node.PROCESS_MODE_INHERIT
 	add_child(root)
 
 	overlay = ColorRect.new()
@@ -192,7 +193,7 @@ func build_ui(
 	) / 2.0
 	panel.position.y += 16.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	panel.process_mode = Node.PROCESS_MODE_ALWAYS
+	panel.process_mode = Node.PROCESS_MODE_INHERIT
 	root.add_child(panel)
 
 	panel_style = make_panel_style(
@@ -335,7 +336,7 @@ func make_choice_button(
 	button.position = button_position
 	button.size = BUTTON_SIZE
 	button.text = text_value
-	button.process_mode = Node.PROCESS_MODE_ALWAYS
+	button.process_mode = Node.PROCESS_MODE_INHERIT
 	button.mouse_filter = Control.MOUSE_FILTER_STOP
 	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size", 17)
