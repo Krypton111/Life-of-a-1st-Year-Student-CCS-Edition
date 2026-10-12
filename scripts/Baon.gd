@@ -100,3 +100,21 @@ func disable_collision() -> void:
 			"disabled",
 			true
 		)
+
+func reset_for_new_day() -> void:
+	# The baon is a daily objective, so it must be collectible again after
+	# the cafe dream returns the player home and starts the next loop.
+	collected = false
+	GameManager.has_baon = false
+	visible = true
+	modulate = Color.WHITE
+
+	var sprite := get_node_or_null("Sprite2D") as Sprite2D
+	if sprite != null:
+		sprite.visible = true
+		sprite.modulate = Color.WHITE
+
+	var collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if collision != null:
+		collision.set_deferred("disabled", false)
+
