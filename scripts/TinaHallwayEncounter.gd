@@ -30,7 +30,7 @@ var tina_music: AudioStreamPlayer = null
 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	top_bar.visible = false
 	bottom_bar.visible = false
 
@@ -49,7 +49,7 @@ func _ready() -> void:
 		return
 
 	await get_tree().process_frame
-	await get_tree().create_timer(0.35).timeout
+	await get_tree().create_timer(0.35, false).timeout
 	await start_encounter()
 
 
@@ -93,7 +93,7 @@ func start_encounter() -> void:
 
 	var choice_ui := COZY_CHOICE_UI.new()
 	choice_ui.layer = 4096
-	choice_ui.process_mode = Node.PROCESS_MODE_ALWAYS
+	choice_ui.process_mode = Node.PROCESS_MODE_PAUSABLE
 	get_tree().root.add_child(choice_ui)
 
 	await get_tree().process_frame
@@ -250,7 +250,7 @@ func move_tina_with_animation(
 	) as AnimatedSprite2D
 
 	if sprite:
-		sprite.process_mode = Node.PROCESS_MODE_ALWAYS
+		sprite.process_mode = Node.PROCESS_MODE_INHERIT
 		sprite.stop()
 
 		var movement := to_position - from_position
@@ -282,7 +282,7 @@ func move_tina_with_animation(
 
 	tina_move_tween = create_tween()
 	tina_move_tween.set_pause_mode(
-		Tween.TWEEN_PAUSE_PROCESS
+		Tween.TWEEN_PAUSE_STOP
 	)
 
 	if duration <= 0.0:
