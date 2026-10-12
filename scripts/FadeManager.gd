@@ -73,6 +73,12 @@ func fade_music_out(duration: float = 1.0):
 		music.volume_db = original_volume
 
 func change_scene_with_fade(scene_path: String):
+	# Temporarily put the fade above all UI CanvasLayers, including the
+	# first-time controls tutorial and pause menu, so every visible element
+	# fades out together during scene transitions.
+	if fade_layer != null:
+		fade_layer.layer = 11000
+
 	var current_scene := get_tree().current_scene
 	var music: AudioStreamPlayer = null
 
@@ -116,6 +122,10 @@ func change_scene_with_fade(scene_path: String):
 	await get_tree().process_frame
 
 	await fade_in(1.0)
+
+	# Restore the normal layer after the transition is complete.
+	if fade_layer != null:
+		fade_layer.layer = 1000
 
 	# Challenge scenes may leave the returning Player locked or with its
 	# physics processing disabled. Recover controls for every classroom scene
