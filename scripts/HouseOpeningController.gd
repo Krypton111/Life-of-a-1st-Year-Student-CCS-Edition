@@ -165,6 +165,118 @@ func start_house_opening() -> void:
 
 	restore_player_animation()
 
+	# This controller only runs the opening sequence for a fresh game. Loaded
+	# saves return early in _ready(), and later house loops skip this sequence,
+	# so the controls tutorial is shown only once for a new player.
+	await show_first_time_controls_popup()
+
+
+func show_first_time_controls_popup() -> void:
+	if not is_inside_tree():
+		return
+
+	GameManager.player_controls_locked = true
+	var popup_layer := CanvasLayer.new()
+	popup_layer.name = "FirstTimeControlsPopup"
+	popup_layer.layer = 6000
+	popup_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().root.add_child(popup_layer)
+
+	var dimmer := ColorRect.new()
+	dimmer.color = Color(0.025, 0.02, 0.035, 0.78)
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	popup_layer.add_child(dimmer)
+
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-330, -245)
+	panel.size = Vector2(660, 490)
+	panel.custom_minimum_size = Vector2(660, 490)
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color("#F7F0E4")
+	panel_style.border_color = Color("#C6A66E")
+	panel_style.set_border_width_all(3)
+	panel_style.set_corner_radius_all(16)
+	panel.add_theme_stylebox_override("panel", panel_style)
+	dimmer.add_child(panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 34)
+	margin.add_theme_constant_override("margin_right", 34)
+	margin.add_theme_constant_override("margin_top", 28)
+	margin.add_theme_constant_override("margin_bottom", 28)
+	panel.add_child(margin)
+
+	var layout := VBoxContainer.new()
+	layout.add_theme_constant_override("separation", 16)
+	margin.add_child(layout)
+
+	var heading := Label.new()
+	heading.text = "YOUR CONTROLS"
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size", 28)
+	heading.add_theme_color_override("font_color", Color("#3A2A22"))
+	layout.add_child(heading)
+
+	var subtitle := Label.new()
+	subtitle.text = "Here are the basic controls for your first year."
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	subtitle.add_theme_font_size_override("font_size", 16)
+	subtitle.add_theme_color_override("font_color", Color("#6B5140"))
+	layout.add_child(subtitle)
+
+	var controls := VBoxContainer.new()
+	controls.add_theme_constant_override("separation", 12)
+	layout.add_child(controls)
+
+	for entry in [
+		["W, A, S, D", "Move your character"],
+		["F", "Interact with people and objects"],
+		["C", "Toggle the Quest Tracker"]
+	]:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 18)
+		controls.add_child(row)
+
+		var key_label := Label.new()
+		key_label.text = entry[0]
+		key_label.custom_minimum_size = Vector2(145, 42)
+		key_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		key_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		key_label.add_theme_font_size_override("font_size", 19)
+		key_label.add_theme_color_override("font_color", Color("#8B5E34"))
+		row.add_child(key_label)
+
+		var description := Label.new()
+		description.text = entry[1]
+		description.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		description.add_theme_font_size_override("font_size", 17)
+		description.add_theme_color_override("font_color", Color("#3A2A22"))
+		row.add_child(description)
+
+	var settings_note := Label.new()
+	settings_note.text = "You can change these key bindings anytime in Settings."
+	settings_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	settings_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	settings_note.add_theme_font_size_override("font_size", 15)
+	settings_note.add_theme_color_override("font_color", Color("#6B5140"))
+	layout.add_child(settings_note)
+
+	var continue_button := Button.new()
+	continue_button.text = "GOT IT — LET'S GO"
+	continue_button.custom_minimum_size = Vector2(0, 48)
+	continue_button.add_theme_font_size_override("font_size", 17)
+	layout.add_child(continue_button)
+	continue_button.pressed.connect(func():
+		popup_layer.queue_free()
+		GameManager.player_controls_locked = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	)
+	await continue_button.pressed
+
 
 # =========================================
 # PLAYER-CONTROLLED PANIC
