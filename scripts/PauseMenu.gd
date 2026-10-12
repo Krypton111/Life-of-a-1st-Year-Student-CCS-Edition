@@ -1233,16 +1233,12 @@ func select_slot(slot: int) -> void:
 			show_button_feedback(slot_grid.get_child(slot - 1) as Button, "EMPTY SLOT")
 			return
 
-		pending_slot_action = "load"
-		pending_slot_number = slot
-		slot_confirmation_dialog.title = "Load Save File?"
-		slot_confirmation_dialog.dialog_text = (
-			"Load the saved progress from Slot %02d?\n"
-			+ "Your current session will be replaced by this save.\n\n"
-			+ "Do you want to continue?"
-		) % slot
-		slot_confirmation_dialog.ok_button_text = "Load"
-		slot_confirmation_dialog.popup_centered()
+		# Load directly when a populated slot is clicked. The extra native
+		# ConfirmationDialog could become unresponsive/obscured over the
+		# custom CanvasLayer menu, leaving the player trapped on this screen.
+		# The slot itself is the explicit load action, so no second click is
+		# needed to continue.
+		await load_from_slot(slot)
 
 
 func save_to_slot(slot: int) -> void:
