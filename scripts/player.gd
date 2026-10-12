@@ -514,6 +514,23 @@ func _on_zone_body_exited(body: Node) -> void:
 		nearby_npcs.erase(body)
 
 
+func refresh_interaction_targets() -> void:
+	# Rebuild NPC proximity after SaveManager restores the player's position.
+	# Area2D overlap signals may not yet reflect the teleported position.
+	nearby_npcs.clear()
+
+	if interaction_zone == null or not is_instance_valid(interaction_zone):
+		return
+
+	if not interaction_zone.is_inside_tree():
+		return
+
+	for body in interaction_zone.get_overlapping_bodies():
+		if body != null and is_instance_valid(body) and body.is_in_group("npc"):
+			if not nearby_npcs.has(body):
+				nearby_npcs.append(body)
+
+
 # ============================================================
 # PLAYER CONTROL
 # ============================================================
