@@ -580,9 +580,23 @@ func show_solo_gelo_decision() -> void:
 	avoid.add_theme_font_size_override("font_size", 16)
 	avoid.pressed.connect(func():
 		layer.queue_free()
-		start_solo_direct_order()
+		start_solo_avoid_gelo()
 	)
 	panel.add_child(avoid)
+
+
+func start_solo_avoid_gelo() -> void:
+	# Let the player reflect on seeing Gelo again before moving on to order.
+	GameManager.set_meta("cafe_quest_phase", "avoid_gelo")
+	GameManager.player_controls_locked = true
+	var monologue := [
+		{"speaker": "Player", "text": "I think I'll leave him be."},
+		{"speaker": "Player", "text": "It feels weird seeing him again after everything."},
+		{"speaker": "Player", "text": "I don't need to force a conversation right now. I'll just order a coffee and keep to myself."}
+	]
+	DialogueManager.start_multi_dialogue(monologue, {}, PLAYER_PORTRAIT)
+	await DialogueManager.dialogue_finished
+	start_solo_direct_order()
 
 
 func start_solo_gelo_conversation() -> void:
