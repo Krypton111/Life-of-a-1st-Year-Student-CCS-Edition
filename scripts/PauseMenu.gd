@@ -70,14 +70,18 @@ var showing_achievement_menu := false
 var showing_settings_menu := false
 
 var cursor_mode_before_pause: Input.MouseMode = Input.MOUSE_MODE_HIDDEN
+var last_pause_toggle_msec: int = -1000
+const PAUSE_TOGGLE_DEBOUNCE_MSEC: int = 220
 var paused_node_process_modes: Array = []
 var paused_audio_players: Array[Node] = []
 var paused_audio_player_states: Array[bool] = []
 
 
 func _ready() -> void:
+	# This autoload must remain interactive while the SceneTree is paused.
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	layer = 100
+	# Keep pause controls above dialogue, cinematic bars, and choice overlays.
+	layer = 10000
 
 	master_bus_index = AudioServer.get_bus_index("Master")
 
@@ -120,7 +124,7 @@ func build_brightness_overlay() -> void:
 
 	var overlay_layer := CanvasLayer.new()
 	overlay_layer.name = "BrightnessOverlayLayer"
-	overlay_layer.layer = 1000
+	overlay_layer.layer = 9999
 	add_child(overlay_layer)
 	overlay_layer.add_child(brightness_overlay)
 
@@ -1373,6 +1377,14 @@ func make_button_style(background: Color) -> StyleBoxFlat:
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed and not event.echo):
 		return
+
+	# Ignore rapid repeated presses so pause/resume cannot flip several times
+	# in a single burst and leave audio, cursor, or UI state out of sync.
+	var now_msec := Time.get_ticks_msec()
+	if now_msec - last_pause_toggle_msec < PAUSE_TOGGLE_DEBOUNCE_MSEC:
+		get_viewport().set_input_as_handled()
+		return
+	last_pause_toggle_msec = now_msec
 	if showing_credits_menu:
 		close_credits()
 		get_viewport().set_input_as_handled()
