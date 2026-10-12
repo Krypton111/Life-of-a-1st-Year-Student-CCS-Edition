@@ -112,6 +112,11 @@ func _ready() -> void:
 
 	_create_quest_pointer()
 
+	# Scene transitions can place the player near an NPC before overlap
+	# signals are emitted. Refresh once physics has registered overlaps.
+	await get_tree().physics_frame
+	refresh_interaction_targets()
+
 
 # ============================================================
 # APPLY SELECTED CHARACTER SPRITE
