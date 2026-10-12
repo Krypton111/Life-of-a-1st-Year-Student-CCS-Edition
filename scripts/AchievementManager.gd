@@ -92,17 +92,23 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	# AchievementManager always processes, even while the SceneTree is paused.
-	# This keeps both achievement detection and the popup countdown running.
-	check_achievements()
-	update_toast(delta)
-
+	# Scene transitions replace the gameplay context. Dismiss any toast from
+	# the previous room before evaluating achievements for the new room.
 	var scene_path := get_current_scene_path()
-	if scene_path != last_scene_path:
+	var scene_changed := scene_path != last_scene_path
+	if scene_changed:
 		if not scene_path.ends_with("house_game_level.tscn"):
 			house_timer = 0.0
 		room_timer = 0.0
 		last_scene_path = scene_path
+		hide_unlock_toast()
+
+	# AchievementManager always processes, even while the SceneTree is paused.
+	# Skip achievement evaluation on the exact frame a door swaps scenes so
+	# stale room state cannot produce a popup during the transition.
+	if not scene_changed:
+		check_achievements()
+	update_toast(delta)
 
 	if get_tree().paused:
 		return
@@ -470,6 +476,17 @@ func show_unlock_toast(title: String, description: String) -> void:
 	var hidden_x := viewport_size.x + 10.0
 	var popup_y := viewport_size.y - toast_panel.size.y - TOAST_MARGIN
 	toast_panel.position = Vector2(hidden_x, popup_y)
+
+
+
+func hide_unlock_toast() -> void:
+	if toast_tween != null and toast_tween.is_valid():
+		toast_tween.kill()
+	toast_state = 0
+	toast_timer = 0.0
+	if toast_panel != null:
+		toast_panel.visible = false
+		toast_panel.modulate.a = 1.0
 
 
 func update_toast(delta: float) -> void:
