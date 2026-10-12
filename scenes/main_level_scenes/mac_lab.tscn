@@ -6361,7 +6361,7 @@ position = Vector2(512.9729, 203.78377)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=49969874]
 layer = 10
-visible = false
+visible = true
 
 [node name="DialogueUI" parent="UI" unique_id=1438493306 instance=ExtResource("8_je51l")]
 metadata/_edit_use_anchors_ = true
