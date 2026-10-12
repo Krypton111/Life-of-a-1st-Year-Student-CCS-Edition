@@ -108,9 +108,9 @@ var questions: Array[Dictionary] = [
 		"answer_display": "F / False"
 	},
 	{
-		"question": "Simplify: (p ∨ q) ∧ (p ∨ q)",
-		"answers": ["p ∨ q", "p or q", "p+q"],
-		"answer_display": "p ∨ q"
+		"question": "Simplify: (p v q) ∧ (p v q)",
+		"answers": ["p v q", "p∨q", "p or q", "p+q"],
+		"answer_display": "p v q"
 	},
 	{
 		"question": "Simplify: (p ∨ q) ∧ (¬p ∨ q)",
