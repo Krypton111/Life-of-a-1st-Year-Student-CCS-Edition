@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://nq4ov2eln833"]
 
+[ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="27_cutscene_script"]
+
 [ext_resource type="Texture2D" uid="uid://cxubjmi824bpa" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/53.png" id="1_upr0p"]
 [ext_resource type="Texture2D" uid="uid://b42plqhvf7el4" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/54.png" id="2_g0y2u"]
 [ext_resource type="Texture2D" uid="uid://dxv8bkgqaqcf0" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/55.png" id="3_g5o4p"]
@@ -34,6 +36,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("27_cutscene_script")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=619527600]
 layout_mode = 1
