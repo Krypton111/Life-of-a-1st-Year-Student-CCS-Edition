@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://cbi65jkjf8no5" path="res://scenes/player&NPCs/tina.tscn" id="20_tina"]
 [ext_resource type="Script" uid="uid://cbkwqp147lok1" path="res://scripts/TinaHallwayEncounter.gd" id="21_tina"]
 [ext_resource type="AudioStream" uid="uid://cao1vm8obr0ap" path="res://GAME ASSETS_/Misc/Music/ingay.mp3" id="22_ingay"]
-[ext_resource type="Script" path="res://scripts/SchoolBackgroundMusic.gd" id="23_school_music"]
+[ext_resource type="Script" uid="uid://dfomi34ngerj3" path="res://scripts/SchoolBackgroundMusic.gd" id="23_school_music"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_b6cbq"]
 vertices = PackedVector2Array(1194.3906, 123.61719, -31.03125, 120.9375, -26.546875, 108.96875, -80.4375, 78.13281, -94.47656, 75.97656, -92.78906, -161.75781, -91.453125, -161.89063, -39.75, 76.00781, -42.421875, -170.0625, 1210.9063, 87.14844, 1210.9063, 120.09375, 1229.0313, -174.03125, 1276.4219, -162.17188, 1278.1328, 76.21875, 1262.9688, 82.890625, -30.15625, -194.59375, 1211.6563, -202.6875)
@@ -4652,7 +4652,7 @@ radius = 5.56522
 size = Vector2(17.391323, 14.074098)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3glsg"]
-size = Vector2(1237.7778, 56.031708)
+size = Vector2(1552.5714, 56.031708)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5v5el"]
 size = Vector2(53.9682, 607.1428)
@@ -4661,7 +4661,7 @@ size = Vector2(53.9682, 607.1428)
 size = Vector2(44.61539, 588.46155)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2e367"]
-size = Vector2(1206.9231, 35.38469)
+size = Vector2(1558.4615, 35.38469)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3glsg"]
 radius = 18.605202
@@ -4806,11 +4806,10 @@ shape = SubResource("RectangleShape2D_8n445")
 
 [node name="StaticBody2D" parent="." unique_id=1078186643 instance=ExtResource("3_6omkh")]
 y_sort_enabled = true
-position = Vector2(1221.0194, 360.963)
-scale = Vector2(0.24347831, 0.18666668)
+position = Vector2(1512, 666)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1691044370]
-position = Vector2(-580.3175, 70.39679)
+position = Vector2(-737.7143, 70.39679)
 shape = SubResource("RectangleShape2D_3glsg")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=1362790957]
@@ -4819,27 +4818,26 @@ shape = SubResource("RectangleShape2D_5v5el")
 
 [node name="StaticBody2D2" parent="." unique_id=1622225669 instance=ExtResource("3_6omkh")]
 y_sort_enabled = true
-position = Vector2(942.7584, 359.4815)
-scale = Vector2(0.25120774, 0.19259259)
+position = Vector2(57, 658)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D2" unique_id=2102230274]
 position = Vector2(-56.153854, -210.3847)
 shape = SubResource("RectangleShape2D_qpub1")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D2" unique_id=884887444]
-position = Vector2(554.2309, -263.07706)
+position = Vector2(737.7692, -347)
 shape = SubResource("RectangleShape2D_2e367")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1086989076]
-position = Vector2(-4.615385, -240)
+position = Vector2(2.000002, -323)
 shape = SubResource("CircleShape2D_3glsg")
 
 [node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1762838595]
-position = Vector2(572.3077, -243.07693)
+position = Vector2(750, -326)
 shape = SubResource("CircleShape2D_3glsg")
 
 [node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1988402639]
-position = Vector2(1117.6924, -243.07697)
+position = Vector2(1461, -328)
 shape = SubResource("CircleShape2D_3glsg")
 
 [node name="CinematicUI" type="CanvasLayer" parent="." unique_id=1579185928]
@@ -4924,7 +4922,7 @@ stream = ExtResource("22_ingay")
 volume_db = -8.0
 autoplay = true
 
-[node name="SchoolBackgroundMusic" type="AudioStreamPlayer" parent="."]
+[node name="SchoolBackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1963902935]
 script = ExtResource("23_school_music")
 
 [node name="QuestMarker_Comlab202" type="Marker2D" parent="." unique_id=994744761]

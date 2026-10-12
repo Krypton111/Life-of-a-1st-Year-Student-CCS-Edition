@@ -151,10 +151,9 @@ var panels = [
 
 	{
 		"image": "op3_p4",
-		"text": "And then, just
-		like that, Senior
-		High School
-		was over."
+		"text": "And then, just like
+		that, Senior High
+		School was over."
 	},
 
 	{

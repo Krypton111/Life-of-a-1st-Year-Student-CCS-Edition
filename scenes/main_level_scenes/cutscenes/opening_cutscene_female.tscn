@@ -315,9 +315,9 @@ text = "DIALOGUETEXT1"
 visible = false
 layout_mode = 0
 offset_left = 688.0
-offset_top = 36.0
+offset_top = 47.0
 offset_right = 1020.0
-offset_bottom = 136.0
+offset_bottom = 147.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("25_w40ir")
@@ -503,7 +503,7 @@ offset_bottom = 672.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("25_w40ir")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "DIALOGUETEXT4"
 
 [node name="DialogueText17" type="Label" parent="." unique_id=747473617]
