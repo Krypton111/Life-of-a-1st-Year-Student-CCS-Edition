@@ -57,6 +57,24 @@ func _process(_delta: float) -> void:
 	if dialogue_ui.get("skip_dialogue_without_confirmation") == true:
 		skip_dialogue_confirmation_disabled = true
 
+func reset_for_save_load() -> void:
+	# DialogueManager is an autoload, so it survives scene changes. Clear its
+	# transient references and lock state before replacing a gameplay scene.
+	# Do not emit dialogue_finished here; loading a save must not advance quests.
+	is_active = false
+	current_quest_professor = ""
+	dialogue_ui = null
+	dialogue_layer = null
+
+	if is_instance_valid(GameManager):
+		GameManager.player_controls_locked = false
+
+	_set_house_music_ducked(false)
+	_set_cafe_music_ducked(false)
+	_set_bookstore_music_ducked(false)
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+
+
 func start_dialogue(dialogue_data: Array, left_texture: Texture2D, right_texture: Texture2D) -> void:
 	if is_active:
 
