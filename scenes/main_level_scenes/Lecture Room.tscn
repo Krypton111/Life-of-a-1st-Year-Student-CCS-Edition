@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://ctctupvqyofu2" path="res://scripts/door.gd" id="6_rn8hb"]
 [ext_resource type="Script" uid="uid://c6k42sb7vao46" path="res://scripts/SirCharles.gd" id="9_oxlj3"]
 [ext_resource type="AudioStream" uid="uid://b3w1q01iuvavd" path="res://GAME ASSETS_/Misc/Music/comlab202.mp3" id="lecture_music"]
-[ext_resource type="Script" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
+[ext_resource type="Script" uid="uid://c1dxlba0ka5uf" path="res://scripts/LoopingMusicPlayer.gd" id="looping_music_script"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ulqil"]
 texture = ExtResource("1_el8cr")
@@ -6734,7 +6734,7 @@ size = Vector2(20, 520.625)
 size = Vector2(375, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lxh5r"]
-size = Vector2(475.625, 12.8125)
+size = Vector2(585.41656, 12.8125)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fjcsh"]
 size = Vector2(72.5, 25.625)
@@ -6794,7 +6794,8 @@ position = Vector2(146.875, 432.5)
 shape = SubResource("RectangleShape2D_e3i4n")
 
 [node name="CollisionShape2D13" type="CollisionShape2D" parent="lec table" unique_id=1133348991]
-position = Vector2(659.0625, 434.21875)
+position = Vector2(604.1665, 434.21872)
+scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_lxh5r")
 
 [node name="CollisionShape2D14" type="CollisionShape2D" parent="lec table" unique_id=1201268230]
@@ -6832,6 +6833,7 @@ shape = SubResource("RectangleShape2D_oxlj3")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1192824253]
 layer = 10
+visible = false
 
 [node name="DialogueUI" parent="UI" unique_id=1438493306 instance=ExtResource("4_reu7l")]
 metadata/_edit_use_anchors_ = true
@@ -6931,7 +6933,7 @@ scale = Vector2(0.23783778, 0.23783779)
 position = Vector2(159, 62.666668)
 scale = Vector2(0.04632827, 0.04632827)
 
-[node name="LectureRoomMusic" type="AudioStreamPlayer" parent="."]
+[node name="LectureRoomMusic" type="AudioStreamPlayer" parent="." unique_id=1985088169]
 stream = ExtResource("lecture_music")
-script = ExtResource("looping_music_script")
 volume_db = -13.293
+script = ExtResource("looping_music_script")
