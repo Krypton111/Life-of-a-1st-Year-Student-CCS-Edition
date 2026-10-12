@@ -46,7 +46,8 @@ var slot_title: Label
 var slot_grid: GridContainer
 var slot_cancel_button: Button
 var slot_mode: String = ""
-var slot_confirmation_dialog: ConfirmationDialog
+var slot_confirmation_dialog: PanelContainer
+var slot_confirmation_message: Label
 var pending_slot_action: String = ""
 var pending_slot_number: int = 0
 
@@ -311,15 +312,63 @@ func build_slot_ui() -> void:
 
 
 func build_slot_confirmation_dialog() -> void:
-	slot_confirmation_dialog = ConfirmationDialog.new()
-	slot_confirmation_dialog.name = "SaveLoadConfirmationDialog"
-	slot_confirmation_dialog.title = "Please Confirm"
-	slot_confirmation_dialog.dialog_text = ""
-	slot_confirmation_dialog.ok_button_text = "Continue"
-	slot_confirmation_dialog.cancel_button_text = "Cancel"
-	slot_confirmation_dialog.min_size = Vector2i(480, 190)
-	slot_confirmation_dialog.confirmed.connect(confirm_pending_slot_action)
-	add_child(slot_confirmation_dialog)
+	# Use a custom Control panel instead of a native Window dialog. Native
+	# ConfirmationDialogs can appear behind CanvasLayer menus or stop receiving
+	# mouse input in some project/window configurations.
+	slot_confirmation_dialog = PanelContainer.new()
+	slot_confirmation_dialog.name = "SaveLoadConfirmationPanel"
+	slot_confirmation_dialog.set_anchors_preset(Control.PRESET_CENTER)
+	slot_confirmation_dialog.position = Vector2(-260, -145)
+	slot_confirmation_dialog.size = Vector2(520, 290)
+	slot_confirmation_dialog.add_theme_stylebox_override("panel", make_panel_style())
+	overlay.add_child(slot_confirmation_dialog)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 28)
+	margin.add_theme_constant_override("margin_right", 28)
+	margin.add_theme_constant_override("margin_top", 24)
+	margin.add_theme_constant_override("margin_bottom", 24)
+	slot_confirmation_dialog.add_child(margin)
+
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 18)
+	margin.add_child(box)
+
+	var title := Label.new()
+	title.name = "SlotConfirmationTitle"
+	title.text = "OVERWRITE SAVE FILE?"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title.add_theme_font_size_override("font_size", 24)
+	title.add_theme_color_override("font_color", Color("#FFE1A8"))
+	box.add_child(title)
+
+	slot_confirmation_message = Label.new()
+	slot_confirmation_message.name = "SlotConfirmationMessage"
+	slot_confirmation_message.text = ""
+	slot_confirmation_message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	slot_confirmation_message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	slot_confirmation_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	slot_confirmation_message.add_theme_font_size_override("font_size", 16)
+	slot_confirmation_message.custom_minimum_size.y = 90
+	box.add_child(slot_confirmation_message)
+
+	var buttons := HBoxContainer.new()
+	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	buttons.add_theme_constant_override("separation", 14)
+	box.add_child(buttons)
+
+	var overwrite_button := make_button("Overwrite")
+	overwrite_button.custom_minimum_size = Vector2(170, 46)
+	overwrite_button.pressed.connect(confirm_pending_slot_action)
+	buttons.add_child(overwrite_button)
+
+	var cancel_button := make_button("Cancel")
+	cancel_button.custom_minimum_size = Vector2(170, 46)
+	cancel_button.pressed.connect(cancel_pending_slot_action)
+	buttons.add_child(cancel_button)
+
+	slot_confirmation_dialog.visible = false
 
 
 func confirm_pending_slot_action() -> void:
@@ -327,11 +376,23 @@ func confirm_pending_slot_action() -> void:
 	var slot := pending_slot_number
 	pending_slot_action = ""
 	pending_slot_number = 0
+	slot_confirmation_dialog.visible = false
 
 	if action == "save":
 		save_to_slot(slot)
 	elif action == "load":
 		await load_from_slot(slot)
+
+
+func cancel_pending_slot_action() -> void:
+	pending_slot_action = ""
+	pending_slot_number = 0
+	slot_confirmation_dialog.visible = false
+	slot_panel.visible = true
+	showing_slot_menu = true
+	var slot_button := slot_grid.get_child(0) as Button
+	if slot_button != null:
+		slot_button.grab_focus()
 
 
 func build_achievement_ui() -> void:
@@ -979,7 +1040,7 @@ func open_settings() -> void:
 	pause_panel.visible = false
 	confirm_panel.visible = false
 	if slot_confirmation_dialog != null:
-		slot_confirmation_dialog.hide()
+		slot_confirmation_dialog.visible = false
 	pending_slot_action = ""
 	pending_slot_number = 0
 	slot_panel.visible = false
@@ -1169,6 +1230,8 @@ func open_save_slots() -> void:
 	confirm_panel.visible = false
 	settings_panel.visible = false
 	slot_panel.visible = true
+	if slot_confirmation_dialog != null:
+		slot_confirmation_dialog.visible = false
 	slot_title.text = "SELECT SAVE SLOT"
 	refresh_slot_buttons()
 
@@ -1205,6 +1268,8 @@ func open_load_slots() -> void:
 	confirm_panel.visible = false
 	settings_panel.visible = false
 	slot_panel.visible = true
+	if slot_confirmation_dialog != null:
+		slot_confirmation_dialog.visible = false
 	slot_title.text = "SELECT SAVE TO LOAD"
 	refresh_slot_buttons()
 
@@ -1218,14 +1283,16 @@ func select_slot(slot: int) -> void:
 		if SaveManager.has_save(slot):
 			pending_slot_action = "save"
 			pending_slot_number = slot
-			slot_confirmation_dialog.title = "Overwrite Save File?"
-			slot_confirmation_dialog.dialog_text = (
+			slot_confirmation_message.text = (
 				"Slot %02d already contains saved progress.\n"
 				+ "Overwriting it will permanently replace that save.\n\n"
 				+ "Do you want to overwrite this slot?"
 			) % slot
-			slot_confirmation_dialog.ok_button_text = "Overwrite"
-			slot_confirmation_dialog.popup_centered()
+			slot_panel.visible = false
+			slot_confirmation_dialog.visible = true
+			var confirm_button := slot_confirmation_dialog.find_child("Overwrite", true, false) as Button
+			if confirm_button != null:
+				confirm_button.grab_focus()
 		else:
 			save_to_slot(slot)
 	elif slot_mode == "load":
@@ -1313,8 +1380,8 @@ func close_slot_menu() -> void:
 	slot_mode = ""
 	pending_slot_action = ""
 	pending_slot_number = 0
-	if slot_confirmation_dialog != null and slot_confirmation_dialog.visible:
-		slot_confirmation_dialog.hide()
+	if slot_confirmation_dialog != null:
+		slot_confirmation_dialog.visible = false
 	slot_panel.visible = false
 
 	if is_paused:
@@ -1762,7 +1829,7 @@ func hide_menu() -> void:
 	pause_panel.visible = false
 	confirm_panel.visible = false
 	if slot_confirmation_dialog != null:
-		slot_confirmation_dialog.hide()
+		slot_confirmation_dialog.visible = false
 	pending_slot_action = ""
 	pending_slot_number = 0
 	slot_panel.visible = false
