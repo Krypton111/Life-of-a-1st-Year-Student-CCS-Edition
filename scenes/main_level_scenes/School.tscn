@@ -4804,41 +4804,41 @@ lecture_bully_interruption = true
 position = Vector2(380.28992, -120.44444)
 shape = SubResource("RectangleShape2D_8n445")
 
-[node name="StaticBody2D" parent="Door_Room202" unique_id=1078186643 instance=ExtResource("3_6omkh")]
+[node name="StaticBody2D" parent="." unique_id=1078186643 instance=ExtResource("3_6omkh")]
 y_sort_enabled = true
-position = Vector2(68.01936, 50.962967)
+position = Vector2(1221.0194, 360.963)
 scale = Vector2(0.24347831, 0.18666668)
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Door_Room202/StaticBody2D" unique_id=1691044370]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1691044370]
 position = Vector2(-580.3175, 70.39679)
 shape = SubResource("RectangleShape2D_3glsg")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Door_Room202/StaticBody2D" unique_id=1362790957]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=1362790957]
 position = Vector2(60.317383, -205.95242)
 shape = SubResource("RectangleShape2D_5v5el")
 
-[node name="StaticBody2D2" parent="Door_Room202" unique_id=1622225669 instance=ExtResource("3_6omkh")]
+[node name="StaticBody2D2" parent="." unique_id=1622225669 instance=ExtResource("3_6omkh")]
 y_sort_enabled = true
-position = Vector2(-210.24156, 49.481483)
+position = Vector2(942.7584, 359.4815)
 scale = Vector2(0.25120774, 0.19259259)
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Door_Room202/StaticBody2D2" unique_id=2102230274]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D2" unique_id=2102230274]
 position = Vector2(-56.153854, -210.3847)
 shape = SubResource("RectangleShape2D_qpub1")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Door_Room202/StaticBody2D2" unique_id=884887444]
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D2" unique_id=884887444]
 position = Vector2(554.2309, -263.07706)
 shape = SubResource("RectangleShape2D_2e367")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Door_Room202/StaticBody2D2" unique_id=1086989076]
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1086989076]
 position = Vector2(-4.615385, -240)
 shape = SubResource("CircleShape2D_3glsg")
 
-[node name="CollisionShape2D5" type="CollisionShape2D" parent="Door_Room202/StaticBody2D2" unique_id=1762838595]
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1762838595]
 position = Vector2(572.3077, -243.07693)
 shape = SubResource("CircleShape2D_3glsg")
 
-[node name="CollisionShape2D6" type="CollisionShape2D" parent="Door_Room202/StaticBody2D2" unique_id=1988402639]
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D2" unique_id=1988402639]
 position = Vector2(1117.6924, -243.07697)
 shape = SubResource("CircleShape2D_3glsg")
 
