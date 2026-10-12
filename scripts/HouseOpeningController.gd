@@ -176,6 +176,8 @@ func show_first_time_controls_popup() -> void:
 		return
 
 	GameManager.player_controls_locked = true
+	# Keep the mouse cursor visible so the player can see and click the tutorial button.
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var popup_layer := CanvasLayer.new()
 	popup_layer.name = "FirstTimeControlsPopup"
 	popup_layer.layer = 6000
