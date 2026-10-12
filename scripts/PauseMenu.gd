@@ -46,6 +46,9 @@ var slot_title: Label
 var slot_grid: GridContainer
 var slot_cancel_button: Button
 var slot_mode: String = ""
+var slot_confirmation_dialog: ConfirmationDialog
+var pending_slot_action: String = ""
+var pending_slot_number: int = 0
 
 var volume_slider: HSlider
 var brightness_slider: HSlider
@@ -191,6 +194,7 @@ func build_ui() -> void:
 
 	build_confirmation_ui()
 	build_slot_ui()
+	build_slot_confirmation_dialog()
 	build_achievement_ui()
 	build_settings_ui()
 	build_controls_ui()
@@ -299,6 +303,31 @@ func build_slot_ui() -> void:
 	slot_cancel_button.custom_minimum_size = Vector2(280, 42)
 	slot_cancel_button.pressed.connect(close_slot_menu)
 	box.add_child(slot_cancel_button)
+
+
+
+func build_slot_confirmation_dialog() -> void:
+	slot_confirmation_dialog = ConfirmationDialog.new()
+	slot_confirmation_dialog.name = "SaveLoadConfirmationDialog"
+	slot_confirmation_dialog.title = "Please Confirm"
+	slot_confirmation_dialog.dialog_text = ""
+	slot_confirmation_dialog.ok_button_text = "Continue"
+	slot_confirmation_dialog.cancel_button_text = "Cancel"
+	slot_confirmation_dialog.min_size = Vector2i(480, 190)
+	slot_confirmation_dialog.confirmed.connect(confirm_pending_slot_action)
+	add_child(slot_confirmation_dialog)
+
+
+func confirm_pending_slot_action() -> void:
+	var action := pending_slot_action
+	var slot := pending_slot_number
+	pending_slot_action = ""
+	pending_slot_number = 0
+
+	if action == "save":
+		save_to_slot(slot)
+	elif action == "load":
+		await load_from_slot(slot)
 
 
 func build_achievement_ui() -> void:
@@ -945,6 +974,10 @@ func open_settings() -> void:
 	showing_achievement_menu = false
 	pause_panel.visible = false
 	confirm_panel.visible = false
+	if slot_confirmation_dialog != null:
+		slot_confirmation_dialog.hide()
+	pending_slot_action = ""
+	pending_slot_number = 0
 	slot_panel.visible = false
 	achievement_panel.visible = false
 	settings_panel.visible = true
@@ -1178,9 +1211,34 @@ func open_load_slots() -> void:
 
 func select_slot(slot: int) -> void:
 	if slot_mode == "save":
-		save_to_slot(slot)
+		if SaveManager.has_save(slot):
+			pending_slot_action = "save"
+			pending_slot_number = slot
+			slot_confirmation_dialog.title = "Overwrite Save File?"
+			slot_confirmation_dialog.dialog_text = (
+				"Slot %02d already contains saved progress.\n"
+				+ "Overwriting it will permanently replace that save.\n\n"
+				+ "Do you want to overwrite this slot?"
+			) % slot
+			slot_confirmation_dialog.ok_button_text = "Overwrite"
+			slot_confirmation_dialog.popup_centered()
+		else:
+			save_to_slot(slot)
 	elif slot_mode == "load":
-		load_from_slot(slot)
+		if not SaveManager.has_save(slot):
+			show_button_feedback(slot_grid.get_child(slot - 1) as Button, "EMPTY SLOT")
+			return
+
+		pending_slot_action = "load"
+		pending_slot_number = slot
+		slot_confirmation_dialog.title = "Load Save File?"
+		slot_confirmation_dialog.dialog_text = (
+			"Load the saved progress from Slot %02d?\n"
+			+ "Your current session will be replaced by this save.\n\n"
+			+ "Do you want to continue?"
+		) % slot
+		slot_confirmation_dialog.ok_button_text = "Load"
+		slot_confirmation_dialog.popup_centered()
 
 
 func save_to_slot(slot: int) -> void:
@@ -1247,6 +1305,10 @@ func force_unlock_player_after_load() -> void:
 func close_slot_menu() -> void:
 	showing_slot_menu = false
 	slot_mode = ""
+	pending_slot_action = ""
+	pending_slot_number = 0
+	if slot_confirmation_dialog != null and slot_confirmation_dialog.visible:
+		slot_confirmation_dialog.hide()
 	slot_panel.visible = false
 
 	if is_paused:
