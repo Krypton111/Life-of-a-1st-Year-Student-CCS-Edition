@@ -379,6 +379,12 @@ func confirm_pending_slot_action() -> void:
 	slot_confirmation_dialog.visible = false
 
 	if action == "save":
+		var title_label := slot_confirmation_dialog.find_child("SlotConfirmationTitle", true, false) as Label
+		if title_label != null:
+			title_label.text = "OVERWRITE SAVE FILE?"
+		var confirm_button := slot_confirmation_dialog.find_child("Overwrite", true, false) as Button
+		if confirm_button != null:
+			confirm_button.text = "Overwrite"
 		save_to_slot(slot)
 	elif action == "load":
 		await load_from_slot(slot)
@@ -390,6 +396,13 @@ func cancel_pending_slot_action() -> void:
 	slot_confirmation_dialog.visible = false
 	slot_panel.visible = true
 	showing_slot_menu = true
+	# Restore the save/load-specific heading and button label when returning.
+	var title_label := slot_confirmation_dialog.find_child("SlotConfirmationTitle", true, false) as Label
+	if title_label != null:
+		title_label.text = "OVERWRITE SAVE FILE?"
+	var confirm_button := slot_confirmation_dialog.find_child("Overwrite", true, false) as Button
+	if confirm_button != null:
+		confirm_button.text = "Overwrite"
 	var slot_button := slot_grid.get_child(0) as Button
 	if slot_button != null:
 		slot_button.grab_focus()
@@ -1300,12 +1313,26 @@ func select_slot(slot: int) -> void:
 			show_button_feedback(slot_grid.get_child(slot - 1) as Button, "EMPTY SLOT")
 			return
 
-		# Load directly when a populated slot is clicked. The extra native
-		# ConfirmationDialog could become unresponsive/obscured over the
-		# custom CanvasLayer menu, leaving the player trapped on this screen.
-		# The slot itself is the explicit load action, so no second click is
-		# needed to continue.
-		await load_from_slot(slot)
+		# Ask before replacing the current session with the selected save.
+		pending_slot_action = "load"
+		pending_slot_number = slot
+		slot_confirmation_message.text = (
+			"Are you sure you want to open Slot %02d?\n\n"
+			+ "Your current progress may be lost.\n\n"
+			+ "Do you want to continue?"
+		) % slot
+		slot_panel.visible = false
+		slot_confirmation_dialog.visible = true
+		var confirm_button := slot_confirmation_dialog.find_child("Overwrite", true, false) as Button
+		if confirm_button != null:
+			confirm_button.text = "Open Save"
+			confirm_button.grab_focus()
+		var cancel_button := slot_confirmation_dialog.find_child("Cancel", true, false) as Button
+		if cancel_button != null:
+			cancel_button.text = "Cancel"
+		var title_label := slot_confirmation_dialog.find_child("SlotConfirmationTitle", true, false) as Label
+		if title_label != null:
+			title_label.text = "OPEN SAVE FILE?"
 
 
 func save_to_slot(slot: int) -> void:
