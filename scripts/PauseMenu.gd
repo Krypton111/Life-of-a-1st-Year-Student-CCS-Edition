@@ -1747,6 +1747,10 @@ func hide_menu() -> void:
 	overlay.visible = false
 	pause_panel.visible = false
 	confirm_panel.visible = false
+	if slot_confirmation_dialog != null:
+		slot_confirmation_dialog.hide()
+	pending_slot_action = ""
+	pending_slot_number = 0
 	slot_panel.visible = false
 	achievement_panel.visible = false
 	settings_panel.visible = false
