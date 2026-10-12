@@ -1,0 +1,309 @@
+[gd_scene format=3 uid="uid://nq4ov2eln833"]
+
+[ext_resource type="Texture2D" uid="uid://cxubjmi824bpa" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/53.png" id="1_upr0p"]
+[ext_resource type="Texture2D" uid="uid://b42plqhvf7el4" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/54.png" id="2_g0y2u"]
+[ext_resource type="Texture2D" uid="uid://dxv8bkgqaqcf0" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/55.png" id="3_g5o4p"]
+[ext_resource type="Texture2D" uid="uid://c0l5guvw55abh" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/56.png" id="4_furqx"]
+[ext_resource type="Texture2D" uid="uid://crf0xmsr1fuwg" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/57.png" id="5_nsssj"]
+[ext_resource type="Texture2D" uid="uid://cabj0woxwg6nh" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/58.png" id="6_1b5jf"]
+[ext_resource type="Texture2D" uid="uid://552q48anq1bg" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/59.png" id="7_2vflh"]
+[ext_resource type="Texture2D" uid="uid://bufkbgdxjrw8u" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/60.png" id="8_5xhbm"]
+[ext_resource type="Texture2D" uid="uid://c15c3av7sitnl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/61.png" id="9_j3cg2"]
+[ext_resource type="Texture2D" uid="uid://bwi2iytn56m66" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/62.png" id="10_28dbm"]
+[ext_resource type="Texture2D" uid="uid://cgcvybuv7jnoq" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/63.png" id="11_bakr7"]
+[ext_resource type="Texture2D" uid="uid://bx8x6hr120dtx" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/64.png" id="12_bxysn"]
+[ext_resource type="Texture2D" uid="uid://dg1mweo4jjdsm" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/65.png" id="13_t06jc"]
+[ext_resource type="Texture2D" uid="uid://vkdgi5a7rb68" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/66.png" id="14_1fmau"]
+[ext_resource type="Texture2D" uid="uid://b42m1bt3ctfvn" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/67.png" id="15_dpyiq"]
+[ext_resource type="Texture2D" uid="uid://c80o2frpoxgfd" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/68.png" id="16_wofdx"]
+[ext_resource type="Texture2D" uid="uid://busr6rv5e7vb7" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/69.png" id="17_bf8mx"]
+[ext_resource type="Texture2D" uid="uid://c3e6l0im50w42" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/70.png" id="18_krixk"]
+[ext_resource type="Texture2D" uid="uid://3klc47gwenxk" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/71.png" id="19_exwp2"]
+[ext_resource type="Texture2D" uid="uid://baud4fblb7va6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/72.png" id="20_nmli4"]
+[ext_resource type="Texture2D" uid="uid://bend1okglhrq8" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/73.png" id="21_1xafv"]
+[ext_resource type="Texture2D" uid="uid://db0ghrw4fj361" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/74.png" id="22_hxsk4"]
+[ext_resource type="Texture2D" uid="uid://oo8mggqf13wd" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/75.png" id="23_pb5x0"]
+[ext_resource type="Texture2D" uid="uid://cimwe5vqr384p" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/76.png" id="24_66fqq"]
+[ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="25_ksxbs"]
+[ext_resource type="AudioStream" uid="uid://dw3pdijqsjein" path="res://GAME ASSETS_/Misc/Music/closing cutscene music.mp3" id="26_ojpxq"]
+
+[node name="Control" type="Control" unique_id=1019725777]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=619527600]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8901961, 0.74509805, 0.5411765, 1)
+
+[node name="op1_p1" type="TextureRect" parent="." unique_id=1678578480]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_upr0p")
+
+[node name="op1_p2" type="TextureRect" parent="." unique_id=731773603]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_g0y2u")
+
+[node name="op1_p3" type="TextureRect" parent="." unique_id=1734340135]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_g5o4p")
+
+[node name="op1_p4" type="TextureRect" parent="." unique_id=1964891047]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_furqx")
+
+[node name="op1_p5" type="TextureRect" parent="." unique_id=540625752]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_nsssj")
+
+[node name="op1_p6" type="TextureRect" parent="." unique_id=710158909]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_1b5jf")
+
+[node name="op2_p1" type="TextureRect" parent="." unique_id=837017902]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_2vflh")
+
+[node name="op2_p2" type="TextureRect" parent="." unique_id=2050903713]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_5xhbm")
+
+[node name="op2_p3" type="TextureRect" parent="." unique_id=1848378345]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_j3cg2")
+
+[node name="op2_p4" type="TextureRect" parent="." unique_id=1754325440]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_28dbm")
+
+[node name="op2_p5" type="TextureRect" parent="." unique_id=228906380]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_bakr7")
+
+[node name="op2_p6" type="TextureRect" parent="." unique_id=403356769]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("12_bxysn")
+
+[node name="op3_p1" type="TextureRect" parent="." unique_id=581700359]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_t06jc")
+
+[node name="op3_p2" type="TextureRect" parent="." unique_id=752195911]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_1fmau")
+
+[node name="op3_p3" type="TextureRect" parent="." unique_id=1247927438]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_dpyiq")
+
+[node name="op3_p4" type="TextureRect" parent="." unique_id=597239429]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_wofdx")
+
+[node name="op3_p5" type="TextureRect" parent="." unique_id=1832339606]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("17_bf8mx")
+
+[node name="op3_p6" type="TextureRect" parent="." unique_id=1665864163]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_krixk")
+
+[node name="op4_p1" type="TextureRect" parent="." unique_id=1833842264]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("19_exwp2")
+
+[node name="op4_p2" type="TextureRect" parent="." unique_id=660576135]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_nmli4")
+
+[node name="op4_p3" type="TextureRect" parent="." unique_id=914493414]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_1xafv")
+
+[node name="op4_p4" type="TextureRect" parent="." unique_id=1218769383]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_hxsk4")
+
+[node name="op4_p5" type="TextureRect" parent="." unique_id=100915200]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_pb5x0")
+
+[node name="op4_p6" type="TextureRect" parent="." unique_id=1487476846]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_66fqq")
+
+[node name="ContinueText" type="Label" parent="." unique_id=1368632279]
+layout_mode = 0
+offset_left = 1749.0
+offset_top = 1177.0
+offset_right = 1907.0
+offset_bottom = 1201.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
+theme_override_fonts/font = ExtResource("25_ksxbs")
+theme_override_font_sizes/font_size = 17
+text = "▶ Click to continue..."
+
+[node name="NextButton" type="Button" parent="." unique_id=1382166039]
+layout_mode = 0
+offset_left = -1.0
+offset_right = 1919.0
+offset_bottom = 1080.0
+flat = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=981218971]
+stream = ExtResource("26_ojpxq")
+volume_db = 2.102
+autoplay = true

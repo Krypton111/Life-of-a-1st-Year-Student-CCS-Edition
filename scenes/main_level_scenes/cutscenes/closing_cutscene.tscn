@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="1_wxwp8"]
 [ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="2_csnvj"]
-[ext_resource type="Texture2D" uid="uid://c0uwatfraw5yk" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/29.png" id="2_eqq4f"]
-[ext_resource type="Texture2D" uid="uid://dvv6xq52i1wwt" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/30.png" id="3_mhomk"]
-[ext_resource type="Texture2D" uid="uid://j8oypx48syby" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/31.png" id="4_xq7ui"]
-[ext_resource type="Texture2D" uid="uid://cmfenxtp3g0nl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/32.png" id="5_7otek"]
-[ext_resource type="Texture2D" uid="uid://db8quxcv7l4h3" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/33.png" id="6_glpwd"]
-[ext_resource type="Texture2D" uid="uid://c4ir3m725sj8b" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/34.png" id="7_iicpn"]
+[ext_resource type="Texture2D" uid="uid://bqft12k3arpw7" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/29.png" id="2_eqq4f"]
+[ext_resource type="Texture2D" uid="uid://rdancgncbam6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/30.png" id="3_mhomk"]
+[ext_resource type="Texture2D" uid="uid://bmjqdq4ha7s6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/31.png" id="4_xq7ui"]
+[ext_resource type="Texture2D" uid="uid://ciqhwe03hgkyl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/32.png" id="5_7otek"]
+[ext_resource type="Texture2D" uid="uid://frw1jfbnaq2j" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/33.png" id="6_glpwd"]
+[ext_resource type="Texture2D" uid="uid://tdgckyoqdb3m" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/34.png" id="7_iicpn"]
 [ext_resource type="Texture2D" uid="uid://dlg8tmxei7dwc" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/35.png" id="8_v5ls3"]
 [ext_resource type="Texture2D" uid="uid://cpbvy17hol5v6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/36.png" id="9_cerhc"]
 [ext_resource type="Texture2D" uid="uid://be575y2bj8xbx" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (1)/37.png" id="10_gait8"]
@@ -298,70 +298,17 @@ theme_override_fonts/font = ExtResource("2_csnvj")
 theme_override_font_sizes/font_size = 17
 text = "▶ Click to continue..."
 
-[node name="DialogueText1" type="Label" parent="." unique_id=138658523]
-visible = false
+[node name="NextButton" type="Button" parent="." unique_id=918166453]
 layout_mode = 0
-offset_left = 49.0
-offset_top = 36.0
-offset_right = 257.0
-offset_bottom = 110.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 28
-text = "DIALOGUETEXT1"
+offset_left = -1.0
+offset_right = 1919.0
+offset_bottom = 1080.0
+flat = true
 
-[node name="DialogueText2" type="Label" parent="." unique_id=1518113462]
-visible = false
-layout_mode = 0
-offset_left = 670.0
-offset_top = 36.0
-offset_right = 1002.0
-offset_bottom = 136.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 24
-text = "DIALOGUETEXT2"
-
-[node name="DialogueText3" type="Label" parent="." unique_id=652283129]
-visible = false
-layout_mode = 0
-offset_left = 1340.0
-offset_top = 39.0
-offset_right = 1684.0
-offset_bottom = 115.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 26
-text = "DIALOGUETEXT3"
-
-[node name="DialogueText4" type="Label" parent="." unique_id=1332918443]
-visible = false
-layout_mode = 0
-offset_left = 48.0
-offset_top = 645.0
-offset_right = 219.0
-offset_bottom = 685.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 28
-text = "DIALOGUETEXT4"
-
-[node name="DialogueText5" type="Label" parent="." unique_id=1181421648]
-visible = false
-layout_mode = 0
-offset_left = 669.0
-offset_top = 639.0
-offset_right = 1042.0
-offset_bottom = 729.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 28
-text = "DIALOGUETEXT5"
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1640260729]
+stream = ExtResource("27_0otps")
+volume_db = 2.102
+autoplay = true
 
 [node name="DialogueText6" type="Label" parent="." unique_id=1718069824]
 visible = false
@@ -375,15 +322,3 @@ theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687
 theme_override_fonts/font = ExtResource("2_csnvj")
 theme_override_font_sizes/font_size = 27
 text = "DIALOGUETEXT6"
-
-[node name="NextButton" type="Button" parent="." unique_id=918166453]
-layout_mode = 0
-offset_left = -1.0
-offset_right = 1919.0
-offset_bottom = 1080.0
-flat = true
-
-[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1640260729]
-stream = ExtResource("27_0otps")
-volume_db = 2.102
-autoplay = true
