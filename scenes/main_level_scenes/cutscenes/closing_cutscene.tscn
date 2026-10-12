@@ -310,15 +310,3 @@ stream = ExtResource("27_0otps")
 volume_db = 2.102
 autoplay = true
 
-[node name="DialogueText6" type="Label" parent="." unique_id=1718069824]
-visible = false
-layout_mode = 0
-offset_left = 1338.0
-offset_top = 643.0
-offset_right = 1751.0
-offset_bottom = 725.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
-theme_override_fonts/font = ExtResource("2_csnvj")
-theme_override_font_sizes/font_size = 27
-text = "DIALOGUETEXT6"
