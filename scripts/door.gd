@@ -81,9 +81,14 @@ func enter_room() -> void:
 	if should_play_ending_cutscene():
 		transitioning = true
 		print("All required achievements completed. Starting closing cutscene.")
-		await FadeManager.change_scene_with_fade(
-			"res://scenes/main_level_scenes/cutscenes/closing_cutscene.tscn"
-		)
+		if is_instance_valid(AchievementManager) and AchievementManager.has_method("hide_unlock_toast"):
+			AchievementManager.hide_unlock_toast()
+
+		var ending_scene := "res://scenes/main_level_scenes/cutscenes/closing_cutscene.tscn"
+		if is_instance_valid(PlayerSetup) and str(PlayerSetup.player_gender).strip_edges().to_lower() == "female":
+			ending_scene = "res://scenes/main_level_scenes/cutscenes/closing_cutscene_female.tscn"
+
+		await FadeManager.change_scene_with_fade(ending_scene)
 		return
 
 	# Dismiss any achievement notification from the room being exited.
