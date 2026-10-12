@@ -1265,6 +1265,9 @@ func load_from_slot(slot: int) -> void:
 		show_button_feedback(slot_grid.get_child(slot - 1) as Button, "EMPTY SLOT")
 		return
 
+	# Keep the mouse available on the main menu. The pause-menu cursor state
+	# defaults to hidden, which can make the load screen appear unclickable if
+	# a save fails to load and the slot picker is reopened.
 	hide_menu()
 
 	is_paused = false
@@ -1274,18 +1277,21 @@ func load_from_slot(slot: int) -> void:
 	showing_settings_menu = false
 
 	get_tree().paused = false
-	Input.mouse_mode = cursor_mode_before_pause
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if main_menu_mode else cursor_mode_before_pause
 
 	var success: bool = await SaveManager.load_game(slot)
 
 	if success:
 		force_unlock_player_after_load()
 	elif main_menu_mode:
+		get_tree().paused = false
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		open_main_menu_load_slots()
-		show_button_feedback(load_game_button, "Load Failed")
+		show_button_feedback(slot_grid.get_child(slot - 1) as Button, "LOAD FAILED — CHECK SAVE")
 	else:
+		get_tree().paused = false
 		pause_game()
-		show_button_feedback(load_game_button, "Load Failed")
+		show_button_feedback(slot_grid.get_child(slot - 1) as Button, "LOAD FAILED")
 
 
 func force_unlock_player_after_load() -> void:
