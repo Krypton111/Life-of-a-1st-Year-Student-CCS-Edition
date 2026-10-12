@@ -22,6 +22,7 @@ var typing_id := 0
 
 var changing_page := false
 var panel_animating := false
+var is_closing_cutscene := false
 
 # =========================================
 # NODE REFERENCES
@@ -228,23 +229,7 @@ func _ready():
 	if get_tree().current_scene != null:
 		active_scene_path = str(get_tree().current_scene.scene_file_path).to_lower()
 
-	if active_scene_path.contains("closing_cutscene"):
-		var closing_remarks := [
-			"College felt bigger
-			than I expected.",
-			"New faces, new rooms, and
-			a lot to learn.",
-			"Some classes were
-			confusing at first.",
-			"But little by little,
-			I found my rhythm.",
-			"There were laughs between
-			the stressful days.",
-			"I was still figuring things
-			out—and that was okay."
-		]
-		for i in range(mini(6, panels.size())):
-			panels[i]["text"] = closing_remarks[i]
+	is_closing_cutscene = active_scene_path.contains("closing_cutscene")
 
 	next_button.pressed.connect(_on_next_pressed)
 
@@ -297,7 +282,7 @@ func show_panel():
 
 	# Some cutscene scenes intentionally keep only the first six dialogue
 	# labels. Missing labels should not stop the remaining panels from playing.
-	var dialogue_node := get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
+	var dialogue_node: Label = null if is_closing_cutscene else get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
 
 	# Show current panel
 	if panel_node == null:
@@ -417,7 +402,7 @@ func _on_next_pressed():
 		# Invalidate the current typing coroutine
 		typing_id += 1
 
-		var dialogue_node := get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
+		var dialogue_node: Label = null if is_closing_cutscene else get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
 
 		# Finish the current line immediately when its label exists.
 		# If the panel has no dialogue label, continue to the next panel.
