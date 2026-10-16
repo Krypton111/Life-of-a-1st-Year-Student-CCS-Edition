@@ -239,7 +239,7 @@ var closing_narration_batches: Array = [
 	],
 	[
 		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 1.mp3",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/image 4 - 2.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/image 4 - 2.mp3",
 		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 3.mp3",
 		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 4.mp3",
 		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 5.mp3",
