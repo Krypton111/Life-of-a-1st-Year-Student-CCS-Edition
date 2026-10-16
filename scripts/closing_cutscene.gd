@@ -222,7 +222,7 @@ var panels = [
 var narration_player: AudioStreamPlayer
 
 # Independent opening narration volumes in decibels. Adjust these separately.
-@export_range(-80.0, 24.0, 1.0) var male_narration_volume_db: float = 15.0
+@export_range(-80.0, 24.0, 1.0) var male_narration_volume_db: float = 25.0
 
 var male_narration_audio := {
 	0: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 1.mp3"),

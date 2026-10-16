@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cili6eo8hlfmm"]
 
-[ext_resource type="Script" path="res://scripts/closing_cutscene.gd" id="1_wxwp8"]
+[ext_resource type="Script" uid="uid://dtcxo33i1r0ld" path="res://scripts/closing_cutscene.gd" id="1_wxwp8"]
 [ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="2_csnvj"]
 [ext_resource type="Texture2D" uid="uid://bqft12k3arpw7" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/29.png" id="2_eqq4f"]
 [ext_resource type="Texture2D" uid="uid://rdancgncbam6" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (3)/30.png" id="3_mhomk"]
@@ -307,6 +307,5 @@ flat = true
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1640260729]
 stream = ExtResource("27_0otps")
-volume_db = 2.102
+volume_db = -11.0
 autoplay = true
-
