@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bvd3pieorg3rp"
+path="res://.godot/imported/cl male voice 1.mp3-9e798e4545b4a5ac2b8e7e5a607d4ece.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 1.mp3"
+dest_files=["res://.godot/imported/cl male voice 1.mp3-9e798e4545b4a5ac2b8e7e5a607d4ece.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

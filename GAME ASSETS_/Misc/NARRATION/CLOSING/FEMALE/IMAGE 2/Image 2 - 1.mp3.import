@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://lulaqtkmrtfv"
+path="res://.godot/imported/Image 2 - 1.mp3-939ec68d69e406ed08cac4f15fd5ffe0.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 1.mp3"
+dest_files=["res://.godot/imported/Image 2 - 1.mp3-939ec68d69e406ed08cac4f15fd5ffe0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
