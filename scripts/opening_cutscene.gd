@@ -223,7 +223,6 @@ var narration_player: AudioStreamPlayer
 
 # Independent opening narration volumes in decibels. Adjust these separately.
 @export_range(-80.0, 24.0, 1.0) var male_narration_volume_db: float = 15.0
-@export_range(-80.0, 24.0, 1.0) var female_narration_volume_db: float = 15.0
 
 var male_narration_audio := {
 	0: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 1.mp3"),
@@ -249,29 +248,7 @@ var male_narration_audio := {
 	23: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 21.mp3")
 }
 
-var female_narration_audio: Dictionary = {}
-
-func load_female_narration_audio() -> void:
-	# Female clips are numbered continuously across the four subfolders:
-	# 1-6, 7-12, 13-18, and 19-24. Files are named simply "1.mp3",
-	# "2.mp3", etc. Keep the existing panel-to-clip mapping.
-	var clip_panels := {
-		0: 1, 1: 2, 4: 3, 2: 4, 5: 5,
-		6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11,
-		12: 12, 14: 13, 15: 14, 17: 15,
-		18: 16, 19: 17, 20: 18, 21: 19, 22: 20, 23: 21
-	}
-	for panel_index in clip_panels:
-		var clip_number: int = int(clip_panels[panel_index])
-		var folder := "1-6" if clip_number <= 6 else "7-12" if clip_number <= 12 else "13-18" if clip_number <= 18 else "19-24"
-		var clip_path := "res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels %s/%d.mp3" % [folder, clip_number]
-		if ResourceLoader.exists(clip_path):
-			var stream := load(clip_path) as AudioStream
-			if stream != null:
-				female_narration_audio[panel_index] = stream
-
-
-var narration_audio: Dictionary = {}
+var narration_audio: Dictionary = male_narration_audio
 
 
 # =========================================
@@ -314,23 +291,13 @@ func _ready():
 			dialogue_node.modulate.a = 1.0
 			dialogue_node.text = ""
 
-	# Choose narration for the selected player character. Both opening scenes
-	# use this script; the player profile determines which voice-over is used.
-	var selected_gender := str(PlayerSetup.player_gender).to_lower()
-	load_female_narration_audio()
-	if selected_gender == "female":
-		narration_audio = female_narration_audio
-	else:
-		narration_audio = male_narration_audio
+	# This script is dedicated to the male opening cutscene.
+	narration_audio = male_narration_audio
 
-	# Create a dedicated player for the panel-by-panel voice-over.
-	# Each character has an independent volume setting.
+	# Dedicated male narration player and independent volume setting.
 	narration_player = AudioStreamPlayer.new()
 	narration_player.name = "NarrationPlayer"
-	if selected_gender == "female":
-		narration_player.volume_db = female_narration_volume_db
-	else:
-		narration_player.volume_db = male_narration_volume_db
+	narration_player.volume_db = male_narration_volume_db
 	add_child(narration_player)
 
 	# Keep Click to Continue visible
