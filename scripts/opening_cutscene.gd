@@ -245,29 +245,26 @@ var male_narration_audio := {
 	23: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 21.mp3")
 }
 
-var female_narration_audio := {
-	0: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 1-6/op female voice 1.mp3"),
-	1: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 1-6/op female voice 2.mp3"),
-	4: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 1-6/op female voice 3.mp3"),
-	2: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 1-6/op female voice 4.mp3"),
-	5: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 1-6/op female voice 5.mp3"),
-	6: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 6.mp3"),
-	7: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 7.mp3"),
-	8: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 8.mp3"),
-	9: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 9.mp3"),
-	10: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 10.mp3"),
-	11: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/op female voice 11.mp3"),
-	12: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 13-18/op female voice 12.mp3"),
-	14: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 13-18/op female voice 13.mp3"),
-	15: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 13-18/op female voice 14.mp3"),
-	17: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 13-18/op female voice 15.mp3"),
-	18: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 16.mp3"),
-	19: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 17.mp3"),
-	20: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 18.mp3"),
-	21: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 19.mp3"),
-	22: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 20.mp3"),
-	23: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 19-24/op female voice 21.mp3")
-}
+var female_narration_audio: Dictionary = {}
+
+func load_female_narration_audio() -> void:
+	# Female voice clips are optional until the matching MP3 assets are committed.
+	# Load only files that exist so missing female clips never break scene loading.
+	var clip_panels := {
+		0: 1, 1: 2, 4: 3, 2: 4, 5: 5,
+		6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11,
+		12: 12, 14: 13, 15: 14, 17: 15,
+		18: 16, 19: 17, 20: 18, 21: 19, 22: 20, 23: 21
+	}
+	for panel_index in clip_panels:
+		var clip_number: int = int(clip_panels[panel_index])
+		var folder := "1-6" if clip_number <= 5 else "7-12" if clip_number <= 11 else "13-18" if clip_number <= 15 else "19-24"
+		var clip_path := "res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels %s/op female voice %d.mp3" % [folder, clip_number]
+		if ResourceLoader.exists(clip_path):
+			var stream := load(clip_path) as AudioStream
+			if stream != null:
+				female_narration_audio[panel_index] = stream
+
 
 var narration_audio: Dictionary = {}
 
@@ -315,6 +312,7 @@ func _ready():
 	# Choose narration for the selected player character. Both opening scenes
 	# use this script; the player profile determines which voice-over is used.
 	var selected_gender := str(PlayerSetup.player_gender).to_lower()
+	load_female_narration_audio()
 	if selected_gender == "female":
 		narration_audio = female_narration_audio
 	else:
