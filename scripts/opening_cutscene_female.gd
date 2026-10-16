@@ -219,10 +219,35 @@ var panels = [
 # =========================================
 var narration_player: AudioStreamPlayer
 
-# Independent opening narration volumes in decibels. Adjust these separately.
+# Independent narration volumes in decibels. Adjust these separately.
 @export_range(-80.0, 24.0, 1.0) var female_narration_volume_db: float = 0.0
 
 var female_narration_audio: Dictionary = {}
+var closing_narration_batches: Array = [
+	[
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 1.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 2.m4a"
+	],
+	[
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 1.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 2.m4a"
+	],
+	[
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 1.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 2.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 3.m4a"
+	],
+	[
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 1.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/image 4 - 2.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 3.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 4.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 5.m4a",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 6 END.m4a"
+	]
+]
+var closing_narration_batch_index := -1
+var closing_narration_clip_index := 0
 
 func load_female_narration_audio() -> void:
 	# Female clips are numbered continuously across the four subfolders:
@@ -323,6 +348,7 @@ func _ready():
 	narration_player.name = "NarrationPlayer"
 	narration_player.volume_db = female_narration_volume_db
 	add_child(narration_player)
+	narration_player.finished.connect(_on_narration_clip_finished)
 
 	# Keep Click to Continue visible
 	continue_text.visible = true
@@ -386,9 +412,12 @@ func show_panel():
 	# Panel is now ready
 	panel_animating = false
 
-	# Start the voice-over paired with this panel, if one is assigned.
-	# Blank panels and the "You got this!" panel intentionally have no voice-over.
-	if not is_closing_cutscene and narration_audio.has(current_panel):
+	# Opening narration is panel-specific. Closing narration is grouped into
+	# continuous six-panel batches, with each folder's clips played in order.
+	if is_closing_cutscene:
+		if current_panel % 6 == 0:
+			start_closing_narration(int(current_panel / 6))
+	elif narration_audio.has(current_panel):
 		narration_player.stream = narration_audio[current_panel]
 		narration_player.play()
 	else:
@@ -400,6 +429,64 @@ func show_panel():
 	else:
 		is_typing = false
 		continue_text.visible = true
+
+
+# =========================================
+# CLOSING CUTSCENE NARRATION (FEMALE)
+# =========================================
+
+func start_closing_narration(batch_index: int) -> void:
+	if narration_player == null:
+		return
+	if batch_index < 0 or batch_index >= closing_narration_batches.size():
+		return
+
+	# Avoid restarting the same batch if the first panel is shown again.
+	if closing_narration_batch_index == batch_index and narration_player.playing:
+		return
+
+	narration_player.stop()
+	closing_narration_batch_index = batch_index
+	closing_narration_clip_index = 0
+	play_next_closing_narration_clip()
+
+
+func play_next_closing_narration_clip() -> void:
+	if not is_closing_cutscene or narration_player == null:
+		return
+	if closing_narration_batch_index < 0 or closing_narration_batch_index >= closing_narration_batches.size():
+		return
+
+	var clips: Array = closing_narration_batches[closing_narration_batch_index]
+	if closing_narration_clip_index >= clips.size():
+		return
+
+	var clip_path: String = str(clips[closing_narration_clip_index])
+	if not ResourceLoader.exists(clip_path):
+		push_warning("Female closing narration file not found: " + clip_path)
+		closing_narration_clip_index += 1
+		play_next_closing_narration_clip()
+		return
+
+	var stream := load(clip_path) as AudioStream
+	if stream == null:
+		push_warning("Female closing narration could not be loaded as an AudioStream: " + clip_path)
+		closing_narration_clip_index += 1
+		play_next_closing_narration_clip()
+		return
+
+	narration_player.stream = stream
+	narration_player.play()
+
+
+func _on_narration_clip_finished() -> void:
+	if not is_closing_cutscene:
+		return
+	# Do not continue into another batch if the player already moved on.
+	if current_panel / 6 != closing_narration_batch_index:
+		return
+	closing_narration_clip_index += 1
+	play_next_closing_narration_clip()
 
 
 # =========================================
@@ -498,8 +585,10 @@ func _on_next_pressed():
 
 		return
 
-	# Stop the current voice-over when the player advances early.
-	if narration_player != null and narration_player.playing:
+	# Keep closing narration running across all six panels in the current
+	# batch. Stop it only when leaving that batch (or ending the cutscene).
+	# Opening narration retains its original panel-by-panel behavior.
+	if narration_player != null and not is_closing_cutscene and narration_player.playing:
 		narration_player.stop()
 
 	# Move to the next panel
@@ -512,8 +601,13 @@ func _on_next_pressed():
 
 		return
 
-	# Every six panels = new cutscene page
+	# Every six panels = new cutscene page. Stop the previous closing
+	# narration batch only after all six of its panels have left the screen.
 	if current_panel % 6 == 0:
+
+		if is_closing_cutscene and narration_player != null:
+			narration_player.stop()
+			closing_narration_batch_index = -1
 
 		change_page()
 
@@ -600,6 +694,9 @@ func change_page():
 # =========================================
 
 func finish_opening():
+
+	if narration_player != null:
+		narration_player.stop()
 
 	continue_text.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
