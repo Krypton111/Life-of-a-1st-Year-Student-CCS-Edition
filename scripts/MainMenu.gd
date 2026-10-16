@@ -312,15 +312,6 @@ void fragment() {
 
 
 func build_character_art() -> void:
-	# Poster assets decorate the open right side of the menu. They sit behind
-	# the cast and ignore mouse input, leaving character interactions intact.
-	add_poster_decoration("ELEMENT.png", Vector2(720, 55), Vector2(1080, 920), -5, 0.20)
-	add_poster_decoration("STAR.png", Vector2(1120, 70), Vector2(700, 700), -4, 0.38)
-	add_poster_decoration("PC.png", Vector2(1450, 95), Vector2(310, 250), 1, 0.88)
-	add_poster_decoration("PHONE.png", Vector2(1450, 615), Vector2(175, 280), 5, 0.92)
-	add_poster_decoration("MOUSE.png", Vector2(1290, 790), Vector2(190, 150), 5, 0.92)
-	add_poster_decoration("KEEBS.png", Vector2(1540, 800), Vector2(250, 150), 5, 0.90)
-
 	# Back row: smaller, slightly softened silhouettes establish depth.
 	# These are added first so the foreground cast naturally overlaps them.
 	add_character(SCHOOL_ASSETS + "Profs/Charles/Charles.png", Vector2(350, 220), Vector2(235, 490), 0, 0.78)
@@ -350,30 +341,6 @@ func build_character_art() -> void:
 	character_caption.add_theme_constant_override("letter_spacing", 2)
 	character_caption.z_index = 5
 	add_child(character_caption)
-
-
-func add_poster_decoration(file_name: String, at: Vector2, dimensions: Vector2, z_layer: int = 0, opacity: float = 1.0) -> void:
-	var path := POSTER_ELEMENTS_PATH + file_name
-	if not ResourceLoader.exists(path):
-		push_warning("Main menu poster element not found: " + path)
-		return
-	var texture := load(path) as Texture2D
-	if texture == null:
-		push_warning("Main menu poster element could not be loaded: " + path)
-		return
-
-	var decoration := TextureRect.new()
-	decoration.name = "PosterElement_" + file_name.get_basename()
-	decoration.position = at
-	decoration.size = dimensions
-	decoration.z_index = z_layer
-	decoration.modulate = Color(1.0, 1.0, 1.0, opacity)
-	decoration.texture = texture
-	decoration.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	decoration.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	decoration.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	decoration.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(decoration)
 
 
 func add_character(path: String, at: Vector2, dimensions: Vector2, z_layer: int = 1, opacity: float = 1.0) -> void:
