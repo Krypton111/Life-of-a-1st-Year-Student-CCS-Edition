@@ -340,6 +340,8 @@ func _ready():
 	# Dedicated female narration player and independent volume setting.
 	narration_player = AudioStreamPlayer.new()
 	narration_player.name = "NarrationPlayer"
+	narration_player.bus = "Master"
+	narration_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	narration_player.volume_db = female_narration_volume_db
 	add_child(narration_player)
 	narration_player.finished.connect(_on_narration_clip_finished)
@@ -469,8 +471,14 @@ func play_next_closing_narration_clip() -> void:
 		play_next_closing_narration_clip()
 		return
 
+	narration_player.stop()
 	narration_player.stream = stream
+	narration_player.stream_paused = false
 	narration_player.play()
+	print("[Closing narration - female] Requested: ", clip_path,
+		" | playing=", narration_player.playing,
+		" | volume_db=", narration_player.volume_db,
+		" | bus=", narration_player.bus)
 
 
 func _on_narration_clip_finished() -> void:
