@@ -117,4 +117,3 @@ func reset_for_new_day() -> void:
 	var collision := get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if collision != null:
 		collision.set_deferred("disabled", false)
-

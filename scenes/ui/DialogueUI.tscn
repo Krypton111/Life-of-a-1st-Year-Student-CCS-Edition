@@ -59,9 +59,9 @@ offset_bottom = 283.0
 [node name="ContinuePrompt" type="Label" parent="." unique_id=189402097]
 layout_mode = 0
 offset_left = 1562.0
-offset_top = 1016.0
+offset_top = 1057.0
 offset_right = 1810.0
-offset_bottom = 1065.0
+offset_bottom = 1106.0
 text = "Click or press SPACE to continue"
 horizontal_alignment = 1
 vertical_alignment = 1
