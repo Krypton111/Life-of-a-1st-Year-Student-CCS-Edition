@@ -30,8 +30,7 @@ grow_vertical = 2
 color = Color(0.8901961, 0.74509805, 0.5411765, 1)
 
 [node name="PosterElement" type="TextureRect" parent="." unique_id=804400560]
-modulate = Color(1, 1, 1, 0.2)
-z_index = -5
+z_index = 1
 layout_mode = 0
 offset_left = 1014.0
 offset_top = 615.0
@@ -43,8 +42,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="PosterStar" type="TextureRect" parent="." unique_id=455236486]
-modulate = Color(1, 1, 1, 0.38)
-z_index = -4
+z_index = 1
 layout_mode = 0
 offset_left = 2074.0
 offset_top = 159.0
