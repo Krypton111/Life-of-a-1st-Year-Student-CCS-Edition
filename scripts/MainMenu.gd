@@ -181,41 +181,54 @@ func build_menu() -> void:
 	content.add_theme_constant_override("separation", 13)
 	margin.add_child(content)
 
-	var eyebrow := Label.new()
-	eyebrow.text = "A CAMPUS LIFE ADVENTURE"
-	eyebrow.add_theme_font_size_override("font_size", 15)
-	eyebrow.add_theme_color_override("font_color", GOLD)
-	content.add_child(eyebrow)
+	# Title stack: a larger left-aligned logo with a warm shader glow,
+	# followed immediately by the requested subtitle.
+	var title_stack := VBoxContainer.new()
+	title_stack.name = "TitleStack"
+	title_stack.add_theme_constant_override("separation", 2)
+	content.add_child(title_stack)
 
-	# Use the supplied game-poster logo as the actual title artwork.
-	var title_logo := TextureRect.new()
-	title_logo.name = "GameTitleLogo"
-	title_logo.custom_minimum_size = Vector2(0, 142)
-	title_logo.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title_logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	title_logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	title_logo.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var logo_frame := Control.new()
+	logo_frame.name = "LogoGlowFrame"
+	logo_frame.custom_minimum_size = Vector2(0, 245)
+	logo_frame.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_stack.add_child(logo_frame)
+
 	var logo_path := POSTER_ELEMENTS_PATH + "LOGO.png"
 	if ResourceLoader.exists(logo_path):
-		title_logo.texture = load(logo_path) as Texture2D
+		var logo_texture := load(logo_path) as Texture2D
+		if logo_texture != null:
+			var logo_glow := TextureRect.new()
+			logo_glow.name = "GameTitleLogoGlow"
+			logo_glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			logo_glow.texture = logo_texture
+			logo_glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			logo_glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			logo_glow.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			logo_glow.modulate = Color("#FFC45E")
+			logo_glow.material = make_logo_glow_material()
+			logo_frame.add_child(logo_glow)
+
+			var title_logo := TextureRect.new()
+			title_logo.name = "GameTitleLogo"
+			title_logo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			title_logo.texture = logo_texture
+			title_logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			title_logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			title_logo.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			title_logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			logo_frame.add_child(title_logo)
 	else:
 		push_warning("Game title logo not found: " + logo_path)
-	content.add_child(title_logo)
 
-	var edition_row := HBoxContainer.new()
-	edition_row.add_theme_constant_override("separation", 12)
-	content.add_child(edition_row)
-	var edition_rule := ColorRect.new()
-	edition_rule.custom_minimum_size = Vector2(36, 3)
-	edition_rule.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	edition_rule.color = GOLD
-	edition_row.add_child(edition_rule)
-	var edition := Label.new()
-	edition.text = "CCS EDITION"
-	edition.add_theme_font_size_override("font_size", 18)
-	edition.add_theme_color_override("font_color", PALE_GOLD)
-	edition.add_theme_constant_override("letter_spacing", 4)
-	edition_row.add_child(edition)
+	var subtitle := Label.new()
+	subtitle.name = "GameSubtitle"
+	subtitle.text = "A CAMPUS LIFE ADVENTURE"
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	subtitle.add_theme_font_size_override("font_size", 20)
+	subtitle.add_theme_color_override("font_color", PALE_GOLD)
+	subtitle.add_theme_constant_override("letter_spacing", 3)
+	title_stack.add_child(subtitle)
 
 	var description := Label.new()
 	description.text = "New semester. New faces.\nYour story starts here."
@@ -265,6 +278,35 @@ func build_menu() -> void:
 	content.add_child(footer)
 
 	build_quit_dialog()
+
+
+func make_logo_glow_material() -> ShaderMaterial:
+	# Soft golden halo sampled outward from the logo's transparent edges.
+	var shader := Shader.new()
+	shader.code = """
+shader_type canvas_item;
+uniform vec4 glow_color : source_color = vec4(1.0, 0.66, 0.20, 0.88);
+uniform float glow_radius = 0.018;
+uniform float glow_strength = 0.95;
+void fragment() {
+	vec4 base = texture(TEXTURE, UV);
+	float halo = 0.0;
+	for (int x = -4; x <= 4; x++) {
+		for (int y = -4; y <= 4; y++) {
+			if (x == 0 && y == 0) {
+				continue;
+			}
+			vec2 offset_uv = UV + vec2(float(x), float(y)) * glow_radius / 4.0;
+			halo = max(halo, texture(TEXTURE, offset_uv).a);
+		}
+	}
+	float glow_alpha = max(halo - base.a, 0.0) * glow_strength;
+	COLOR = vec4(glow_color.rgb, glow_color.a * glow_alpha);
+}
+"""
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	return material
 
 
 func build_character_art() -> void:
