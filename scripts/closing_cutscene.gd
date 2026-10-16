@@ -253,10 +253,10 @@ var narration_audio: Dictionary = male_narration_audio
 # Dedicated male closing narration: one continuous clip per six-panel page.
 @export_range(-80.0, 24.0, 1.0) var male_closing_narration_volume_db: float = 15.0
 var closing_narration_batches := [
-	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 1.m4a"],
-	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 2.m4a"],
-	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 3.m4a"],
-	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 4.m4a"]
+	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 1.mp3"],
+	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 2.mp3"],
+	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 3.mp3"],
+	["res://GAME ASSETS_/Misc/NARRATION/CLOSING/MALE/cl male voice 4.mp3"]
 ]
 var closing_narration_batch_index := -1
 var closing_narration_clip_index := 0
