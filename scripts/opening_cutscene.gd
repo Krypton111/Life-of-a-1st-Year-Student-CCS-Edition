@@ -248,8 +248,9 @@ var male_narration_audio := {
 var female_narration_audio: Dictionary = {}
 
 func load_female_narration_audio() -> void:
-	# Female voice clips are optional until the matching MP3 assets are committed.
-	# Load only files that exist so missing female clips never break scene loading.
+	# Female clips are numbered continuously across the four subfolders:
+	# 1-6, 7-12, 13-18, and 19-24. Files are named simply "1.mp3",
+	# "2.mp3", etc. Keep the existing panel-to-clip mapping.
 	var clip_panels := {
 		0: 1, 1: 2, 4: 3, 2: 4, 5: 5,
 		6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11,
@@ -258,8 +259,8 @@ func load_female_narration_audio() -> void:
 	}
 	for panel_index in clip_panels:
 		var clip_number: int = int(clip_panels[panel_index])
-		var folder := "1-6" if clip_number <= 5 else "7-12" if clip_number <= 11 else "13-18" if clip_number <= 15 else "19-24"
-		var clip_path := "res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels %s/op female voice %d.mp3" % [folder, clip_number]
+		var folder := "1-6" if clip_number <= 6 else "7-12" if clip_number <= 12 else "13-18" if clip_number <= 18 else "19-24"
+		var clip_path := "res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels %s/%d.mp3" % [folder, clip_number]
 		if ResourceLoader.exists(clip_path):
 			var stream := load(clip_path) as AudioStream
 			if stream != null:
