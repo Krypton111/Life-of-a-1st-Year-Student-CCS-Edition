@@ -281,27 +281,29 @@ func build_menu() -> void:
 
 
 func make_logo_glow_material() -> ShaderMaterial:
-	# Soft golden halo sampled outward from the logo's transparent edges.
+	# Illuminate the actual logo artwork while adding a soft golden radiance.
+	# The glow layer sits directly over the original logo, so the lettering and
+	# artwork become brighter instead of only receiving an outline.
 	var shader := Shader.new()
 	shader.code = """
 shader_type canvas_item;
-uniform vec4 glow_color : source_color = vec4(1.0, 0.66, 0.20, 0.88);
-uniform float glow_radius = 0.018;
-uniform float glow_strength = 0.95;
+uniform vec3 light_color : source_color = vec3(1.0, 0.76, 0.38);
+uniform float illumination : hint_range(0.0, 2.0) = 0.72;
+uniform float glow_radius : hint_range(0.001, 0.06) = 0.018;
+uniform float glow_strength : hint_range(0.0, 2.0) = 1.15;
 void fragment() {
 	vec4 base = texture(TEXTURE, UV);
 	float halo = 0.0;
 	for (int x = -4; x <= 4; x++) {
 		for (int y = -4; y <= 4; y++) {
-			if (x == 0 && y == 0) {
-				continue;
-			}
 			vec2 offset_uv = UV + vec2(float(x), float(y)) * glow_radius / 4.0;
 			halo = max(halo, texture(TEXTURE, offset_uv).a);
 		}
 	}
-	float glow_alpha = max(halo - base.a, 0.0) * glow_strength;
-	COLOR = vec4(glow_color.rgb, glow_color.a * glow_alpha);
+	float outer_glow = max(halo - base.a, 0.0) * glow_strength;
+	vec3 illuminated_rgb = base.rgb + light_color * illumination * base.a;
+	float illuminated_alpha = max(base.a, outer_glow * 0.82);
+	COLOR = vec4(illuminated_rgb, illuminated_alpha);
 }
 """
 	var material := ShaderMaterial.new()
