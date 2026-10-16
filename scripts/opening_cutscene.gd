@@ -221,6 +221,10 @@ var panels = [
 # =========================================
 var narration_player: AudioStreamPlayer
 
+# Independent opening narration volumes in decibels. Adjust these separately.
+@export_range(-80.0, 24.0, 1.0) var male_narration_volume_db: float = 15.0
+@export_range(-80.0, 24.0, 1.0) var female_narration_volume_db: float = 15.0
+
 var male_narration_audio := {
 	0: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 1.mp3"),
 	1: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 2.mp3"),
@@ -320,9 +324,13 @@ func _ready():
 		narration_audio = male_narration_audio
 
 	# Create a dedicated player for the panel-by-panel voice-over.
+	# Each character has an independent volume setting.
 	narration_player = AudioStreamPlayer.new()
 	narration_player.name = "NarrationPlayer"
-	narration_player.volume_db = 15.0
+	if selected_gender == "female":
+		narration_player.volume_db = female_narration_volume_db
+	else:
+		narration_player.volume_db = male_narration_volume_db
 	add_child(narration_player)
 
 	# Keep Click to Continue visible
