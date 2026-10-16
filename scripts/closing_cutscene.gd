@@ -271,9 +271,7 @@ func _ready():
 
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	# The same script drives both cutscenes. Give the closing cutscene its
-	# own brief reflections about the character's first college experiences,
-	# without changing the opening narration.
+	# This script is exclusively for the closing cutscene.
 	is_closing_cutscene = true
 
 	# Loop the cutscene background music continuously.
@@ -285,7 +283,7 @@ func _ready():
 		if not background_music.playing:
 			background_music.play()
 
-	next_button.pressed.connect(_on_next_pressed)
+	next_button.pressed.connect(_on_closing_next_pressed)
 
 	# Hide all panels and dialogue
 	for i in range(1, 25):
@@ -308,7 +306,7 @@ func _ready():
 			dialogue_node.modulate.a = 1.0
 			dialogue_node.text = ""
 
-	# This script is dedicated to the male opening cutscene.
+	# This script is dedicated to the male closing cutscene.
 	narration_audio = male_narration_audio
 
 	# Dedicated male narration player and independent volume setting.
@@ -321,7 +319,7 @@ func _ready():
 	# Keep Click to Continue visible
 	continue_text.visible = true
 
-	# Fade the entire opening in
+	# Fade the entire closing cutscene in
 	await FadeManager.fade_in(opening_fade_duration)
 
 	# Show first panel
@@ -505,62 +503,25 @@ func type_text(label: Label, full_text: String):
 # NEXT BUTTON
 # =========================================
 
-func _on_next_pressed():
-
-	# Ignore clicks while changing pages
-	if changing_page:
+func _on_closing_next_pressed() -> void:
+	# Dedicated closing-cutscene controls: advance one image on each click.
+	# There is no dialogue-typing phase in the closing cutscene.
+	if changing_page or panel_animating:
 		return
 
-	# Ignore clicks while panel itself
-	# is still fading in
-	if panel_animating:
-		return
-
-	# If the text is still typing,
-	# finish it completely.
-	if is_typing:
-
-		# Invalidate the current typing coroutine
-		typing_id += 1
-
-		var dialogue_node: Label = get_dialogue_node(current_panel)
-
-		# Finish the current line immediately when its label exists.
-		# If the panel has no dialogue label, continue to the next panel.
-		if dialogue_node != null:
-			dialogue_node.text = str(panels[current_panel]["text"])
-
-		is_typing = false
-
-		continue_text.visible = true
-
-		return
-
-	# Opening voice-overs stop when advancing. Closing narration continues across
-	# panels and is stopped only when the six-panel page changes.
-	if not is_closing_cutscene and narration_player != null and narration_player.playing:
-		narration_player.stop()
-
-	# Move to the next panel
 	current_panel += 1
 
-	# Check if all 24 panels are finished
 	if current_panel >= panels.size():
-
-		finish_opening()
-
+		finish_closing_cutscene()
 		return
 
-	# Every six panels = new cutscene page
 	if current_panel % 6 == 0:
-		if is_closing_cutscene and narration_player != null:
+		if narration_player != null:
 			narration_player.stop()
-			closing_narration_batch_index = -1
-			closing_narration_clip_index = 0
+		closing_narration_batch_index = -1
+		closing_narration_clip_index = 0
 		change_page()
-
 	else:
-
 		show_panel()
 
 
@@ -641,24 +602,12 @@ func change_page():
 # FINISH OPENING
 # =========================================
 
-func finish_opening():
-
+func finish_closing_cutscene() -> void:
 	if narration_player != null:
 		narration_player.stop()
+
 	continue_text.visible = false
+	next_button.disabled = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	var scene_path := ""
-	if get_tree().current_scene != null:
-		scene_path = str(get_tree().current_scene.scene_file_path).to_lower()
-
-	# The closing cutscene ends immediately by returning to the main menu.
-	# Only the opening cutscene continues into the house gameplay scene.
-	next_button.disabled = true
-	if scene_path.contains("closing_cutscene"):
-		await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
-		return
-
-	await FadeManager.change_scene_with_fade(
-		"res://scenes/main_level_scenes/house_game_level.tscn"
-	)
+	await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
