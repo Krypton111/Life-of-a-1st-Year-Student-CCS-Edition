@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bkb47kn77htr3"]
 
-[ext_resource type="Script" uid="uid://dsfuglt7lah5b" path="res://scripts/opening_cutscene.gd" id="1_7el8l"]
+[ext_resource type="Script" path="res://scripts/opening_cutscene_female.gd" id="1_7el8l"]
 [ext_resource type="Texture2D" uid="uid://b0yincu3l2d56" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/5.png" id="1_tqprj"]
 [ext_resource type="Texture2D" uid="uid://djy1eq4mnhf1f" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/6.png" id="2_7el8l"]
 [ext_resource type="Texture2D" uid="uid://pwrrbi4ncewl" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design/7.png" id="3_y7tqj"]
