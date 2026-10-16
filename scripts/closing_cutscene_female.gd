@@ -578,6 +578,12 @@ func _get_closing_batch_duration(batch_index: int) -> float:
 
 
 func _schedule_closing_auto_advance(panel_index: int) -> void:
+	# The last image of each six-image batch must wait for a manual click.
+	# This prevents the cutscene from automatically entering the next batch
+	# while the player is skipping through the current batch.
+	if panel_index % 6 == 5:
+		return
+
 	var batch_index := int(panel_index / 6)
 	var batch_duration := _get_closing_batch_duration(batch_index)
 	if batch_duration <= 0.0:
