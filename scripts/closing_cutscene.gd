@@ -438,6 +438,10 @@ func show_panel():
 	else:
 		narration_player.stop()
 
+	# Automatically advance through the six panels over the full narration duration.
+	if is_closing_cutscene:
+		_schedule_closing_auto_advance(current_panel)
+
 	# Panels without a dialogue label simply display the artwork.
 	if dialogue_node != null:
 		type_text(dialogue_node, str(panel_data["text"]))
@@ -510,6 +514,49 @@ func type_text(label: Label, full_text: String):
 # =========================================
 # NEXT BUTTON
 # =========================================
+
+func _get_closing_batch_duration(batch_index: int) -> float:
+	if batch_index < 0 or batch_index >= closing_narration_batches.size():
+		return 0.0
+
+	var total_duration := 0.0
+	var clips: Array = closing_narration_batches[batch_index]
+	for clip_path in clips:
+		var path := str(clip_path)
+		if not ResourceLoader.exists(path):
+			continue
+		var stream := load(path) as AudioStream
+		if stream != null:
+			total_duration += stream.get_length()
+
+	return total_duration
+
+
+func _schedule_closing_auto_advance(panel_index: int) -> void:
+	var batch_index := int(panel_index / 6)
+	var batch_duration := _get_closing_batch_duration(batch_index)
+	if batch_duration <= 0.0:
+		return
+
+	# Share the complete batch narration duration across its six images.
+	# Account for the next image's fade-in so the sequence stays close to narration length.
+	var panel_delay := maxf(0.1, (batch_duration / 6.0) - panel_fade_duration)
+	_auto_advance_closing_panel_after_delay(panel_index, batch_index, panel_delay)
+
+
+func _auto_advance_closing_panel_after_delay(panel_index: int, batch_index: int, delay: float) -> void:
+	await get_tree().create_timer(delay).timeout
+
+	# A manual click, scene exit, or another panel transition invalidates this timer.
+	if not is_inside_tree() or not is_closing_cutscene:
+		return
+	if current_panel != panel_index or int(current_panel / 6) != batch_index:
+		return
+	if changing_page or panel_animating:
+		return
+
+	_on_closing_next_pressed()
+
 
 func _on_closing_next_pressed() -> void:
 	# Dedicated closing-cutscene controls: advance one image on each click.
