@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://nq4ov2eln833"]
 
-[ext_resource type="Script" path="res://scripts/closing_cutscene_female.gd" id="27_cutscene_script"]
-
 [ext_resource type="Texture2D" uid="uid://cxubjmi824bpa" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/53.png" id="1_upr0p"]
 [ext_resource type="Texture2D" uid="uid://b42plqhvf7el4" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/54.png" id="2_g0y2u"]
 [ext_resource type="Texture2D" uid="uid://dxv8bkgqaqcf0" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/55.png" id="3_g5o4p"]
@@ -28,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://cimwe5vqr384p" path="res://GAME ASSETS_/Misc/comic-panels/Untitled design (2)/76.png" id="24_66fqq"]
 [ext_resource type="FontFile" uid="uid://bhayau7yruri3" path="res://GAME ASSETS_/Misc/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/Godot-Fontpack-d244bf6170b399a6d4d26a0d906058ddf2dafdf1/fonts/poco/Poco.ttf" id="25_ksxbs"]
 [ext_resource type="AudioStream" uid="uid://dw3pdijqsjein" path="res://GAME ASSETS_/Misc/Music/closing cutscene music.mp3" id="26_ojpxq"]
+[ext_resource type="Script" uid="uid://cikegujtalk2l" path="res://scripts/closing_cutscene_female.gd" id="27_cutscene_script"]
 
 [node name="Control" type="Control" unique_id=1019725777]
 layout_mode = 3
@@ -308,5 +307,5 @@ flat = true
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=981218971]
 stream = ExtResource("26_ojpxq")
-volume_db = 2.102
+volume_db = -11.0
 autoplay = true
