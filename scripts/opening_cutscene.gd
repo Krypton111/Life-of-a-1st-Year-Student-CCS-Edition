@@ -354,7 +354,7 @@ func show_panel():
 
 	# Start the voice-over paired with this panel, if one is assigned.
 	# Blank panels and the "You got this!" panel intentionally have no voice-over.
-	if narration_audio.has(current_panel):
+	if not is_closing_cutscene and narration_audio.has(current_panel):
 		narration_player.stream = narration_audio[current_panel]
 		narration_player.play()
 	else:
