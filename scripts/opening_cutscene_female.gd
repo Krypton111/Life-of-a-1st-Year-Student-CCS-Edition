@@ -143,18 +143,16 @@ var panels = [
 
 	{
 		"image": "op3_p3",
-		"text": "The classroom that
-		once felt ordinary
-		suddenly felt like a place
-		I didn’t want to leave."
+		"text": "The classroom that once
+		felt ordinary suddenly felt like
+		a place I didn’t want to leave."
 	},
 
 	{
 		"image": "op3_p4",
-		"text": "And then, just
-		like that, Senior
-		High School was
-		over."
+		"text": "And then, just like
+		that, Senior High
+		School was over."
 	},
 
 	{

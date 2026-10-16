@@ -455,16 +455,15 @@ theme_override_fonts/font = ExtResource("25_w40ir")
 theme_override_font_sizes/font_size = 24
 
 [node name="DialogueText13" type="Label" parent="." unique_id=1759119]
-visible = false
 layout_mode = 0
-offset_left = 46.0
-offset_top = 28.0
-offset_right = 254.0
-offset_bottom = 102.0
+offset_left = 49.0
+offset_top = 30.0
+offset_right = 257.0
+offset_bottom = 104.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.54249024, 0.33724356, 0.19074482, 1)
 theme_override_fonts/font = ExtResource("25_w40ir")
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 text = "DIALOGUETEXT1"
 
 [node name="DialogueText14" type="Label" parent="." unique_id=1584033318]
@@ -481,20 +480,18 @@ theme_override_font_sizes/font_size = 22
 text = "DIALOGUETEXT2"
 
 [node name="DialogueText15" type="Label" parent="." unique_id=1245882542]
-visible = false
 layout_mode = 0
-offset_left = 1319.0
-offset_top = 31.0
-offset_right = 1663.0
-offset_bottom = 107.0
+offset_left = 1317.0
+offset_top = 39.0
+offset_right = 1661.0
+offset_bottom = 115.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("25_w40ir")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 20
 text = "DIALOGUETEXT3"
 
 [node name="DialogueText16" type="Label" parent="." unique_id=1523919860]
-visible = false
 layout_mode = 0
 offset_left = 43.0
 offset_top = 632.0
@@ -503,7 +500,7 @@ offset_bottom = 672.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0.5411765, 0.3372549, 0.19215687, 1)
 theme_override_fonts/font = ExtResource("25_w40ir")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "DIALOGUETEXT4"
 
 [node name="DialogueText17" type="Label" parent="." unique_id=747473617]
