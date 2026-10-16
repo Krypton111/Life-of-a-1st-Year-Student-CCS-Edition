@@ -43,6 +43,7 @@ func _ready() -> void:
 	setup_menu_audio()
 	build_menu()
 	build_character_art()
+	animate_poster_elements()
 	build_character_dialogue_ui()
 	build_profile_setup()
 	animate_menu_intro()
@@ -50,6 +51,44 @@ func _ready() -> void:
 	if pause_menu != null:
 		pause_menu.set("main_menu_mode", true)
 	queue_redraw()
+
+
+func animate_poster_elements() -> void:
+	# Give the scene-editable poster decorations a slow, gentle floating motion.
+	# Their authored positions and rotations remain the resting positions.
+	var element_names := [
+		"PosterElement",
+		"PosterElement2",
+		"PosterElement3",
+		"PosterElement4",
+		"PosterStar",
+		"PosterPC",
+		"PosterPhone",
+		"PosterMouse",
+		"PosterKeebs"
+	]
+
+	for index in range(element_names.size()):
+		var decoration := get_node_or_null(NodePath(element_names[index])) as TextureRect
+		if decoration == null:
+			continue
+
+		var resting_position := decoration.position
+		var resting_rotation := decoration.rotation
+		var float_height := 5.0 + float(index % 3) * 2.0
+		var duration := 2.8 + float(index % 4) * 0.45
+		var delay := float(index) * 0.16
+
+		var float_tween := create_tween()
+		float_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		float_tween.set_loops()
+		float_tween.tween_interval(delay)
+		float_tween.set_parallel(true)
+		float_tween.tween_property(decoration, "position", resting_position + Vector2(0.0, -float_height), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		float_tween.tween_property(decoration, "rotation", resting_rotation + deg_to_rad(1.2), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		float_tween.set_parallel(false)
+		float_tween.tween_property(decoration, "position", resting_position, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		float_tween.parallel().tween_property(decoration, "rotation", resting_rotation - deg_to_rad(1.2), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _draw() -> void:
