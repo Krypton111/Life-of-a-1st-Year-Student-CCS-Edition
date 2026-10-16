@@ -222,7 +222,7 @@ var panels = [
 var narration_player: AudioStreamPlayer
 
 # Independent opening narration volumes in decibels. Adjust these separately.
-@export_range(-80.0, 24.0, 1.0) var female_narration_volume_db: float = 15.0
+@export_range(-80.0, 24.0, 1.0) var female_narration_volume_db: float = 0.0
 
 var female_narration_audio: Dictionary = {}
 
@@ -231,7 +231,7 @@ func load_female_narration_audio() -> void:
 	# 1-6, 7-12, 13-18, and 19-24. Files are named simply "1.mp3",
 	# "2.mp3", etc. Keep the existing panel-to-clip mapping.
 	var clip_panels := {
-		0: 1, 1: 2, 4: 3, 2: 4, 5: 5,
+		0: 1, 1: 2, 2: 3, 4: 4, 5: 5,
 		6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 11,
 		12: 12, 14: 13, 15: 14, 17: 15,
 		18: 16, 19: 17, 20: 18, 21: 19, 22: 20, 23: 21
