@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cdnk6ecb7v68d"
+path="res://.godot/imported/10.mp3-e63e1e59aeaca4d4b8afb2db079e18ed.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels 7-12/10.mp3"
+dest_files=["res://.godot/imported/10.mp3-e63e1e59aeaca4d4b8afb2db079e18ed.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

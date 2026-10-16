@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dfmpdjlq3xj63"
+path="res://.godot/imported/op male voice 12.mp3-dfcc2245b1d62c73fe86b367eea93c10.mp3str"
+
+[deps]
+
+source_file="res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 13-18/op male voice 12.mp3"
+dest_files=["res://.godot/imported/op male voice 12.mp3-dfcc2245b1d62c73fe86b367eea93c10.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
