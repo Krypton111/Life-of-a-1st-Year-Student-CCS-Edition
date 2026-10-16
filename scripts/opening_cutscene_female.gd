@@ -238,12 +238,30 @@ func load_female_narration_audio() -> void:
 	}
 	for panel_index in clip_panels:
 		var clip_number: int = int(clip_panels[panel_index])
-		var folder := "1-6" if clip_number <= 6 else "7-12" if clip_number <= 12 else "13-18" if clip_number <= 18 else "19-24"
+		# The repository's actual MP3 placement has three boundary files
+		# in the next folder: 6 is under 7-12, 12 under 13-18,
+		# and 16 under 19-24. Match the real asset locations explicitly.
+		var folder := ""
+		if clip_number <= 5:
+			folder = "1-6"
+		elif clip_number <= 11:
+			folder = "7-12"
+		elif clip_number <= 15:
+			folder = "13-18"
+		else:
+			folder = "19-24"
+
 		var clip_path := "res://GAME ASSETS_/Misc/NARRATION/INTRO/FEMALE/intro panels %s/%d.mp3" % [folder, clip_number]
-		if ResourceLoader.exists(clip_path):
-			var stream := load(clip_path) as AudioStream
-			if stream != null:
-				female_narration_audio[panel_index] = stream
+		if not ResourceLoader.exists(clip_path):
+			push_warning("Female narration file not found: " + clip_path)
+			continue
+
+		var stream := load(clip_path) as AudioStream
+		if stream == null:
+			push_warning("Female narration file could not be loaded as AudioStream: " + clip_path)
+			continue
+
+		female_narration_audio[panel_index] = stream
 
 
 var narration_audio: Dictionary = female_narration_audio
