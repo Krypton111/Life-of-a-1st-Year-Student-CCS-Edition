@@ -32,10 +32,51 @@ color = Color(0.8901961, 0.74509805, 0.5411765, 1)
 [node name="PosterElement" type="TextureRect" parent="." unique_id=804400560]
 z_index = 1
 layout_mode = 0
-offset_left = 1014.0
-offset_top = 615.0
-offset_right = 2546.0
-offset_bottom = 1969.0
+offset_left = 743.0
+offset_top = 84.99999
+offset_right = 1318.8418
+offset_bottom = 424.03656
+rotation = -0.3159046
+mouse_filter = 2
+texture = ExtResource("3_element")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterElement2" type="TextureRect" parent="." unique_id=76024376]
+z_index = 1
+layout_mode = 0
+offset_left = 1121.9999
+offset_top = -53.999985
+offset_right = 1697.8417
+offset_bottom = 285.03656
+rotation = 0.10646509
+mouse_filter = 2
+texture = ExtResource("3_element")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
+[node name="PosterElement3" type="TextureRect" parent="." unique_id=1130880608]
+z_index = 1
+layout_mode = 0
+offset_left = 630.0
+offset_top = 247.00002
+offset_right = 797.9265
+offset_bottom = 399.76172
+rotation = 1.1100295
+mouse_filter = 2
+texture = ExtResource("3_element")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterElement4" type="TextureRect" parent="." unique_id=1325134370]
+z_index = 1
+layout_mode = 0
+offset_left = 105.000015
+offset_top = 1156.0
+offset_right = 240.77596
+offset_bottom = 1273.2635
+rotation = 3.619813
 mouse_filter = 2
 texture = ExtResource("3_element")
 expand_mode = 1
@@ -44,10 +85,10 @@ stretch_mode = 5
 [node name="PosterStar" type="TextureRect" parent="." unique_id=455236486]
 z_index = 1
 layout_mode = 0
-offset_left = 2074.0
-offset_top = 159.0
-offset_right = 2405.0
-offset_bottom = 537.0
+offset_left = 1623.0
+offset_top = 20.0
+offset_right = 1867.0
+offset_bottom = 264.0
 mouse_filter = 2
 texture = ExtResource("4_star")
 expand_mode = 1
