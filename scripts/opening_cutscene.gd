@@ -554,12 +554,12 @@ func change_page():
 		previous_page_end + 1
 	):
 
-		var panel_node = get_panel_node(i)
+		var panel_node := get_panel_node(i)
+		var dialogue_node := get_dialogue_node(i)
 
-		var dialogue_node := get_node_or_null("DialogueText" + str(i + 1)) as Label
-
-		panel_node.visible = false
-		panel_node.modulate.a = 1.0
+		if panel_node != null:
+			panel_node.visible = false
+			panel_node.modulate.a = 1.0
 
 		if dialogue_node != null:
 			dialogue_node.visible = false
