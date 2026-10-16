@@ -483,7 +483,7 @@ func _on_narration_clip_finished() -> void:
 	if not is_closing_cutscene:
 		return
 	# Do not continue into another batch if the player already moved on.
-	if current_panel / 6 != closing_narration_batch_index:
+	if int(current_panel / 6) != closing_narration_batch_index:
 		return
 	closing_narration_clip_index += 1
 	play_next_closing_narration_clip()
