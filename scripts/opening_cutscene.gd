@@ -214,6 +214,38 @@ var panels = [
 
 
 # =========================================
+# OPENING VOICE-OVER NARRATION
+# Key = zero-based panel index. Panels with no narration are intentionally omitted.
+# "You got this!" (op1_p4) is intentionally excluded.
+# =========================================
+var narration_player: AudioStreamPlayer
+
+var narration_audio := {
+	0: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 1.m4a"),
+	1: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 2.m4a"),
+	2: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 3.m4a"),
+	4: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 4.m4a"),
+	5: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 1-6/op male voice 5.m4a"),
+	6: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 6.m4a"),
+	7: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 7.m4a"),
+	8: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 8.m4a"),
+	9: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 9.m4a"),
+	10: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 10.m4a"),
+	11: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 7-12/op male voice 11.m4a"),
+	12: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 13-18/op male voice 12.m4a"),
+	14: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 13-18/op male voice 13.m4a"),
+	15: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 13-18/op male voice 14.m4a"),
+	17: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 13-18/op male voice 15.m4a"),
+	18: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 16.m4a"),
+	19: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 17.m4a"),
+	20: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 18.m4a"),
+	21: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 19.m4a"),
+	22: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 20.m4a"),
+	23: preload("res://GAME ASSETS_/Misc/NARRATION/INTRO/MALE/intro panels 19-24/op male voice 21.m4a")
+}
+
+
+# =========================================
 # READY
 # =========================================
 
@@ -252,6 +284,11 @@ func _ready():
 			dialogue_node.visible = false
 			dialogue_node.modulate.a = 1.0
 			dialogue_node.text = ""
+
+	# Create a dedicated player for the panel-by-panel voice-over.
+	narration_player = AudioStreamPlayer.new()
+	narration_player.name = "NarrationPlayer"
+	add_child(narration_player)
 
 	# Keep Click to Continue visible
 	continue_text.visible = true
@@ -314,6 +351,14 @@ func show_panel():
 
 	# Panel is now ready
 	panel_animating = false
+
+	# Start the voice-over paired with this panel, if one is assigned.
+	# Blank panels and the "You got this!" panel intentionally have no voice-over.
+	if narration_audio.has(current_panel):
+		narration_player.stream = narration_audio[current_panel]
+		narration_player.play()
+	else:
+		narration_player.stop()
 
 	# Panels without a dialogue label simply display the artwork.
 	if dialogue_node != null:
@@ -413,6 +458,10 @@ func _on_next_pressed():
 		continue_text.visible = true
 
 		return
+
+	# Stop the current voice-over when the player advances early.
+	if narration_player != null and narration_player.playing:
+		narration_player.stop()
 
 	# Move to the next panel
 	current_panel += 1
