@@ -2,6 +2,12 @@
 
 [ext_resource type="Script" uid="uid://fw7ryhcgsmi7" path="res://scripts/MainMenu.gd" id="1_main_menu"]
 [ext_resource type="PackedScene" uid="uid://cmfbrfempeddn" path="res://scenes/ui/PauseMenu.tscn" id="2_pause_menu"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/ELEMENT.png" id="3_element"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/STAR.png" id="4_star"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/PC.png" id="5_pc"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/PHONE.png" id="6_phone"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/MOUSE.png" id="7_mouse"]
+[ext_resource type="Texture2D" path="res://GAME ASSETS_/Misc/GAME POSTER ELEMENTS/KEEBS.png" id="8_keebs"]
 
 [node name="MainMenu" type="Control" unique_id=1454660661]
 layout_mode = 3
@@ -22,3 +28,71 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.8901961, 0.74509805, 0.5411765, 1)
+
+[node name="PosterElement" type="TextureRect" parent="."]
+offset_left = 720.0
+offset_top = 55.0
+offset_right = 1800.0
+offset_bottom = 975.0
+modulate = Color(1, 1, 1, 0.2)
+z_index = -5
+mouse_filter = 2
+texture = ExtResource("3_element")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterStar" type="TextureRect" parent="."]
+offset_left = 1120.0
+offset_top = 70.0
+offset_right = 1820.0
+offset_bottom = 770.0
+modulate = Color(1, 1, 1, 0.38)
+z_index = -4
+mouse_filter = 2
+texture = ExtResource("4_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterPC" type="TextureRect" parent="."]
+offset_left = 1450.0
+offset_top = 95.0
+offset_right = 1760.0
+offset_bottom = 345.0
+z_index = 1
+mouse_filter = 2
+texture = ExtResource("5_pc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterPhone" type="TextureRect" parent="."]
+offset_left = 1450.0
+offset_top = 615.0
+offset_right = 1625.0
+offset_bottom = 895.0
+z_index = 5
+mouse_filter = 2
+texture = ExtResource("6_phone")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterMouse" type="TextureRect" parent="."]
+offset_left = 1290.0
+offset_top = 790.0
+offset_right = 1480.0
+offset_bottom = 940.0
+z_index = 5
+mouse_filter = 2
+texture = ExtResource("7_mouse")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PosterKeebs" type="TextureRect" parent="."]
+offset_left = 1540.0
+offset_top = 800.0
+offset_right = 1790.0
+offset_bottom = 950.0
+z_index = 5
+mouse_filter = 2
+texture = ExtResource("8_keebs")
+expand_mode = 1
+stretch_mode = 5
