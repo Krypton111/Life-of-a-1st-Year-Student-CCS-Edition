@@ -268,6 +268,15 @@ func _ready():
 
 	is_closing_cutscene = active_scene_path.contains("closing_cutscene")
 
+	# Loop the cutscene background music continuously.
+	# The scene already provides a BackgroundMusic AudioStreamPlayer.
+	var background_music := get_node_or_null("BackgroundMusic") as AudioStreamPlayer
+	if background_music != null:
+		if background_music.stream is AudioStreamMP3:
+			(background_music.stream as AudioStreamMP3).loop = true
+		if not background_music.playing:
+			background_music.play()
+
 	next_button.pressed.connect(_on_next_pressed)
 
 	# Hide all panels and dialogue
