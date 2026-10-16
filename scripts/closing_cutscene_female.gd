@@ -225,25 +225,25 @@ var narration_player: AudioStreamPlayer
 var female_narration_audio: Dictionary = {}
 var closing_narration_batches: Array = [
 	[
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 1.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 2.m4a"
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 1.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 1/Image 1 - 2.mp3"
 	],
 	[
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 1.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 2.m4a"
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 1.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 2/Image 2 - 2.mp3"
 	],
 	[
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 1.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 2.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 3.m4a"
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 1.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 2.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 3/Image 3 - 3.mp3"
 	],
 	[
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 1.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/image 4 - 2.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 3.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 4.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 5.m4a",
-		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 6 END.m4a"
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 1.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/image 4 - 2.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 3.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 4.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 5.mp3",
+		"res://GAME ASSETS_/Misc/NARRATION/CLOSING/FEMALE/IMAGE 4/Image 4 - 6 END.mp3"
 	]
 ]
 var closing_narration_batch_index := -1
