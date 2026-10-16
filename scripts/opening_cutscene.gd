@@ -328,7 +328,7 @@ func show_panel():
 
 	# Some cutscene scenes intentionally keep only the first six dialogue
 	# labels. Missing labels should not stop the remaining panels from playing.
-	var dialogue_node: Label = null if is_closing_cutscene else get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
+	var dialogue_node: Label = get_dialogue_node(current_panel)
 
 	# Show current panel
 	if panel_node == null:
@@ -383,18 +383,23 @@ func show_panel():
 # =========================================
 
 func get_panel_node(index: int) -> Control:
+	if index < 0 or index >= panels.size():
+		return null
 
-	var cutscene_number = int(index / 6) + 1
-	var panel_number = int(index % 6) + 1
+	var cutscene_number := int(index / 6) + 1
+	var panel_number := int(index % 6) + 1
+	var panel_name := "op%d_p%d" % [cutscene_number, panel_number]
 
-	var panel_name = (
-		"op"
-		+ str(cutscene_number)
-		+ "_p"
-		+ str(panel_number)
-	)
+	return get_node_or_null(panel_name) as Control
 
-	return get_node(panel_name)
+
+func get_dialogue_node(index: int) -> Label:
+	if is_closing_cutscene:
+		return null
+	if index < 0 or index >= panels.size():
+		return null
+
+	return get_node_or_null("DialogueText%d" % (index + 1)) as Label
 
 
 # =========================================
@@ -456,7 +461,7 @@ func _on_next_pressed():
 		# Invalidate the current typing coroutine
 		typing_id += 1
 
-		var dialogue_node: Label = null if is_closing_cutscene else get_node_or_null("DialogueText" + str(current_panel + 1)) as Label
+		var dialogue_node: Label = get_dialogue_node(current_panel)
 
 		# Finish the current line immediately when its label exists.
 		# If the panel has no dialogue label, continue to the next panel.
@@ -517,14 +522,14 @@ func change_page():
 		previous_page_end + 1
 	):
 
-		var panel_node = get_panel_node(i)
-
-		fade_tween.parallel().tween_property(
-			panel_node,
-			"modulate:a",
-			0.0,
-			page_fade_duration
-		)
+		var panel_node := get_panel_node(i)
+		if panel_node != null:
+			fade_tween.parallel().tween_property(
+				panel_node,
+				"modulate:a",
+				0.0,
+				page_fade_duration
+			)
 
 	# Fade out previous dialogue
 	for i in range(
@@ -532,7 +537,7 @@ func change_page():
 		previous_page_end + 1
 	):
 
-		var dialogue_node := get_node_or_null("DialogueText" + str(i + 1)) as Label
+		var dialogue_node := get_dialogue_node(i)
 		if dialogue_node != null:
 			fade_tween.parallel().tween_property(
 				dialogue_node,
