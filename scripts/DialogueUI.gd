@@ -921,7 +921,7 @@ func start_typing(full_text: String) -> void:
 	# Choose the largest readable font that keeps the entire line inside the
 	# dialogue text area. The default remains 24; long lines scale down only
 	# as needed, and the label wraps instead of drawing outside the panel.
-	await fit_dialogue_text_to_box(full_text)
+	fit_dialogue_text_to_box(full_text)
 	dialogue_text.text = ""
 
 	for i in range(full_text.length()):
@@ -952,26 +952,30 @@ func start_typing(full_text: String) -> void:
 
 
 func fit_dialogue_text_to_box(full_text: String) -> void:
-	var font_size := 24
-	var minimum_font_size := 18
-	dialogue_text.add_theme_font_size_override("font_size", font_size)
+	# Measure the full line without temporarily placing it in the live label.
+	# This avoids clearing/relayout timing issues with the typewriter effect.
 	dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialogue_text.clip_text = true
-	dialogue_text.text = full_text
 
-	# Wait for Godot to calculate wrapped lines using the current label width.
-	dialogue_text.reset_size()
-	await get_tree().process_frame
+	var font := dialogue_text.get_theme_font("font")
+	var available_width := maxf(1.0, dialogue_text.size.x)
+	var available_height := maxf(1.0, dialogue_text.size.y)
+	var font_size := 24
+	var minimum_font_size := 18
 
-	while font_size > minimum_font_size and dialogue_text.get_combined_minimum_size().y > dialogue_text.size.y:
-		font_size -= 1
-		dialogue_text.add_theme_font_size_override("font_size", font_size)
-		dialogue_text.reset_size()
-		await get_tree().process_frame
+	if font != null:
+		while font_size > minimum_font_size:
+			var measured := font.get_multiline_string_size(
+				full_text,
+				HORIZONTAL_ALIGNMENT_LEFT,
+				available_width,
+				font_size
+			)
+			if measured.y <= available_height:
+				break
+			font_size -= 1
 
-	# Clear the preview text; start_typing will reveal it character by character.
-	dialogue_text.text = ""
-
+	dialogue_text.add_theme_font_size_override("font_size", font_size)
 
 func _input(event) -> void:
 
