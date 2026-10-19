@@ -921,7 +921,7 @@ func start_typing(full_text: String) -> void:
 	# Choose the largest readable font that keeps the entire line inside the
 	# dialogue text area. The default remains 24; long lines scale down only
 	# as needed, and the label wraps instead of drawing outside the panel.
-	fit_dialogue_text_to_box(full_text)
+	await fit_dialogue_text_to_box(full_text)
 	dialogue_text.text = ""
 
 	for i in range(full_text.length()):
