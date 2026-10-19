@@ -399,7 +399,7 @@ func apply_cozy_dialogue_style() -> void:
 
 	accent_bar.color = Color("#D8A15D")
 
-	speaker_name.add_theme_font_size_override("font_size", 20)
+	speaker_name.add_theme_font_size_override("font_size", 28)
 	speaker_name.add_theme_color_override(
 		"font_color",
 		Color("#D8A15D")
@@ -411,7 +411,10 @@ func apply_cozy_dialogue_style() -> void:
 	speaker_name.add_theme_constant_override("shadow_offset_x", 1)
 	speaker_name.add_theme_constant_override("shadow_offset_y", 2)
 
-	dialogue_text.add_theme_font_size_override("font_size", 18)
+	dialogue_text.add_theme_font_size_override("font_size", 24)
+	dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialogue_text.clip_text = true
+	dialogue_text.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	dialogue_text.add_theme_color_override(
 		"font_color",
 		Color("#F6E7D2")
@@ -915,6 +918,10 @@ func start_typing(full_text: String) -> void:
 
 	var my_typing_id := typing_id
 
+	# Choose the largest readable font that keeps the entire line inside the
+	# dialogue text area. The default remains 24; long lines scale down only
+	# as needed, and the label wraps instead of drawing outside the panel.
+	fit_dialogue_text_to_box(full_text)
 	dialogue_text.text = ""
 
 	for i in range(full_text.length()):
@@ -942,6 +949,28 @@ func start_typing(full_text: String) -> void:
 		return
 
 	is_typing = false
+
+
+func fit_dialogue_text_to_box(full_text: String) -> void:
+	var font_size := 24
+	var minimum_font_size := 18
+	dialogue_text.add_theme_font_size_override("font_size", font_size)
+	dialogue_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialogue_text.clip_text = true
+	dialogue_text.text = full_text
+
+	# Wait for Godot to calculate wrapped lines using the current label width.
+	dialogue_text.reset_size()
+	await get_tree().process_frame
+
+	while font_size > minimum_font_size and dialogue_text.get_combined_minimum_size().y > dialogue_text.size.y:
+		font_size -= 1
+		dialogue_text.add_theme_font_size_override("font_size", font_size)
+		dialogue_text.reset_size()
+		await get_tree().process_frame
+
+	# Clear the preview text; start_typing will reveal it character by character.
+	dialogue_text.text = ""
 
 
 func _input(event) -> void:
