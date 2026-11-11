@@ -925,7 +925,7 @@ func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
 	# the game's content/base resolution instead, which is the supported
 	# multi-resolution approach and avoids unsafe display-mode switching.
 	var root_window := get_tree().root
-	root_window.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	root_window.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	root_window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
 	root_window.content_scale_size = resolution
 
@@ -1133,6 +1133,14 @@ func load_settings() -> void:
 			achievement_snapshot = stored_snapshot.duplicate(true)
 		for action in REBIND_ACTIONS:
 			saved_controls[action] = int(config.get_value("controls", action, 0))
+
+	# Set these before slider callbacks run: those callbacks save the complete
+	# settings file, so they must not overwrite a previously chosen resolution.
+	resolution_user_selected = saved_resolution_customized
+	current_resolution = Vector2i(resolution_width, resolution_height)
+	if not get_resolution_options().has(current_resolution):
+		current_resolution = detected_monitor_resolution
+		resolution_user_selected = false
 
 	if not InputMap.has_action("toggle_quest_tracker"):
 		InputMap.add_action("toggle_quest_tracker")
