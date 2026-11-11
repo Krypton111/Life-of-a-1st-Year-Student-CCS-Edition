@@ -7,15 +7,18 @@ const SLOT_BUTTON_SIZE := Vector2(270.0, 64.0)
 const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
 const SETTINGS_PANEL_SIZE := Vector2(560.0, 700.0)
 const AVAILABLE_RESOLUTIONS: Array[Vector2i] = [
-	Vector2i(1280, 720),
-	Vector2i(1366, 768),
-	Vector2i(1600, 900),
-	Vector2i(1920, 1080),
-	Vector2i(1920, 1200),
-	Vector2i(2560, 1440),
-	Vector2i(3840, 2160)
+	Vector2i(1280, 720),   # 16:9
+	Vector2i(1366, 768),   # 16:9
+	Vector2i(1600, 900),   # 16:9
+	Vector2i(1680, 1050),  # 16:10
+	Vector2i(1920, 1080),  # 16:9
+	Vector2i(1920, 1200),  # 16:10
+	Vector2i(2560, 1080),  # 21:9
+	Vector2i(2560, 1440),  # 16:9
+	Vector2i(3440, 1440),  # 21:9
+	Vector2i(3840, 2160)   # 16:9
 ]
-const DEFAULT_RESOLUTION := Vector2i(1920, 1080)
+const FALLBACK_RESOLUTION := Vector2i(1920, 1080)
 const CONTROLS_PANEL_SIZE := Vector2(560.0, 520.0)
 const REBIND_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
 const REBIND_LABELS := {"move_up": "Move Up", "move_left": "Move Left", "move_down": "Move Down", "move_right": "Move Right", "interact": "Interact", "toggle_quest_tracker": "Toggle Quest Tracker"}
@@ -67,7 +70,9 @@ var volume_value_label: Label
 var brightness_value_label: Label
 var resolution_option: Button
 var resolution_popup_list: VBoxContainer
-var current_resolution: Vector2i = DEFAULT_RESOLUTION
+var current_resolution: Vector2i = FALLBACK_RESOLUTION
+var detected_monitor_resolution: Vector2i = FALLBACK_RESOLUTION
+var resolution_user_selected: bool = false
 var quest_pointer_toggle: CheckButton
 var all_achievements_toggle: CheckButton
 var settings_close_button: Button
@@ -98,6 +103,14 @@ func _ready() -> void:
 	layer = 10000
 
 	master_bus_index = AudioServer.get_bus_index("Master")
+
+	# Fullscreen uses the monitor's current video mode. Use that size as the
+	# initial content resolution for this player instead of assuming 1080p.
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	detected_monitor_resolution = DisplayServer.screen_get_size(DisplayServer.SCREEN_OF_MAIN_WINDOW)
+	if detected_monitor_resolution.x <= 0 or detected_monitor_resolution.y <= 0:
+		detected_monitor_resolution = FALLBACK_RESOLUTION
+	current_resolution = detected_monitor_resolution
 
 	build_brightness_overlay()
 	build_ui()
@@ -577,7 +590,7 @@ func build_settings_ui() -> void:
 	resolution_label.add_theme_color_override("font_color", Color("#F6E7D2"))
 	resolution_row.add_child(resolution_label)
 
-	resolution_option = make_button("%d × %d (Default)" % [DEFAULT_RESOLUTION.x, DEFAULT_RESOLUTION.y])
+	resolution_option = make_button("%d × %d (Default)" % [current_resolution.x, current_resolution.y])
 	resolution_option.name = "ResolutionDropdownButton"
 	resolution_option.custom_minimum_size = Vector2(0.0, 42.0)
 	resolution_option.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -597,10 +610,10 @@ func build_settings_ui() -> void:
 	resolution_popup_list.add_theme_constant_override("separation", 4)
 	resolution_dropdown_panel.add_child(resolution_popup_list)
 
-	for resolution in AVAILABLE_RESOLUTIONS:
+	for resolution in get_resolution_options():
 		var option_label := "%d × %d" % [resolution.x, resolution.y]
-		if resolution == DEFAULT_RESOLUTION:
-			option_label += " (Default)"
+		if resolution == detected_monitor_resolution:
+			option_label += " (Your Display)"
 		var option_button := make_button(option_label)
 		option_button.custom_minimum_size = Vector2(0.0, 38.0)
 		option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -876,9 +889,17 @@ func toggle_resolution_dropdown() -> void:
 	dropdown_panel.visible = not dropdown_panel.visible
 
 
+func get_resolution_options() -> Array[Vector2i]:
+	var options: Array[Vector2i] = AVAILABLE_RESOLUTIONS.duplicate()
+	if not options.has(detected_monitor_resolution):
+		options.append(detected_monitor_resolution)
+	return options
+
+
 func on_resolution_selected(resolution: Vector2i) -> void:
-	if not AVAILABLE_RESOLUTIONS.has(resolution):
+	if not get_resolution_options().has(resolution):
 		return
+	resolution_user_selected = true
 	if resolution_popup_list != null:
 		var dropdown_panel := resolution_popup_list.get_parent() as PanelContainer
 		if dropdown_panel != null:
@@ -889,21 +910,26 @@ func on_resolution_selected(resolution: Vector2i) -> void:
 func update_resolution_dropdown_label() -> void:
 	if resolution_option == null:
 		return
-	var suffix := " (Default)" if current_resolution == DEFAULT_RESOLUTION else ""
+	var suffix := " (Your Display)" if current_resolution == detected_monitor_resolution and not resolution_user_selected else ""
 	resolution_option.text = "%d × %d%s" % [current_resolution.x, current_resolution.y, suffix]
 
 
 func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
-	if not AVAILABLE_RESOLUTIONS.has(resolution):
-		resolution = DEFAULT_RESOLUTION
+	if not get_resolution_options().has(resolution):
+		resolution = detected_monitor_resolution
 
 	current_resolution = resolution
 
-	# Exclusive fullscreen allows the selected display mode to be applied
-	# while keeping the game fullscreen. The logical viewport stays 1920x1080.
-	var window_id := DisplayServer.MAIN_WINDOW_ID
-	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN, window_id)
-	DisplayServer.window_set_size(resolution, window_id)
+	# Godot deliberately does not switch the monitor's video mode. In
+	# fullscreen, the OS keeps the monitor at its native resolution. Change
+	# the game's content/base resolution instead, which is the supported
+	# multi-resolution approach and avoids unsafe display-mode switching.
+	var root_window := get_tree().root
+	root_window.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	root_window.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	root_window.content_scale_size = resolution
+
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	update_resolution_dropdown_label()
 
 	if persist:
@@ -1030,6 +1056,7 @@ func save_settings() -> void:
 
 	config.set_value("video", "resolution_width", current_resolution.x)
 	config.set_value("video", "resolution_height", current_resolution.y)
+	config.set_value("video", "resolution_customized", resolution_user_selected)
 
 	if quest_pointer_toggle != null:
 		config.set_value(
@@ -1070,8 +1097,9 @@ func load_settings() -> void:
 
 	var volume_value: float = 100.0
 	var brightness_value: float = 100.0
-	var resolution_width: int = DEFAULT_RESOLUTION.x
-	var resolution_height: int = DEFAULT_RESOLUTION.y
+	var resolution_width: int = detected_monitor_resolution.x
+	var resolution_height: int = detected_monitor_resolution.y
+	var saved_resolution_customized := false
 	var quest_pointer_enabled: bool = true
 	var all_achievements_enabled: bool = false
 	var achievement_snapshot: Dictionary = {}
@@ -1085,8 +1113,10 @@ func load_settings() -> void:
 		brightness_value = float(
 			config.get_value("video", "brightness", 100.0)
 		)
-		resolution_width = int(config.get_value("video", "resolution_width", DEFAULT_RESOLUTION.x))
-		resolution_height = int(config.get_value("video", "resolution_height", DEFAULT_RESOLUTION.y))
+		saved_resolution_customized = bool(config.get_value("video", "resolution_customized", false))
+		if saved_resolution_customized:
+			resolution_width = int(config.get_value("video", "resolution_width", detected_monitor_resolution.x))
+			resolution_height = int(config.get_value("video", "resolution_height", detected_monitor_resolution.y))
 		quest_pointer_enabled = bool(
 			config.get_value(
 				"gameplay",
@@ -1155,9 +1185,11 @@ func load_settings() -> void:
 		all_achievements_toggle.set_pressed_no_signal(all_achievements_enabled)
 		all_achievements_toggle.text = "ON" if all_achievements_enabled else "OFF"
 
+	resolution_user_selected = saved_resolution_customized
 	current_resolution = Vector2i(resolution_width, resolution_height)
-	if not AVAILABLE_RESOLUTIONS.has(current_resolution):
-		current_resolution = DEFAULT_RESOLUTION
+	if not get_resolution_options().has(current_resolution):
+		current_resolution = detected_monitor_resolution
+		resolution_user_selected = false
 	apply_resolution(current_resolution, false)
 
 	refresh_control_key_labels()
