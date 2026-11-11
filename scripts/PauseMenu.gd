@@ -588,10 +588,10 @@ func build_settings_ui() -> void:
 	# OptionButton's separate popup Window, which was not receiving mouse input.
 	var resolution_dropdown_panel := PanelContainer.new()
 	resolution_dropdown_panel.name = "ResolutionDropdownPanel"
-	resolution_dropdown_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	resolution_dropdown_panel.add_theme_stylebox_override("panel", make_panel_style())
 	resolution_dropdown_panel.visible = false
-	resolution_row.add_child(resolution_dropdown_panel)
+	resolution_dropdown_panel.z_index = 100
+	settings_panel.add_child(resolution_dropdown_panel)
 
 	resolution_popup_list = VBoxContainer.new()
 	resolution_popup_list.add_theme_constant_override("separation", 4)
@@ -860,11 +860,20 @@ func close_controls() -> void:
 # ============================================================
 
 func toggle_resolution_dropdown() -> void:
-	if resolution_popup_list == null:
+	if resolution_popup_list == null or resolution_option == null:
 		return
 	var dropdown_panel := resolution_popup_list.get_parent() as PanelContainer
-	if dropdown_panel != null:
-		dropdown_panel.visible = not dropdown_panel.visible
+	if dropdown_panel == null:
+		return
+
+	# Position the floating choices directly beneath the selector without
+	# expanding the Settings VBox or pushing other settings off-screen.
+	var button_canvas_position := resolution_option.get_global_transform_with_canvas().origin
+	var panel_inverse := settings_panel.get_global_transform_with_canvas().affine_inverse()
+	var button_panel_position: Vector2 = panel_inverse * button_canvas_position
+	dropdown_panel.position = button_panel_position + Vector2(0.0, resolution_option.size.y)
+	dropdown_panel.custom_minimum_size.x = resolution_option.size.x
+	dropdown_panel.visible = not dropdown_panel.visible
 
 
 func on_resolution_selected(resolution: Vector2i) -> void:
