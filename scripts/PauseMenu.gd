@@ -849,7 +849,8 @@ func on_resolution_selected(index: int) -> void:
 	var selected: Variant = resolution_option.get_item_metadata(index)
 	if not selected is Vector2i:
 		return
-	apply_resolution(selected as Vector2i, true)
+	var selected_resolution: Vector2i = selected
+	apply_resolution(selected_resolution, true)
 
 
 func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
@@ -869,7 +870,8 @@ func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
 
 	var screen := DisplayServer.window_get_current_screen(window_id)
 	var usable_size := DisplayServer.screen_get_size(screen)
-	var target_position := Vector2i(
+	var screen_origin := DisplayServer.screen_get_position(screen)
+	var target_position := screen_origin + Vector2i(
 		maxi(0, int((usable_size.x - resolution.x) / 2)),
 		maxi(0, int((usable_size.y - resolution.y) / 2))
 	)
