@@ -5,7 +5,18 @@ const BUTTON_SIZE := Vector2(280.0, 46.0)
 const SLOT_PANEL_SIZE := Vector2(620.0, 500.0)
 const SLOT_BUTTON_SIZE := Vector2(270.0, 64.0)
 const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
-const SETTINGS_PANEL_SIZE := Vector2(560.0, 620.0)
+const SETTINGS_PANEL_SIZE := Vector2(560.0, 700.0)
+const AVAILABLE_RESOLUTIONS: Array[Vector2i] = [
+	Vector2i(1080, 1920),
+	Vector2i(1080, 1200),
+	Vector2i(1280, 720),
+	Vector2i(1366, 768),
+	Vector2i(1600, 900),
+	Vector2i(1920, 1080),
+	Vector2i(2560, 1440),
+	Vector2i(3840, 2160)
+]
+const DEFAULT_RESOLUTION := Vector2i(1080, 1920)
 const CONTROLS_PANEL_SIZE := Vector2(560.0, 520.0)
 const REBIND_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
 const REBIND_LABELS := {"move_up": "Move Up", "move_left": "Move Left", "move_down": "Move Down", "move_right": "Move Right", "interact": "Interact", "toggle_quest_tracker": "Toggle Quest Tracker"}
@@ -55,6 +66,8 @@ var volume_slider: HSlider
 var brightness_slider: HSlider
 var volume_value_label: Label
 var brightness_value_label: Label
+var resolution_option: OptionButton
+var current_resolution: Vector2i = DEFAULT_RESOLUTION
 var quest_pointer_toggle: CheckButton
 var all_achievements_toggle: CheckButton
 var settings_close_button: Button
@@ -465,7 +478,7 @@ func build_settings_ui() -> void:
 	settings_panel = PanelContainer.new()
 	settings_panel.name = "SettingsPanel"
 	settings_panel.set_anchors_preset(Control.PRESET_CENTER)
-	settings_panel.position = Vector2(-280, -310)
+	settings_panel.position = Vector2(-280, -350)
 	settings_panel.size = SETTINGS_PANEL_SIZE
 	settings_panel.add_theme_stylebox_override("panel", make_panel_style())
 	overlay.add_child(settings_panel)
@@ -552,6 +565,31 @@ func build_settings_ui() -> void:
 	brightness_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	brightness_slider.value_changed.connect(on_brightness_changed)
 	brightness_row.add_child(brightness_slider)
+
+	# ---------- DISPLAY RESOLUTION ----------
+	var resolution_row := VBoxContainer.new()
+	resolution_row.add_theme_constant_override("separation", 6)
+	box.add_child(resolution_row)
+
+	var resolution_label := Label.new()
+	resolution_label.text = "Display Resolution"
+	resolution_label.add_theme_font_size_override("font_size", 18)
+	resolution_label.add_theme_color_override("font_color", Color("#F6E7D2"))
+	resolution_row.add_child(resolution_label)
+
+	resolution_option = OptionButton.new()
+	resolution_option.custom_minimum_size = Vector2(0.0, 42.0)
+	resolution_option.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for resolution in AVAILABLE_RESOLUTIONS:
+		var label := "%d × %d" % [resolution.x, resolution.y]
+		if resolution == DEFAULT_RESOLUTION:
+			label += " (Default)"
+		elif resolution == Vector2i(1080, 1200):
+			label += " (Portrait)"
+		resolution_option.add_item(label)
+		resolution_option.set_item_metadata(resolution_option.item_count - 1, resolution)
+	resolution_option.item_selected.connect(on_resolution_selected)
+	resolution_row.add_child(resolution_option)
 
 	# ---------- QUEST POINTER ----------
 	var quest_pointer_row := HBoxContainer.new()
@@ -802,6 +840,46 @@ func close_controls() -> void:
 
 
 # ============================================================
+# SETTINGS — DISPLAY RESOLUTION
+# ============================================================
+
+func on_resolution_selected(index: int) -> void:
+	if resolution_option == null or index < 0 or index >= resolution_option.item_count:
+		return
+	var selected: Variant = resolution_option.get_item_metadata(index)
+	if not selected is Vector2i:
+		return
+	apply_resolution(selected as Vector2i, true)
+
+
+func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
+	if resolution.x <= 0 or resolution.y <= 0:
+		return
+
+	current_resolution = resolution
+
+	# Resolution changes are applied in windowed mode. This avoids the
+	# fullscreen mode ignoring window_set_size() and keeps the selected size
+	# predictable across monitors. The logical 1920x1080 game viewport remains
+	# unchanged; Godot scales the game content to the selected window size.
+	var window_id := DisplayServer.MAIN_WINDOW_ID
+	if DisplayServer.window_get_mode(window_id) != DisplayServer.WINDOW_MODE_WINDOWED:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, window_id)
+	DisplayServer.window_set_size(resolution, window_id)
+
+	var screen := DisplayServer.window_get_current_screen(window_id)
+	var usable_size := DisplayServer.screen_get_size(screen)
+	var target_position := Vector2i(
+		maxi(0, int((usable_size.x - resolution.x) / 2)),
+		maxi(0, int((usable_size.y - resolution.y) / 2))
+	)
+	DisplayServer.window_set_position(target_position, window_id)
+
+	if persist:
+		save_settings()
+
+
+# ============================================================
 # SETTINGS — VOLUME
 # ============================================================
 
@@ -919,6 +997,9 @@ func save_settings() -> void:
 	if brightness_slider != null:
 		config.set_value("video", "brightness", brightness_slider.value)
 
+	config.set_value("video", "resolution_width", current_resolution.x)
+	config.set_value("video", "resolution_height", current_resolution.y)
+
 	if quest_pointer_toggle != null:
 		config.set_value(
 			"gameplay",
@@ -958,6 +1039,8 @@ func load_settings() -> void:
 
 	var volume_value: float = 100.0
 	var brightness_value: float = 100.0
+	var resolution_width: int = DEFAULT_RESOLUTION.x
+	var resolution_height: int = DEFAULT_RESOLUTION.y
 	var quest_pointer_enabled: bool = true
 	var all_achievements_enabled: bool = false
 	var achievement_snapshot: Dictionary = {}
@@ -971,6 +1054,8 @@ func load_settings() -> void:
 		brightness_value = float(
 			config.get_value("video", "brightness", 100.0)
 		)
+		resolution_width = int(config.get_value("video", "resolution_width", DEFAULT_RESOLUTION.x))
+		resolution_height = int(config.get_value("video", "resolution_height", DEFAULT_RESOLUTION.y))
 		quest_pointer_enabled = bool(
 			config.get_value(
 				"gameplay",
@@ -1038,6 +1123,16 @@ func load_settings() -> void:
 	if all_achievements_toggle != null:
 		all_achievements_toggle.set_pressed_no_signal(all_achievements_enabled)
 		all_achievements_toggle.text = "ON" if all_achievements_enabled else "OFF"
+
+	current_resolution = Vector2i(resolution_width, resolution_height)
+	if not AVAILABLE_RESOLUTIONS.has(current_resolution):
+		current_resolution = DEFAULT_RESOLUTION
+	if resolution_option != null:
+		for index in range(resolution_option.item_count):
+			if resolution_option.get_item_metadata(index) == current_resolution:
+				resolution_option.select(index)
+				break
+	apply_resolution(current_resolution, false)
 
 	refresh_control_key_labels()
 
