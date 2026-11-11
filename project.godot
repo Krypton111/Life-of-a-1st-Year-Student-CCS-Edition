@@ -11,10 +11,14 @@ config_version=5
 [application]
 
 config/name="Game Design"
-run/main_scene="res://scenes/ui/MainMenu.tscn"
+run/main_scene="uid://ccc6vn3ow4mk8"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
-config/icon="res://icon.svg"
+boot_splash/show_image=false
+boot_splash/image="uid://bamdvyx77jnjp"
+config/icon="res://icon exe.ico"
+config/windows_native_icon="res://icon exe.ico"
+boot_splash/minimum_display_time=300
 
 [autoload]
 

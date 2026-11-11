@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://ccc6vn3ow4mk8"]
+
+[ext_resource type="Texture2D" uid="uid://bamdvyx77jnjp" path="res://logo.png" id="1_m0ilf"]
+[ext_resource type="Script" uid="uid://dv40kt00lyfmb" path="res://scripts/spalsh screen.gd" id="2_eina6"]
+
+[sub_resource type="Animation" id="Animation_wh6tg"]
+resource_name = "LogIntro"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_usb1j"]
+_data = {
+&"LogIntro": SubResource("Animation_wh6tg")
+}
+
+[node name="splash screen" type="Control" unique_id=737599239]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Logo" type="TextureRect" parent="." unique_id=1026429013]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -550.0
+offset_top = -550.0
+offset_right = 550.0
+offset_bottom = 550.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_m0ilf")
+expand_mode = 1
+
+[node name="LogIntro" type="AnimationPlayer" parent="." unique_id=851585771]
+libraries/ = SubResource("AnimationLibrary_usb1j")
+
+[node name="Control" type="Control" parent="." unique_id=1013054092]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_eina6")

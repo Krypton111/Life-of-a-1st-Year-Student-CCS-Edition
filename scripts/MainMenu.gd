@@ -51,8 +51,69 @@ func _ready() -> void:
 	if pause_menu != null:
 		pause_menu.set("main_menu_mode", true)
 	queue_redraw()
+	   
+	await get_tree().process_frame
+	await FadeManager.fade_in(1.5)
 
+func start_menu_fade_in() -> void:
+	var fade_layer := CanvasLayer.new()
+	fade_layer.name = "MenuFadeLayer"
+	fade_layer.layer = 100
+	add_child(fade_layer)
 
+	var fade_rect := ColorRect.new()
+	fade_rect.name = "MenuFadeOverlay"
+	fade_rect.color = Color.BLACK
+	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	fade_rect.set_anchors_and_offsets_preset(
+		Control.PRESET_FULL_RECT
+	)
+
+	fade_layer.add_child(fade_rect)
+
+	# Wait one frame so the black overlay is rendered first.
+	await get_tree().process_frame
+
+	var tween := create_tween()
+
+	tween.tween_property(
+		fade_rect,
+		"color:a",
+		0.0,
+		1.5
+	).set_trans(Tween.TRANS_SINE).set_ease(
+		Tween.EASE_IN_OUT
+	)
+
+	await tween.finished
+
+	fade_layer.queue_free()
+
+func fade_in_from_black() -> void:
+	var fade_layer := CanvasLayer.new()
+	fade_layer.layer = 100
+	add_child(fade_layer)
+
+	var fade_rect := ColorRect.new()
+	fade_rect.color = Color.BLACK
+	fade_rect.set_anchors_and_offsets_preset(
+		Control.PRESET_FULL_RECT
+	)
+	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fade_layer.add_child(fade_rect)
+
+	var tween := create_tween()
+	tween.tween_property(
+		fade_rect,
+		"color:a",
+		0.0,
+		1.5
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	await tween.finished
+	fade_layer.queue_free()
+	
 func animate_poster_elements() -> void:
 	# Give the scene-editable poster decorations a slow, gentle floating motion.
 	# Their authored positions and rotations remain the resting positions.
@@ -1100,6 +1161,7 @@ func choose_player_gender(chosen_gender: String) -> void:
 func begin_opening_cutscene() -> void:
 	# Route the player to the opening cutscene that matches their selected character.
 	var opening_scene := FEMALE_OPENING_SCENE if PlayerSetup.player_gender.to_lower() == "female" else OPENING_SCENE
+	DialogueManager.reset_for_new_game()
 
 	if is_instance_valid(FadeManager):
 		await FadeManager.change_scene_with_fade(opening_scene)

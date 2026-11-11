@@ -196,16 +196,28 @@ func build_ui() -> void:
 
 func _on_scene_changed() -> void:
 	await get_tree().process_frame
-	# Reset the tracker position whenever a new scene loads so it cannot remain
-	# stuck off-screen because the previous scene ended during a locked state.
+
+	# Restore the Autoload CanvasLayer itself.
+	# This is necessary if it was hidden during the splash screen.
+	show()
+
+	# Kill any previous slide animation.
 	if panel_tween != null and panel_tween.is_valid():
 		panel_tween.kill()
+
+	# Reset tracker state.
 	panel_hidden = false
 	manually_collapsed = false
 	auto_hidden = false
+
 	last_scene_path = ""
 	last_state_signature = ""
+
+	# Hide legacy scene-based quest UI.
 	hide_legacy_quest_ui()
+
+	# Let the existing manager decide whether the tracker
+	# should be visible in this scene.
 	refresh_ui()
 
 func get_current_scene_path() -> String:

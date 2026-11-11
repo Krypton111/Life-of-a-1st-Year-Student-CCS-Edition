@@ -1844,6 +1844,7 @@ func confirm_quit() -> void:
 	get_tree().paused = false
 	GameManager.player_controls_locked = false
 	resume_game_audio()
+	DialogueManager.reset_for_new_game()
 
 	if is_instance_valid(FadeManager):
 		await FadeManager.change_scene_with_fade("res://scenes/ui/MainMenu.tscn")
