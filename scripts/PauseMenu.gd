@@ -7,16 +7,15 @@ const SLOT_BUTTON_SIZE := Vector2(270.0, 64.0)
 const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
 const SETTINGS_PANEL_SIZE := Vector2(560.0, 700.0)
 const AVAILABLE_RESOLUTIONS: Array[Vector2i] = [
-	Vector2i(1080, 1920),
-	Vector2i(1920, 1200),
 	Vector2i(1280, 720),
 	Vector2i(1366, 768),
 	Vector2i(1600, 900),
 	Vector2i(1920, 1080),
+	Vector2i(1920, 1200),
 	Vector2i(2560, 1440),
 	Vector2i(3840, 2160)
 ]
-const DEFAULT_RESOLUTION := Vector2i(1080, 1920)
+const DEFAULT_RESOLUTION := Vector2i(1920, 1080)
 const CONTROLS_PANEL_SIZE := Vector2(560.0, 520.0)
 const REBIND_ACTIONS := ["move_up", "move_left", "move_down", "move_right", "interact", "toggle_quest_tracker"]
 const REBIND_LABELS := {"move_up": "Move Up", "move_left": "Move Left", "move_down": "Move Down", "move_right": "Move Right", "interact": "Interact", "toggle_quest_tracker": "Toggle Quest Tracker"}
@@ -66,7 +65,8 @@ var volume_slider: HSlider
 var brightness_slider: HSlider
 var volume_value_label: Label
 var brightness_value_label: Label
-var resolution_option: OptionButton
+var resolution_option: Button
+var resolution_popup_list: VBoxContainer
 var current_resolution: Vector2i = DEFAULT_RESOLUTION
 var quest_pointer_toggle: CheckButton
 var all_achievements_toggle: CheckButton
@@ -577,19 +577,35 @@ func build_settings_ui() -> void:
 	resolution_label.add_theme_color_override("font_color", Color("#F6E7D2"))
 	resolution_row.add_child(resolution_label)
 
-	resolution_option = OptionButton.new()
+	resolution_option = make_button("%d × %d (Default)" % [DEFAULT_RESOLUTION.x, DEFAULT_RESOLUTION.y])
+	resolution_option.name = "ResolutionDropdownButton"
 	resolution_option.custom_minimum_size = Vector2(0.0, 42.0)
 	resolution_option.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	for resolution in AVAILABLE_RESOLUTIONS:
-		var label := "%d × %d" % [resolution.x, resolution.y]
-		if resolution == DEFAULT_RESOLUTION:
-			label += " (Default)"
-		elif resolution == Vector2i(1080, 1200):
-			label += " (Portrait)"
-		resolution_option.add_item(label)
-		resolution_option.set_item_metadata(resolution_option.item_count - 1, resolution)
-	resolution_option.item_selected.connect(on_resolution_selected)
+	resolution_option.pressed.connect(toggle_resolution_dropdown)
 	resolution_row.add_child(resolution_option)
+
+	# Keep the resolution choices inside this CanvasLayer rather than using
+	# OptionButton's separate popup Window, which was not receiving mouse input.
+	var resolution_dropdown_panel := PanelContainer.new()
+	resolution_dropdown_panel.name = "ResolutionDropdownPanel"
+	resolution_dropdown_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	resolution_dropdown_panel.add_theme_stylebox_override("panel", make_panel_style())
+	resolution_dropdown_panel.visible = false
+	resolution_row.add_child(resolution_dropdown_panel)
+
+	resolution_popup_list = VBoxContainer.new()
+	resolution_popup_list.add_theme_constant_override("separation", 4)
+	resolution_dropdown_panel.add_child(resolution_popup_list)
+
+	for resolution in AVAILABLE_RESOLUTIONS:
+		var option_label := "%d × %d" % [resolution.x, resolution.y]
+		if resolution == DEFAULT_RESOLUTION:
+			option_label += " (Default)"
+		var option_button := make_button(option_label)
+		option_button.custom_minimum_size = Vector2(0.0, 38.0)
+		option_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		option_button.pressed.connect(on_resolution_selected.bind(resolution))
+		resolution_popup_list.add_child(option_button)
 
 	# ---------- QUEST POINTER ----------
 	var quest_pointer_row := HBoxContainer.new()
@@ -843,39 +859,43 @@ func close_controls() -> void:
 # SETTINGS — DISPLAY RESOLUTION
 # ============================================================
 
-func on_resolution_selected(index: int) -> void:
-	if resolution_option == null or index < 0 or index >= resolution_option.item_count:
+func toggle_resolution_dropdown() -> void:
+	if resolution_popup_list == null:
 		return
-	var selected: Variant = resolution_option.get_item_metadata(index)
-	if not selected is Vector2i:
+	var dropdown_panel := resolution_popup_list.get_parent() as PanelContainer
+	if dropdown_panel != null:
+		dropdown_panel.visible = not dropdown_panel.visible
+
+
+func on_resolution_selected(resolution: Vector2i) -> void:
+	if not AVAILABLE_RESOLUTIONS.has(resolution):
 		return
-	var selected_resolution: Vector2i = selected
-	apply_resolution(selected_resolution, true)
+	if resolution_popup_list != null:
+		var dropdown_panel := resolution_popup_list.get_parent() as PanelContainer
+		if dropdown_panel != null:
+			dropdown_panel.visible = false
+	apply_resolution(resolution, true)
+
+
+func update_resolution_dropdown_label() -> void:
+	if resolution_option == null:
+		return
+	var suffix := " (Default)" if current_resolution == DEFAULT_RESOLUTION else ""
+	resolution_option.text = "%d × %d%s" % [current_resolution.x, current_resolution.y, suffix]
 
 
 func apply_resolution(resolution: Vector2i, persist: bool = true) -> void:
-	if resolution.x <= 0 or resolution.y <= 0:
-		return
+	if not AVAILABLE_RESOLUTIONS.has(resolution):
+		resolution = DEFAULT_RESOLUTION
 
 	current_resolution = resolution
 
-	# Resolution changes are applied in windowed mode. This avoids the
-	# fullscreen mode ignoring window_set_size() and keeps the selected size
-	# predictable across monitors. The logical 1920x1080 game viewport remains
-	# unchanged; Godot scales the game content to the selected window size.
+	# Exclusive fullscreen allows the selected display mode to be applied
+	# while keeping the game fullscreen. The logical viewport stays 1920x1080.
 	var window_id := DisplayServer.MAIN_WINDOW_ID
-	if DisplayServer.window_get_mode(window_id) != DisplayServer.WINDOW_MODE_WINDOWED:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED, window_id)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN, window_id)
 	DisplayServer.window_set_size(resolution, window_id)
-
-	var screen := DisplayServer.window_get_current_screen(window_id)
-	var usable_size := DisplayServer.screen_get_size(screen)
-	var screen_origin := DisplayServer.screen_get_position(screen)
-	var target_position := screen_origin + Vector2i(
-		maxi(0, int((usable_size.x - resolution.x) / 2)),
-		maxi(0, int((usable_size.y - resolution.y) / 2))
-	)
-	DisplayServer.window_set_position(target_position, window_id)
+	update_resolution_dropdown_label()
 
 	if persist:
 		save_settings()
@@ -1129,11 +1149,6 @@ func load_settings() -> void:
 	current_resolution = Vector2i(resolution_width, resolution_height)
 	if not AVAILABLE_RESOLUTIONS.has(current_resolution):
 		current_resolution = DEFAULT_RESOLUTION
-	if resolution_option != null:
-		for index in range(resolution_option.item_count):
-			if resolution_option.get_item_metadata(index) == current_resolution:
-				resolution_option.select(index)
-				break
 	apply_resolution(current_resolution, false)
 
 	refresh_control_key_labels()
