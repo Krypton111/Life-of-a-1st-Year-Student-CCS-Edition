@@ -8,7 +8,7 @@ const ACHIEVEMENT_PANEL_SIZE := Vector2(760.0, 620.0)
 const SETTINGS_PANEL_SIZE := Vector2(560.0, 700.0)
 const AVAILABLE_RESOLUTIONS: Array[Vector2i] = [
 	Vector2i(1080, 1920),
-	Vector2i(1080, 1200),
+	Vector2i(1920, 1200),
 	Vector2i(1280, 720),
 	Vector2i(1366, 768),
 	Vector2i(1600, 900),
